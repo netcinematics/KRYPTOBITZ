@@ -1,0 +1,29 @@
+{
+  "name": "kryptobitz",
+  "version": "1.0.0",
+  "description": "radicle little bitz of blockchain goodness!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "netcinemo"
+  },
+  "keywords": [
+    "generative",
+    "art",
+    "3d",
+    "crypto",
+    "nft",
+    "collectible",
+    "eth",
+    "blockchain",
+    "mint",
+    "kryptospaze",
+    "metanet",
+    "metaverse"
+  ],
+  "author": "spazeFalcon",
+  "license": "MIT"
+}
