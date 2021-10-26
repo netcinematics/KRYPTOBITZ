@@ -3,14 +3,15 @@ const fs = require("fs");
 const { createCanvas, loadImage} = require("canvas");
 const {layers, width, height} = require('./config1.js')
 
-const canvas = createCanvas(1000,1000)
+const canvas = createCanvas(width,height)
 const ctx = canvas.getContext("2d")
 
 const edition = 1; //number of sets of krypto BITZ
 function saveLayer(_canvas, _edition){ //WHERE TO SAVE KRYPTOBIT-.
     // fs.writeFileSync("./output1/newImage.png",_canvas.toBuffer("image/png"))
-    fs.writeFileSync(`./output1/newImage${_edition}.png`,_canvas.toBuffer("image/png"))
-    console.log("IMAGE CREATED: ")
+    const outputPATH = "./output1"
+    fs.writeFileSync(`${outputPATH}/newImage${_edition}.png`,_canvas.toBuffer("image/png"))
+    console.log("IMAGE SAVED to  ",outputPATH)
 }
 
 //Random Layer, render inside image ctx.
@@ -25,9 +26,12 @@ async function drawLayer(_layer, _edition){ //Add RANDOMNESS-.
     saveLayer(canvas, _edition); //BITSETS converted into KRYPTOBITZ. $KBZ
 }
 
+//AUTO - GENERATE - generativeART: NFTs, Banners, AVATARZ, trading cards, kryptokoinz, kryptobitz
+//AUTO - GENERATE - various outputs: clean, signed, licensed, avatar cutout, video METALINK.
+//METADATA - GENERATED - with TOKEN. Record what happened. Add extra TXT.
 function main(){
     //Create each Edition, BITSET, BITFLEX
-    for(let i = 0; i<= edition; i++){
+    for(let i = 1; (i-1)<= edition; i++){
         layers.forEach((layer)=>{
             drawLayer(layer, i);
         })
