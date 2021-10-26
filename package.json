@@ -25,5 +25,8 @@
     "metaverse"
   ],
   "author": "spazeFalcon",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "canvas": "^2.8.0"
+  }
 }
