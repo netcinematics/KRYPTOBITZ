@@ -48,28 +48,28 @@ const cleanName = (_str) => {    //converts image file name to text string
 const layers = [
 {
     id:1,
-    name:"layer1 sky",
-    location: `${dir}/assets_set1/`,
+    name:"layer1 starz",
+    location: `${dir}/assets_set1/starz/`,
     position: {x:0,y:0},
-    elements: getElements(`${dir}/assets_set1/`),
+    elements: getElements(`${dir}/assets_set1/starz/`),
     size: {width:width,height:height}
 },
-// {
-//     id:2,
-//     name:"layer2 bg",
-//     imgPath: `${dir}/assets_set1/`,
-//     position: {x:0,y:0},
-//     elements: getElements(`${dir}/assets_set1/`),
-//     size: {width:width,height:height}
-// },
-// {
-//     id:3,
-//     name:"layer3 char",
-//     imgPath: `${dir}/assets_set1/`,
-//     position: {x:0,y:0},
-//     elements: getElements(`${dir}/assets_set1/`),
-//     size: {width:width,height:height}
-// },
+{
+    id:2,
+    name:"layer2 bgz",
+    location: `${dir}/assets_set1/bgz/`,
+    position: {x:0,y:0},
+    elements: getElements(`${dir}/assets_set1/bgz/`),
+    size: {width:width,height:height}
+},
+{
+    id:3,
+    name:"layer3 char",
+    location: `${dir}/assets_set1/heroz/`,
+    position: {x:0,y:0},
+    elements: getElements(`${dir}/assets_set1/heroz/`),
+    size: {width:width,height:height}
+},
 // {
 //     id:4,
 //     name:"layer4 bg",

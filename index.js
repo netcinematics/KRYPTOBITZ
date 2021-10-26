@@ -7,8 +7,10 @@ const canvas = createCanvas(1000,1000)
 const ctx = canvas.getContext("2d")
 
 const edition = 1; //number of sets of krypto BITZ
-function saveLayer(_canvas){
-    fs.writeFileSync("./output1/newImage.png",_canvas.toBuffer("image/png"))
+function saveLayer(_canvas, _edition){ //WHERE TO SAVE KRYPTOBIT-.
+    // fs.writeFileSync("./output1/newImage.png",_canvas.toBuffer("image/png"))
+    fs.writeFileSync(`./output1/newImage${_edition}.png`,_canvas.toBuffer("image/png"))
+    console.log("IMAGE CREATED: ")
 }
 
 //Random Layer, render inside image ctx.
@@ -20,13 +22,16 @@ async function drawLayer(_layer, _edition){ //Add RANDOMNESS-.
     ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
     // ctx.drawImage(image, 0, 0, 1000, 1000)
     console.log("created IMG: ", _layer.name, "with", element.name)
-    saveLayer(canvas); //BITSETS converted into KRYPTOBITZ. $KBZ
+    saveLayer(canvas, _edition); //BITSETS converted into KRYPTOBITZ. $KBZ
 }
 
-//Create each Edition, BITSET, BITFLEX
-for(let i = 0; i<= edition; i++){
-    layers.forEach((layer)=>{
-        drawLayer(layer, i);
-    })
-    console.log("Edition: ",i)
+function main(){
+    //Create each Edition, BITSET, BITFLEX
+    for(let i = 0; i<= edition; i++){
+        layers.forEach((layer)=>{
+            drawLayer(layer, i);
+        })
+        console.log("Edition: ",i)
+    }
 }
+main();
