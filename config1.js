@@ -2,6 +2,7 @@ const fs = require("fs");
 const dir = __dirname; //C:\PROJECTS\VSCODE_PROJECTS\KRYPTOBITZ
 const width = 1000;
 const height = 1000;
+const editionNum = 1; //number of sets to run
 
 
 const getElements = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
@@ -128,4 +129,4 @@ const layers = [
 //     rarity: 'addRarity(i)'
 //   },
 
-module.exports = {layers, width, height}
+module.exports = {layers, width, height, editionNum}
