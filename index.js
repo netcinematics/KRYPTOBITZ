@@ -20,8 +20,9 @@ let decodedHash = [];
 function saveLayer(_canvas, _edition){ //WHERE TO SAVE KRYPTOBIT-.
     // fs.writeFileSync("./output1/newImage.png",_canvas.toBuffer("image/png"))
     const outputPATH = "./output1"
-    fs.writeFileSync(`${outputPATH}/kbz_${dateStamp}.png`,_canvas.toBuffer("image/png"))
+    // fs.writeFileSync(`${outputPATH}/kbz_${dateStamp+_edition}.png`,_canvas.toBuffer("image/png"))
     // fs.writeFileSync(`${outputPATH}/newImage${_edition}.png`,_canvas.toBuffer("image/png"))
+    fs.writeFileSync(`${outputPATH}/TESTIMG${_edition}.png`,_canvas.toBuffer("image/png"))
     console.log("IMAGE SAVED to  ",outputPATH)
 }
 
@@ -56,8 +57,48 @@ const addAttributes = (_element, _layer) => { //populate metadata values
 }
 
 //Random Layer, render inside image ctx.
-async function drawLayer(_layer, _edition){ //Add RANDOMNESS-.
-    let element = _layer.elements[ Math.floor(Math.random() * _layer.elements.length)     ]
+function drawLayer(_layer, _edition){ //Add RANDOMNESS-.
+    let element = _layer.elements[ Math.floor(Math.random() * _layer.elements.length)     ] //RANDOM PICK a BITSET
+    // addMetadata(element, _layer);
+    console.log("IMG - ELEMENT: ", element)
+    addAttributes(element, _layer)
+    console.log('LOAD IMG1:',`${_layer.location}${element.fileName}`)
+
+    loadImage(`${_layer.location}${element.fileName}`)
+    .then( (data)=>{
+        let image = data;
+        ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
+        addNumberTxt(edition); //works but needs move out
+        // addIconIMG(_layer);
+        saveLayer(canvas, _edition); //BITSETS converted into KRYPTOBITZ. $KBZ
+    }).catch( (e) => { debugger;   })
+
+
+
+    // const image = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
+    // const image = await loadImage(`${_layer.location}${element.fileName}`)
+    //const image = await loadImage("./assets_set1/kryptobitz_set1_sky4b.jpg")
+    // ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
+    // ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
+    // ctx.drawImage(image, 0, 0, 1000, 1000)
+    // addIconIMG(_layer);
+    // const logo = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
+    // const cp = await loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
+    // const tm = await loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
+    // ctx.drawImage(logo,30, 22, 55, 55)
+    // ctx.drawImage(cp,26, 940, 32, 32)
+    // ctx.drawImage(tm,960, 45, 32, 32)
+    
+    // addNumberTxt(edition);
+    // console.log("create IMG layer: ", _edition, _layer.name, "with", element.name)
+    // saveLayer(canvas, _edition); //BITSETS converted into KRYPTOBITZ. $KBZ
+}
+
+
+
+//Random Layer, render inside image ctx.
+async function drawLayerAsync(_layer, _edition){ //Add RANDOMNESS-.
+    let element = _layer.elements[ Math.floor(Math.random() * _layer.elements.length)     ] //RANDOM PICK a BITSET
     // addMetadata(element, _layer);
     console.log("IMG - ELEMENT: ", element)
     addAttributes(element, _layer)
@@ -68,13 +109,14 @@ async function drawLayer(_layer, _edition){ //Add RANDOMNESS-.
     // ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
     ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
     // ctx.drawImage(image, 0, 0, 1000, 1000)
-    addIconIMG(_layer);
-    const logo = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
-    const cp = await loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
-    const tm = await loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
-    ctx.drawImage(logo,18, 6, 55, 55)
-    ctx.drawImage(cp,12, 950, 32, 32)
-    ctx.drawImage(tm,980, 33, 32, 32)
+    // addIconIMG(_layer);
+    // const logo = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
+    // const cp = await loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
+    // const tm = await loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
+    // ctx.drawImage(logo,30, 22, 55, 55)
+    // ctx.drawImage(cp,26, 940, 32, 32)
+    // ctx.drawImage(tm,960, 45, 32, 32)
+    
     addNumberTxt(edition);
     console.log("create IMG layer: ", _edition, _layer.name, "with", element.name)
     saveLayer(canvas, _edition); //BITSETS converted into KRYPTOBITZ. $KBZ
@@ -86,14 +128,82 @@ async function addIconIMG(_layer) {
     // ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
     // ctx.drawImage(image, 20,20,440,440);
     // ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height);
+    const logo = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
+    const cp = await loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
+    const tm = await loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
+    ctx.drawImage(logo,30, 22, 55, 55)
+    ctx.drawImage(cp,26, 940, 32, 32)
+    ctx.drawImage(tm,960, 45, 32, 32)
 }
 
-const addNumberTxt = () => {
+const addNumberTxt = (_edition) => {
+
+    let itemNUM = "00"+_edition;
+
     ctx.fillStyle = "#333333";
     ctx.font = "bold 12pt calibri";
     ctx.textBaseline = "top";
     ctx.textAlign = "left";
-    // ctx.fillText("1 of 1", 88, 22);
+    ctx.fillText("1 of 1", 40, 74);
+
+    ctx.font="33pt impact";
+    ctx.shadowColor="yellow";
+    ctx.shadowBlur=6;
+    ctx.lineWidth=4;
+    ctx.strokeText(itemNUM,95,25);
+    ctx.textAlign = "left";
+    ctx.shadowBlur=0;
+    ctx.fillStyle="white";
+    ctx.fillText(itemNUM,95,25);
+
+    ctx.fillStyle = "skyblue";
+    ctx.font = "bold 22pt Impact";
+    ctx.textBaseline = "top";
+    ctx.textAlign = "right";
+    ctx.shadowColor="black";
+    ctx.fillText("KRYPTOBITZ", 955, 28);
+
+    ctx.font="18pt calibri";
+    ctx.shadowColor="skyblue";
+    ctx.textBaseline = "bottom";
+    ctx.textAlign = "right";
+    ctx.shadowBlur=6;
+    ctx.lineWidth=4;
+    ctx.fillStyle = "skyblue";
+    ctx.strokeText("2 0 2 1",136,969);
+    ctx.shadowBlur=4;
+    ctx.fillStyle="steelblue";
+    ctx.fillText("2 0 2 1",136,968);
+
+    ctx.font="italic 20pt Verdana";
+    ctx.shadowColor="skyblue";
+    ctx.textBaseline = "bottom";
+    ctx.textAlign = "right";
+    ctx.shadowBlur=6;
+    ctx.lineWidth=4;
+    ctx.fillStyle = "skyblue";
+    ctx.strokeText("spazeFalcon",965,969);
+    ctx.shadowBlur=4;
+    ctx.fillStyle="steelblue";
+    ctx.fillText("spazeFalcon",964,968);
+
+    // saveLayer(canvas, _edition);
+
+//EXAMPLE: GRADIENT-.
+//     var grad = ctx.createLinearGradient(0,0,200,0);
+// grad.addColorStop(0, "white");
+// grad.addColorStop(0.5, "red");
+// grad.addColorStop(1, "black");
+
+// ctx.fillStyle = grad;
+// ctx.fillRect(0,0,400,200);
+
+/*  NUM LAYOUTS - WITHOUT FRAME
+
+    ctx.fillStyle = "#333333";
+    ctx.font = "bold 12pt calibri";
+    ctx.textBaseline = "top";
+    ctx.textAlign = "left";
     ctx.fillText("1 of 1", 28, 60);
 
     ctx.font="33pt impact";
@@ -113,7 +223,6 @@ const addNumberTxt = () => {
     ctx.shadowColor="black";
     ctx.fillText("KRYPTOBITZ", 977, 12);
 
-
     ctx.font="18pt calibri";
     ctx.shadowColor="skyblue";
     ctx.textBaseline = "bottom";
@@ -126,7 +235,6 @@ const addNumberTxt = () => {
     ctx.fillStyle="steelblue";
     ctx.fillText("2 0 2 1",122,980);
 
-
     ctx.font="italic 22pt Verdana";
     ctx.shadowColor="skyblue";
     ctx.textBaseline = "bottom";
@@ -138,15 +246,8 @@ const addNumberTxt = () => {
     ctx.shadowBlur=4;
     ctx.fillStyle="steelblue";
     ctx.fillText("spazeFalcon",978,988);
-//EXAMPLE: GRADIENT-.
-//     var grad = ctx.createLinearGradient(0,0,200,0);
-// grad.addColorStop(0, "white");
-// grad.addColorStop(0.5, "red");
-// grad.addColorStop(1, "black");
 
-// ctx.fillStyle = grad;
-// ctx.fillRect(0,0,400,200);
-
+*/
 
 }
 
@@ -154,11 +255,222 @@ const addNumberTxt = () => {
 //AUTO - GENERATE - various outputs: clean, signed, licensed, avatar cutout, video METALINK.
 //METADATA - GENERATED - with TOKEN. Record what happened. Add extra TXT.
 function main(){
+    
+    var mainCanvasContext = ctx; //document.getElementById("myCanvas").getContext("2d");
+
+    /* Creates our layer's array */
+    var layers = [];
+
+    function addNewLayer(layers) {
+      /* Creates the layer as a new canvas */
+      var layer = createCanvas(width,height)
+      var layerContext = layer.getContext("2d");
+
+      /* Clears the canvas */
+      layerContext.clearRect(0, 0, 400, 200);
+
+      /* Adds it to our layers array */
+      layers.push(layer);
+
+      /* Returns the new layer to use it straight away */
+      return layer;
+    }
+    
+    /* Draws each layer on top of the other */
+    function drawImage(canvasContext, layers) {
+      /* Clears the original canvas */
+      canvasContext.clearRect(0, 0, 400, 200);
+      for(var i = 0; i < layers.length; i++) {
+        canvasContext.drawImage(layers[i], 0, 0);
+      }
+    }
+
+
+function drawIMGZ(){
+
+    const frm1 = loadImage(`${rootPATH}\\assets_set1\\framez\\frame1a.png`)
+    const bg1 = loadImage(`${rootPATH}\\assets_set1\\bgz\\bg1a.png`)
+    const hero1 = loadImage(`${rootPATH}\\assets_set1\\heroz\\char1a.png`)
+    const sky1 = loadImage(`${rootPATH}\\assets_set1\\starz\\sky1a.png`)
+    const logo = loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
+    const cp = loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
+    const tm = loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
+
+    Promise
+    .all([ logo, cp, tm, sky1,bg1,frm1,hero1 ])
+    .then(function(data){
+        console.log('LOADED IMGS',data)
+        debugger;
+        // ctx.drawImage(logo,30, 22, 55, 55)
+        // ctx.drawImage(cp,26, 940, 32, 32)
+        // ctx.drawImage(tm,960, 45, 32, 32)
+        var newLayer = addNewLayer(layers);
+        var newLayerContext = newLayer.getContext("2d");
+        
+
+
+        newLayerContext.drawImage(data[3],0, 0, 1000, 1000)
+        newLayerContext.drawImage(data[4],0, 0, 1000, 1000)
+        newLayerContext.drawImage(data[6],0, 0, 1000, 1000)
+        newLayerContext.drawImage(data[5],0, 0, 1000, 1000)
+
+        newLayerContext.drawImage(data[0],30, 22, 55, 55)
+        newLayerContext.drawImage(data[1],26, 940, 32, 32)
+        newLayerContext.drawImage(data[2],958, 50, 32, 32)
+
+        
+        function drawNUMZ(){
+            
+            let itemNUM = "00"+1;
+            
+            var newLayer = addNewLayer(layers);
+            newLayerContext = newLayer.getContext("2d");
+            newLayerContext.fillStyle = "#333333";
+            newLayerContext.font = "bold 14pt calibri";
+            newLayerContext.textBaseline = "top";
+            newLayerContext.textAlign = "left";
+            newLayerContext.fillText("1 of 1", 36, 74);
+            // ctx.fillStyle = "#333333";
+            // ctx.font = "bold 12pt calibri";
+            // ctx.textBaseline = "top";
+            // ctx.textAlign = "left";
+            // ctx.fillText("1 of 1", 40, 74);
+        
+            newLayer = addNewLayer(layers);
+            newLayerContext = newLayer.getContext("2d");
+            newLayerContext.font="33pt impact";
+            newLayerContext.shadowColor="yellow";
+            newLayerContext.shadowBlur=6;
+            newLayerContext.lineWidth=4;
+            newLayerContext.strokeText(itemNUM,92,66);
+            newLayerContext.textAlign = "left";
+            newLayerContext.shadowBlur=0;
+            newLayerContext.fillStyle="white";
+            newLayerContext.fillText(itemNUM,92,66);
+        
+            newLayer = addNewLayer(layers);
+            newLayerContext = newLayer.getContext("2d");
+            newLayerContext.fillStyle = "skyblue";
+            newLayerContext.font = "bold 22pt Impact";
+            newLayerContext.textBaseline = "top";
+            newLayerContext.textAlign = "right";
+            newLayerContext.shadowColor="black";
+            newLayerContext.fillText("KRYPTOBITZ", 955, 28);
+
+
+            newLayer = addNewLayer(layers);
+            newLayerContext = newLayer.getContext("2d");
+            newLayerContext.font="18pt calibri";
+            newLayerContext.shadowColor="skyblue";
+            newLayerContext.textBaseline = "bottom";
+            newLayerContext.textAlign = "right";
+            newLayerContext.shadowBlur=6;
+            newLayerContext.lineWidth=4;
+            newLayerContext.fillStyle = "skyblue";
+            newLayerContext.strokeText("2 0 2 1",136,969);
+            newLayerContext.shadowBlur=4;
+            newLayerContext.fillStyle="steelblue";
+            newLayerContext.fillText("2 0 2 1",136,968);
+        
+            newLayer = addNewLayer(layers);
+            newLayerContext = newLayer.getContext("2d");
+            newLayerContext.font="italic 20pt Verdana";
+            newLayerContext.shadowColor="skyblue";
+            newLayerContext.textBaseline = "bottom";
+            newLayerContext.textAlign = "right";
+            newLayerContext.shadowBlur=6;
+            newLayerContext.lineWidth=4;
+            newLayerContext.fillStyle = "skyblue";
+            newLayerContext.strokeText("spazeFalcon",965,969);
+            newLayerContext.shadowBlur=4;
+            newLayerContext.fillStyle="steelblue";
+            newLayerContext.fillText("spazeFalcon",964,968);
+
+
+        
+            newLayer = addNewLayer(layers);
+            newLayerContext = newLayer.getContext("2d");
+            newLayerContext.font="32pt Verdana";
+            newLayerContext.shadowColor="skyblue";
+            newLayerContext.textBaseline = "bottom";
+            newLayerContext.textAlign = "center";
+            // newLayerContext.textAlign = "right";
+            newLayerContext.shadowBlur=6;
+            newLayerContext.lineWidth=4;
+            newLayerContext.fillStyle = "skyblue";
+            newLayerContext.strokeText("OrbyOrbot",500,951);
+            newLayerContext.shadowBlur=4;
+            newLayerContext.fillStyle="steelblue";
+            newLayerContext.fillText("OrbyOrbot",499,950);
+
+
+        }
+        drawNUMZ();
+        
+        drawImage(mainCanvasContext, layers);
+        
+        //edition = 1;
+        
+        const outputPATH = "./output1"
+        fs.writeFileSync(`${outputPATH}/TESTIMG${edition}.png`,canvas.toBuffer("image/png"))
+        
+        
+    });
+}
+drawIMGZ();
+
+
+
+
+
+return
+debugger;
+
+        // const logo = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
+        // const cp = await loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
+        // const tm = await loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
+    // ctx.drawImage(logo,30, 22, 55, 55)
+    // ctx.drawImage(cp,26, 940, 32, 32)
+    // ctx.drawImage(tm,960, 45, 32, 32)
+    
+    //NEED TO CREATE LAYERS, LOAD LAYER IMG, RENDER LAYERS, SAVE END IMAGE
+    /* Creates new layer and adds a square to it */
+    var newLayer = addNewLayer(layers);
+    var newLayerContext = newLayer.getContext("2d");
+    newLayerContext.fillStyle = "#FF0000";
+    newLayerContext.fillRect(0, 0, 80, 100);
+
+    /* Creates new layer and adds a square to it */
+    newLayer = addNewLayer(layers);
+    newLayerContext = newLayer.getContext("2d");
+    newLayerContext.fillStyle = "#00FF00";
+    newLayerContext.fillRect(10, 10, 80, 100);
+
+    /* Creates new layer and adds a square to it */
+    newLayer = addNewLayer(layers);
+    newLayerContext = newLayer.getContext("2d");
+    newLayerContext.fillStyle = "#0000FF";
+    newLayerContext.fillRect(20, 20, 80, 100);
+
+    /* On each change to the layers, draw the image again */
+    drawImage(mainCanvasContext, layers);
+
+    //edition = 1;
+
+    const outputPATH = "./output1"
+    fs.writeFileSync(`${outputPATH}/TESTIMG${edition}.png`,canvas.toBuffer("image/png"))
+
+return;
+
     //Create each Edition, BITSET, BITFLEX
-    for(let i = 1; i <= edition; i++){
-        layers.forEach((layer)=>{
-            drawLayer(layer, i);
-        });
+    for(let i = 1; i <= edition; i++){ //LOOP NUMBER OF CARDZ CARDNUM
+
+        
+        // layers.forEach((layer)=>{  //LOOP NUMBER OF LAYERZ (bitz) sky, bg, char, frame, ...
+            // drawLayer(layer, i);
+        // });
+        // addNumberTxt(i); //broke
+        // saveLayer(canvas, edition); 
         addMetadata(i)
         console.log("Edition: ",i)
     }

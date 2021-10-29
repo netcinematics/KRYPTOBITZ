@@ -2,7 +2,7 @@ const fs = require("fs");
 const dir = __dirname; //C:\PROJECTS\VSCODE_PROJECTS\KRYPTOBITZ
 const width = 1000;
 const height = 1000;
-const editionNum = 1; //number of sets to run
+const editionNum = 2; //number of sets to run
 
 
 const getElements = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
@@ -51,33 +51,34 @@ const layers = [
     id:1,
     name:"layer1 starz",
     location: `${dir}/assets_set1/starz/`,
-    position: {x:0,y:0},
     elements: getElements(`${dir}/assets_set1/starz/`),
-    size: {width:width,height:height}
+    size: {width:width,height:height},
+    position: {x:0,y:0},
 },
 {
     id:2,
     name:"layer2 bgz",
     location: `${dir}/assets_set1/bgz/`,
-    position: {x:0,y:0},
     elements: getElements(`${dir}/assets_set1/bgz/`),
-    size: {width:width,height:height}
+    size: {width:width,height:height},
+    position: {x:0,y:0},
 },
 {
     id:3,
     name:"layer3 char",
     location: `${dir}/assets_set1/heroz/`,
-    position: {x:0,y:0},
     elements: getElements(`${dir}/assets_set1/heroz/`),
-    size: {width:width,height:height}
+    size: {width:width,height:height},
+    position: {x:0,y:0},
 },
-// {
-//     id:4,
-//     name:"layer4 bg",
-//     location: `${dir}/background/`,
-//     position: {x:0,y:0},
-//     size: {width:width,height:height}
-// },
+{
+    id:4,
+    name:"layer4 frame",
+    location: `${dir}/assets_set1/framez/`,
+    elements: getElements(`${dir}/assets_set1/framez/`),
+    size: {width:width,height:height},
+    position: {x:0,y:0},
+},
 // {
 //     id:5,
 //     name:"layer5 bg",
@@ -109,7 +110,7 @@ const layers = [
 //     size: { width: 1000, height: 1000 }
 //   }
 //EXAMPLE2
- console.log(layers[0].elements); 
+ console.log(layers[0].elements); //ELEMENTS are BITZ in BITSETZ
  //Read 1st BIT of BITSET, DYNOBITZ and STATICBITZ. DYNOBITSETS. Are randomly flexed.
  //Run validate BITZ, validated UNIQUE, calculate RANDOMNESS, each BIT has a BITRATE and a BITSCORE
  //SIGNIFICANTLY RARE CARD INSERTION: convert a small set of common cards to _sr
