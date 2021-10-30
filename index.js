@@ -2,7 +2,7 @@ console.log('KRYPTOBITZ - Server on.')
 const fs = require("fs");
 const myArgs = process.argv.slice(2); //CMD LINE args. Split by space into Array;
 const { createCanvas, loadImage} = require("canvas");
-const {layers, width, height, editionNum} = require('./config1.js')
+const {layers, width, height, editionNum, BITZSET, totalCARDZ} = require('./config1.js')
 
 const canvas = createCanvas(width,height)
 const ctx = canvas.getContext("2d")
@@ -10,6 +10,7 @@ const ctx = canvas.getContext("2d")
 let dateStamp = `00000${Date.now()}`;
 const rootPATH = __dirname; //C:\PROJECTS\VSCODE_PROJECTS\KRYPTOBITZ
 const edition = (editionNum) ? editionNum : 1; ; //ARG, number of sets of krypto BITZ
+// totalCARDZ = (totalCARDZ) ? totalCARDZ : 1; ; //ARG, number of sets of krypto BITZ
 let hash = []; //be able to rebuild img from hash.
 let metadata = [];
 let attributes = [];
@@ -285,9 +286,9 @@ function main(){
       }
     }
 
+function drawIMGZ(_currentCardNum, BITZSET){
 
-function drawIMGZ(){
-
+    //load all the images - at INIT
     const frm1 = loadImage(`${rootPATH}\\assets_set1\\framez\\frame1a.png`)
     const bg1 = loadImage(`${rootPATH}\\assets_set1\\bgz\\bg1a.png`)
     const hero1 = loadImage(`${rootPATH}\\assets_set1\\heroz\\char1a.png`)
@@ -296,11 +297,47 @@ function drawIMGZ(){
     const cp = loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
     const tm = loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
 
+debugger;
+   //Calclulate which images get in
+   let selectedBITZ = [], randomBIT = null;
+   for( let i = 0; i<BITZSET.length;i++){
+       randomBIT = BITZSET[i].BITZ[ Math.floor(Math.random() * BITZSET[i].BITZ.length)     ] //RANDOM PICK a BITSET
+       console.log("SELECTED BIT", randomBIT)
+       randomBIT.PATH = BITZSET[i].PATH;
+       selectedBITZ.push(randomBIT)
+   }
+   //LOAD IMG PROMISES
+   promisedBITZ = [];
+   for( let i = 0; i<selectedBITZ.length;i++){
+        let selectedBIT = selectedBITZ[i];
+        console.log("IMGPATH",selectedBIT);
+        let imgPromise = loadImage(`${selectedBIT.PATH}${selectedBIT.fileName}`)
+        // let imgPromise = loadImage(`${rootPATH}\\assets_set1\\starz\\sky1a.png`)
+        promisedBITZ.push( imgPromise )
+   }
+   Promise.all(promisedBITZ)
+   .then( (imageSet) => {
+    debugger;
+
+    var newLayer = addNewLayer(layers);
+    var newLayerContext = newLayer.getContext("2d");
+    
+
+
+    newLayerContext.drawImage(imageSet[0],0, 0, 1000, 1000)
+    newLayerContext.drawImage(imageSet[1],0, 0, 1000, 1000)
+
+
+   });
+//    let element = _layer.elements[ Math.floor(Math.random() * _layer.elements.length)     ] //RANDOM PICK a BITSET
+//    let selectedBIT = BITZSET.BITZ[ Math.floor(Math.random() * BITZSET.BITZ.length)     ] //RANDOM PICK a BITSET
+//   console.log("SELECTED BIT", selectedBIT)
+
+   //SYNCHRONOUSLY LOAD ALL 
     Promise
     .all([ logo, cp, tm, sky1,bg1,frm1,hero1 ])
     .then(function(data){
-        console.log('LOADED IMGS',data)
-        debugger;
+        // console.log('LOADED IMGS',data)
         // ctx.drawImage(logo,30, 22, 55, 55)
         // ctx.drawImage(cp,26, 940, 32, 32)
         // ctx.drawImage(tm,960, 45, 32, 32)
@@ -309,7 +346,7 @@ function drawIMGZ(){
         
 
 
-        newLayerContext.drawImage(data[3],0, 0, 1000, 1000)
+        // newLayerContext.drawImage(data[3],0, 0, 1000, 1000)
         newLayerContext.drawImage(data[4],0, 0, 1000, 1000)
         newLayerContext.drawImage(data[6],0, 0, 1000, 1000)
         newLayerContext.drawImage(data[5],0, 0, 1000, 1000)
@@ -319,9 +356,9 @@ function drawIMGZ(){
         newLayerContext.drawImage(data[2],958, 50, 32, 32)
 
         
-        function drawNUMZ(){
+        function drawNUMZ(_currentCardNum){
             
-            let itemNUM = "00"+1;
+            let itemNUM = "00"+_currentCardNum;
             
             var newLayer = addNewLayer(layers);
             newLayerContext = newLayer.getContext("2d");
@@ -405,20 +442,31 @@ function drawIMGZ(){
 
 
         }
-        drawNUMZ();
+        drawNUMZ(_currentCardNum);
         
         drawImage(mainCanvasContext, layers);
         
         //edition = 1;
         
         const outputPATH = "./output1"
-        fs.writeFileSync(`${outputPATH}/TESTIMG${edition}.png`,canvas.toBuffer("image/png"))
+        fs.writeFileSync(`${outputPATH}/TESTIMG${_currentCardNum}.png`,canvas.toBuffer("image/png"))
+        // fs.writeFileSync(`${outputPATH}/TESTIMG${edition}.png`,canvas.toBuffer("image/png"))
         
         
     });
 }
-drawIMGZ();
+// drawIMGZ();
 
+for(let i = 1; i <= totalCARDZ; i++){
+    // let bitz = BITZSET[i]; //layers dimension
+    drawIMGZ(i,BITZSET)
+    // BITZSET.forEach((bitz)=>{  //LOOP NUMBER OF (bitz) sky, bg, char, frame, ...
+    //     // drawLayer(layer, i);
+    //     drawIMGZ(bitz,i)
+    // });
+
+
+}
 
 
 

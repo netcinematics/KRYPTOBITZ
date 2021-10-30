@@ -3,8 +3,27 @@ const dir = __dirname; //C:\PROJECTS\VSCODE_PROJECTS\KRYPTOBITZ
 const width = 1000;
 const height = 1000;
 const editionNum = 2; //number of sets to run
+const totalCARDZ = 2;
 
 
+// getIMGFILES to array - each is variation
+const getBITZ = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
+    return fs.readdirSync(path) //Load-ALL-IMGS, from DYNO PATH.
+    .filter((item)=>{
+        return !/(^|\/)\.[^\/\.]/g.test(item)
+    })
+    .map((i,index)=>{ //Initial File 
+        return {
+            id:index+1,
+            name:cleanName(i),
+            fileName:i,
+            rarity:addRarity(i)
+        }
+    })
+}
+
+
+//Rename to getIMGFILES to array - each is variation
 const getElements = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
     return fs.readdirSync(path) //Load-ALL-IMGS, from DYNO PATH.
     .filter((item)=>{
@@ -43,6 +62,26 @@ const cleanName = (_str) => {    //converts image file name to text string
     });
     return name;
 }
+
+
+const BITZSET = [
+    {
+        id:1,
+        name:"layer1 starz",
+        PATH: `${dir}/assets_set1/starz/`,
+        BITZ: getBITZ(`${dir}/assets_set1/starz/`),
+        size: {width:width,height:height},
+        position: {x:0,y:0},
+    },
+    {
+        id:2,
+        name:"layer2 bgz",
+        PATH: `${dir}/assets_set1/bgz/`,
+        BITZ: getBITZ(`${dir}/assets_set1/bgz/`),
+        size: {width:width,height:height},
+        position: {x:0,y:0},
+    },
+]
 
 //KRYPTOSCOPE - many images and text creating random scenes... telling a dimensional variation story.
 //sometimes need to resize or position layers to match canvas, 1k, 1k.
@@ -89,6 +128,8 @@ const layers = [
 ]
 
 
+
+
 //EXAMPLE1
 //console.log(layers)
 // {
@@ -130,4 +171,4 @@ const layers = [
 //     rarity: 'addRarity(i)'
 //   },
 
-module.exports = {layers, width, height, editionNum}
+module.exports = {layers, width, height, editionNum, BITZSET, totalCARDZ}
