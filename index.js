@@ -282,7 +282,7 @@ function main(){
       /* Clears the original canvas */
       canvasContext.clearRect(0, 0, 400, 200);
       for(var i = 0; i < layers.length; i++) {
-        canvasContext.drawImage(layers[i], 0, 0);
+        canvasContext.drawImage(layers[i], 0, 0);  //convert CANVAS layers to CTX!
       }
     }
 
@@ -297,35 +297,39 @@ function drawIMGZ(_currentCardNum, BITZSET){
     const cp = loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
     const tm = loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
 
-debugger;
-   //Calclulate which images get in
+
+   //Calclulate which images get in, an array of IMG-PATHS
    let selectedBITZ = [], randomBIT = null;
    for( let i = 0; i<BITZSET.length;i++){
        randomBIT = BITZSET[i].BITZ[ Math.floor(Math.random() * BITZSET[i].BITZ.length)     ] //RANDOM PICK a BITSET
-       console.log("SELECTED BIT", randomBIT)
+       console.log("SELECTED-BIT", randomBIT)
        randomBIT.PATH = BITZSET[i].PATH;
        selectedBITZ.push(randomBIT)
    }
-   //LOAD IMG PROMISES
+   //LOAD IMG-PATHS into array of PROMISE OBJECTS, for IMG LOADING
    promisedBITZ = [];
    for( let i = 0; i<selectedBITZ.length;i++){
         let selectedBIT = selectedBITZ[i];
-        console.log("IMGPATH",selectedBIT);
+        console.log("IMGPATH:",selectedBIT);
         let imgPromise = loadImage(`${selectedBIT.PATH}${selectedBIT.fileName}`)
         // let imgPromise = loadImage(`${rootPATH}\\assets_set1\\starz\\sky1a.png`)
         promisedBITZ.push( imgPromise )
    }
-   Promise.all(promisedBITZ)
-   .then( (imageSet) => {
-    debugger;
+   console.log("CHOZEN-BITZ",promisedBITZ)
+   //LOAD IMGs, called by Promise. When all selected images load, then BUILD.
+   Promise.all(promisedBITZ) //waits for all IMGZ to load before rendering.
+   .then( (imageSet) => { // .all([ logo, cp, tm, sky1,bg1,hero1 ])
+        console.log('BITZ-LOADED',imageSet)
 
-    var newLayer = addNewLayer(layers);
-    var newLayerContext = newLayer.getContext("2d");
-    
+        var newLayer = addNewLayer(layers);
+        var newLayerContext = newLayer.getContext("2d");
 
-
-    newLayerContext.drawImage(imageSet[0],0, 0, 1000, 1000)
-    newLayerContext.drawImage(imageSet[1],0, 0, 1000, 1000)
+        //BITZSET in CONFIG populates LAYERBITZ in VIEW.
+        //The LAYER BITZ are ENCASED here imageSet[0], imageSet[1] - from BITZSET
+        newLayerContext.drawImage(imageSet[0],0, 0, 1000, 1000) //sky
+        newLayerContext.drawImage(imageSet[1],0, 0, 1000, 1000) //bg
+        newLayerContext.drawImage(imageSet[2],0, 0, 1000, 1000) //hero
+        newLayerContext.drawImage(imageSet[3],0, 0, 1000, 1000) //frame
 
 
    });
@@ -335,7 +339,7 @@ debugger;
 
    //SYNCHRONOUSLY LOAD ALL 
     Promise
-    .all([ logo, cp, tm, sky1,bg1,frm1,hero1 ])
+    .all([ logo, cp, tm])
     .then(function(data){
         // console.log('LOADED IMGS',data)
         // ctx.drawImage(logo,30, 22, 55, 55)
@@ -347,9 +351,9 @@ debugger;
 
 
         // newLayerContext.drawImage(data[3],0, 0, 1000, 1000)
-        newLayerContext.drawImage(data[4],0, 0, 1000, 1000)
-        newLayerContext.drawImage(data[6],0, 0, 1000, 1000)
-        newLayerContext.drawImage(data[5],0, 0, 1000, 1000)
+        // newLayerContext.drawImage(data[4],0, 0, 1000, 1000)
+        // newLayerContext.drawImage(data[6],0, 0, 1000, 1000)
+        // newLayerContext.drawImage(data[5],0, 0, 1000, 1000)
 
         newLayerContext.drawImage(data[0],30, 22, 55, 55)
         newLayerContext.drawImage(data[1],26, 940, 32, 32)

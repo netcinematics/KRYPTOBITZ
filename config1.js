@@ -64,7 +64,7 @@ const cleanName = (_str) => {    //converts image file name to text string
 }
 
 
-const BITZSET = [
+const BITZSET = [  //LAYERS of VARIANT BITZ, in BITZSETS, chosen at random for view.
     {
         id:1,
         name:"layer1 starz",
@@ -81,6 +81,23 @@ const BITZSET = [
         size: {width:width,height:height},
         position: {x:0,y:0},
     },
+    {
+        id:3,
+        name:"layer3 hero",
+        PATH: `${dir}/assets_set1/heroz/`,
+        BITZ: getBITZ(`${dir}/assets_set1/heroz/`),
+        size: {width:width,height:height},
+        position: {x:0,y:0},
+    },
+    {
+        id:4,
+        name:"layer4 frame",
+        PATH: `${dir}/assets_set1/framez/`,
+        BITZ: getBITZ(`${dir}/assets_set1/framez/`),
+        size: {width:width,height:height},
+        position: {x:0,y:0},
+    },
+
 ]
 
 //KRYPTOSCOPE - many images and text creating random scenes... telling a dimensional variation story.
