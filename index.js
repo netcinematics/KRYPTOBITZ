@@ -2,7 +2,7 @@ console.log('KRYPTOBITZ - Server on.')
 const fs = require("fs");
 const myArgs = process.argv.slice(2); //CMD LINE args. Split by space into Array;
 const { createCanvas, loadImage} = require("canvas");
-const {layers, width, height, editionNum, BITZSET, totalCARDZ} = require('./config1.js')
+const {layers, width, height, editionNum, BITZSET, totalCARDZ, METANET} = require('./config1.js')
 
 const canvas = createCanvas(width,height)
 const ctx = canvas.getContext("2d")
@@ -252,6 +252,17 @@ const addNumberTxt = (_edition) => {
 
 }
 
+// const updateBITZSETMetaData = (selectedBITZ)=>{ //Lookup BITZ in METANET for METADATA
+//     for(let i = 0; i<selectedBITZ.length; i++){
+//         if(METANET[ selectedBITZ[i].name ]){ //METANET name lookup-.
+//             console.log("METANET found:",selectedBITZ[i].name)
+            
+//         }
+//     }
+//     return selectedBITZ;
+// }
+
+
 //AUTO - GENERATE - generativeART: NFTs, Banners, AVATARZ, trading cards, kryptokoinz, kryptobitz
 //AUTO - GENERATE - various outputs: clean, signed, licensed, avatar cutout, video METALINK.
 //METADATA - GENERATED - with TOKEN. Record what happened. Add extra TXT.
@@ -260,9 +271,9 @@ function main(){
     var mainCanvasContext = ctx; //document.getElementById("myCanvas").getContext("2d");
 
     /* Creates our layer's array */
-    var layers = [];
-
-    function addNewLayer(layers) {
+    var layers = [];  //allows for ctx to write multiple times with clearRect abstracted out.
+//todo rename canvas_layerz
+    function addNewLayer(layers) { //TODO rename addCanvasLayer
       /* Creates the layer as a new canvas */
       var layer = createCanvas(width,height)
       var layerContext = layer.getContext("2d");
@@ -278,7 +289,7 @@ function main(){
     }
     
     /* Draws each layer on top of the other */
-    function drawImage(canvasContext, layers) {
+    function drawImage(canvasContext, layers) { //TODO rename to drawCanvasLayer
       /* Clears the original canvas */
       canvasContext.clearRect(0, 0, 400, 200);
       for(var i = 0; i < layers.length; i++) {
@@ -286,13 +297,14 @@ function main(){
       }
     }
 
-function drawIMGZ(_currentCardNum, BITZSET){
+function drawIMGZ(_currentCardNum, _BITZSET){
 
+    //TODO: comment out as example in README.
     //load all the images - at INIT
-    const frm1 = loadImage(`${rootPATH}\\assets_set1\\framez\\frame1a.png`)
-    const bg1 = loadImage(`${rootPATH}\\assets_set1\\bgz\\bg1a.png`)
-    const hero1 = loadImage(`${rootPATH}\\assets_set1\\heroz\\char1a.png`)
-    const sky1 = loadImage(`${rootPATH}\\assets_set1\\starz\\sky1a.png`)
+    // const frm1 = loadImage(`${rootPATH}\\assets_set1\\framez\\frame1a.png`)
+    // const bg1 = loadImage(`${rootPATH}\\assets_set1\\bgz\\bg1a.png`)
+    // const hero1 = loadImage(`${rootPATH}\\assets_set1\\heroz\\char1a.png`)
+    // const sky1 = loadImage(`${rootPATH}\\assets_set1\\starz\\sky1a.png`)
     const logo = loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
     const cp = loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
     const tm = loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
@@ -300,12 +312,13 @@ function drawIMGZ(_currentCardNum, BITZSET){
 
    //Calclulate which images get in, an array of IMG-PATHS
    let selectedBITZ = [], randomBIT = null;
-   for( let i = 0; i<BITZSET.length;i++){
-       randomBIT = BITZSET[i].BITZ[ Math.floor(Math.random() * BITZSET[i].BITZ.length)     ] //RANDOM PICK a BITSET
+   for( let i = 0; i<_BITZSET.length;i++){
+       randomBIT = _BITZSET[i].BITZ[ Math.floor(Math.random() * _BITZSET[i].BITZ.length)     ] //RANDOM PICK a BITSET
        console.log("SELECTED-BIT", randomBIT)
-       randomBIT.PATH = BITZSET[i].PATH;
+       randomBIT.PATH = _BITZSET[i].PATH;
        selectedBITZ.push(randomBIT)
    }
+//    selectedBITZ = updateBITZSETMetaData(selectedBITZ);
    //LOAD IMG-PATHS into array of PROMISE OBJECTS, for IMG LOADING
    promisedBITZ = [];
    for( let i = 0; i<selectedBITZ.length;i++){
@@ -321,15 +334,28 @@ function drawIMGZ(_currentCardNum, BITZSET){
    .then( (imageSet) => { // .all([ logo, cp, tm, sky1,bg1,hero1 ])
         console.log('BITZ-LOADED',imageSet)
 
+        //RE-UNITE the IMG with its METADATA.
+        // if(imageSet.length===selectedBITZ.length){
+
+        //     for(var i = 0; i<selectedBITZ.length;i++){//put the img with the metadata
+                
+        //     }
+        // }
+
+
         var newLayer = addNewLayer(layers);
         var newLayerContext = newLayer.getContext("2d");
 
         //BITZSET in CONFIG populates LAYERBITZ in VIEW.
         //The LAYER BITZ are ENCASED here imageSet[0], imageSet[1] - from BITZSET
-        newLayerContext.drawImage(imageSet[0],0, 0, 1000, 1000) //sky
-        newLayerContext.drawImage(imageSet[1],0, 0, 1000, 1000) //bg
-        newLayerContext.drawImage(imageSet[2],0, 0, 1000, 1000) //hero
-        newLayerContext.drawImage(imageSet[3],0, 0, 1000, 1000) //frame
+        // newLayerContext.drawImage(imageSet[0],0, 0, 1000, 1000) //sky
+        // newLayerContext.drawImage(imageSet[1],0, 0, 1000, 1000) //bg
+        // newLayerContext.drawImage(imageSet[2],0, 0, 1000, 1000) //hero
+        // newLayerContext.drawImage(imageSet[3],0, 0, 1000, 1000) //frame
+
+        for(var i = 0; i<imageSet.length;i++){ //dynamic draw layerz
+            newLayerContext.drawImage(imageSet[i],0, 0, 1000, 1000) //todo make dynamic size
+        }
 
 
    });
@@ -360,11 +386,10 @@ function drawIMGZ(_currentCardNum, BITZSET){
         newLayerContext.drawImage(data[2],958, 50, 32, 32)
 
         
-        function drawNUMZ(_currentCardNum){
+        function drawNUMZ(_currentCardNum, _selectedBITZ){
             
-            let itemNUM = "00"+_currentCardNum;
             
-            var newLayer = addNewLayer(layers);
+            var newLayer = addNewLayer(layers); //TODO rename "layers" to canvas_setz
             newLayerContext = newLayer.getContext("2d");
             newLayerContext.fillStyle = "#333333";
             newLayerContext.font = "bold 14pt calibri";
@@ -376,13 +401,14 @@ function drawIMGZ(_currentCardNum, BITZSET){
             // ctx.textBaseline = "top";
             // ctx.textAlign = "left";
             // ctx.fillText("1 of 1", 40, 74);
-        
+            
             newLayer = addNewLayer(layers);
             newLayerContext = newLayer.getContext("2d");
             newLayerContext.font="33pt impact";
             newLayerContext.shadowColor="yellow";
             newLayerContext.shadowBlur=6;
             newLayerContext.lineWidth=4;
+            let itemNUM = "00"+_currentCardNum;
             newLayerContext.strokeText(itemNUM,92,66);
             newLayerContext.textAlign = "left";
             newLayerContext.shadowBlur=0;
@@ -427,26 +453,70 @@ function drawIMGZ(_currentCardNum, BITZSET){
             newLayerContext.fillStyle="steelblue";
             newLayerContext.fillText("spazeFalcon",964,968);
 
-
-        
+            //-----------DYNAMIC----TXTs---------------------------
+            let nameLBL = '', subLBL1 = '', subLBL2 = '', subMSG1='', rareMSG='', fNAME='', metaNODE=null;
+            if(METANET && _selectedBITZ ){
+                for(var i=0; i< _selectedBITZ.length; i++){
+                    fNAME = _selectedBITZ[i].name; //METANET fname lookup-.
+                    metaNODE = METANET[fNAME]; //look up data by fNAME, (file-name) to show data-.
+                    if(!metaNODE){continue} //Each BIT can influence any TXT system-.
+                    if(metaNODE.nameLBL){ nameLBL = metaNODE.nameLBL } 
+                    if(metaNODE.subLBL1){ subLBL1 = metaNODE.subLBL1 }
+                    if(metaNODE.subLBL2){ subLBL2 = metaNODE.subLBL2 }
+                    if(metaNODE.subMSG1){ subMSG1 = metaNODE.subMSG1 }
+                    if(metaNODE.rareMSG){ rareMSG = metaNODE.rareMSG }
+                }
+            }
+            //-----------DYNAMIC----TXTs---------------------------
+            //NAME LBL -  let nameLBL = "OrbyOrbot";
             newLayer = addNewLayer(layers);
             newLayerContext = newLayer.getContext("2d");
             newLayerContext.font="32pt Verdana";
             newLayerContext.shadowColor="skyblue";
             newLayerContext.textBaseline = "bottom";
             newLayerContext.textAlign = "center";
-            // newLayerContext.textAlign = "right";
             newLayerContext.shadowBlur=6;
             newLayerContext.lineWidth=4;
             newLayerContext.fillStyle = "skyblue";
-            newLayerContext.strokeText("OrbyOrbot",500,951);
+            newLayerContext.strokeText(`${nameLBL}`,500,901);
             newLayerContext.shadowBlur=4;
             newLayerContext.fillStyle="steelblue";
-            newLayerContext.fillText("OrbyOrbot",499,950);
+            newLayerContext.fillText(`${nameLBL}`,499,900);
+
+            //SUB LBL1 -  let subLBL1 = "GODRAYS"; //COSMOBLAST //BLASTABLACKHOLE
+            newLayer = addNewLayer(layers);
+            newLayerContext = newLayer.getContext("2d");
+            newLayerContext.font="italic 22pt Verdana";
+            newLayerContext.shadowColor="skyblue";
+            newLayerContext.textBaseline = "bottom";
+            newLayerContext.textAlign = "center";
+            newLayerContext.shadowBlur=6;
+            newLayerContext.lineWidth=4;
+            newLayerContext.fillStyle = "skyblue";
+            // let subLBL1 = "cozmoblast";// _BITZSET[_currentCardNum+1].layerDetail1;
+            newLayerContext.strokeText(`${subLBL1}`,350,939);
+            newLayerContext.shadowBlur=2;
+            newLayerContext.fillStyle="steelblue";
+            newLayerContext.fillText(`${subLBL1}`,349,938);
+
+            newLayer = addNewLayer(layers);
+            newLayerContext = newLayer.getContext("2d");
+            newLayerContext.font="italic 22pt Verdana";
+            newLayerContext.shadowColor="skyblue";
+            newLayerContext.textBaseline = "bottom";
+            newLayerContext.textAlign = "center";
+            newLayerContext.shadowBlur=6;
+            newLayerContext.lineWidth=4;
+            newLayerContext.fillStyle = "skyblue";
+            // let subLBL2 = "mountain range";// _BITZSET[_currentCardNum+1].layerDetail2;
+            newLayerContext.strokeText(`${subLBL2}`,630,939);
+            newLayerContext.shadowBlur=2;
+            newLayerContext.fillStyle="steelblue";
+            newLayerContext.fillText(`${subLBL2}`,629,938); 
 
 
         }
-        drawNUMZ(_currentCardNum);
+        drawNUMZ(_currentCardNum, selectedBITZ);
         
         drawImage(mainCanvasContext, layers);
         

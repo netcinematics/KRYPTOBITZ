@@ -3,14 +3,19 @@ const dir = __dirname; //C:\PROJECTS\VSCODE_PROJECTS\KRYPTOBITZ
 const width = 1000;
 const height = 1000;
 const editionNum = 2; //number of sets to run
-const totalCARDZ = 2;
+const totalCARDZ = 3;
 
 
 // getIMGFILES to array - each is variation
 const getBITZ = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
     return fs.readdirSync(path) //Load-ALL-IMGS, from DYNO PATH.
     .filter((item)=>{
-        return !/(^|\/)\.[^\/\.]/g.test(item)
+        if(item.indexOf('.png') || item.indexOf('.jpg') || item.indexOf('.svg') ){
+            return !/(^|\/)\.[^\/\.]/g.test(item)
+        } 
+        return [];
+
+        // return !/(^|\/)\.[^\/\.]/g.test(item)
     })
     .map((i,index)=>{ //Initial File 
         return {
@@ -27,7 +32,10 @@ const getBITZ = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT
 const getElements = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
     return fs.readdirSync(path) //Load-ALL-IMGS, from DYNO PATH.
     .filter((item)=>{
-        return !/(^|\/)\.[^\/\.]/g.test(item)
+        if(item.indexOf('.png') || item.indexOf('.jpg') || item.indexOf('.svg') ){
+            return !/(^|\/)\.[^\/\.]/g.test(item)
+        } 
+        return [];
     })
     .map((i,index)=>{
         return {
@@ -99,6 +107,39 @@ const BITZSET = [  //LAYERS of VARIANT BITZ, in BITZSETS, chosen at random for v
     },
 
 ]
+
+const METANET = { //maps to the (dynamic) file names - to allow a METADATA (net) through dynamically.
+//    "hero1a":{nameLBL:"", subLBL1:"", subLBL2:""}  <--LEGEND-.
+   "hero1a":{nameLBL:"OrbyOrbot"}, //TODO by MODE-STORY, TXT card can be added here. _story
+   "hero2a":{nameLBL:"MaxzaDratz"}, //TODO tm placements here too
+   "hero3a":{nameLBL:"LukkeeDargon"},
+   "hero4a":{nameLBL:"KriminalZawd"},
+   "hero4b":{nameLBL:"Zawd Sees!", useOnce:1},
+   "hero5a":{nameLBL:"DarkoBot"},
+   "hero5b":{nameLBL:"DarkoBot Meta"},
+   "hero5c":{nameLBL:"DarkoBot Ghost", useOnce:1},
+   "hero6a":{nameLBL:"ZapBotz"},
+   "hero6b":{nameLBL:"ZapBotz Meta"},
+   "sky1a":{subLBL1:"HighNoonMoon"},
+   "sky1b":{subLBL1:"Moonrise"},
+   "sky1c":{subLBL1:"Moonset"},
+   "sky2a":{subLBL1:"GodRayRise"},
+   "sky2b":{subLBL1:"GodRayNoon"},
+   "sky2c":{subLBL1:"GodRaySets"},
+   "sky3a":{subLBL1:"CozmoBlast"},
+   "sky3b":{subLBL1:"CozmoBlastBlackHole"},
+   "sky4a":{subLBL1:"LonelyPlanet"},
+   "sky4b":{subLBL1:"SunAndMoon"},
+   "bg1a":{subLBL2:"DesertNight"},
+   "bg1b":{subLBL2:"DesertDay"},
+   "bg2a":{subLBL2:"Desolation"},
+   "bg2b":{subLBL2:"DesolateNight"},
+   "bg2c":{subLBL2:"NightRoad"},
+   "bg2d":{subLBL2:"DarkRoad"},
+   "bg3a":{subLBL2:"GreyMountains"},
+   "bg3b":{subLBL2:"MountainRange"},
+
+}
 
 //KRYPTOSCOPE - many images and text creating random scenes... telling a dimensional variation story.
 //sometimes need to resize or position layers to match canvas, 1k, 1k.
@@ -188,4 +229,4 @@ const layers = [
 //     rarity: 'addRarity(i)'
 //   },
 
-module.exports = {layers, width, height, editionNum, BITZSET, totalCARDZ}
+module.exports = {layers, width, height, editionNum, BITZSET, totalCARDZ, METANET}
