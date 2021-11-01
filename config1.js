@@ -5,10 +5,9 @@ const height = 1000;
 const editionNum = 2; //number of sets to run
 const totalCARDZ = 3;
 
-
 // getIMGFILES to array - each is variation
 const getBITZ = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
-    return fs.readdirSync(path) //Load-ALL-IMGS, from DYNO PATH.
+    return fs.readdirSync(path) //Load-ALL-IMGS, from DYNO IMAGE PATH.
     .filter((item)=>{
         if(item.indexOf('.png') || item.indexOf('.jpg') || item.indexOf('.svg') ){
             return !/(^|\/)\.[^\/\.]/g.test(item)
@@ -17,12 +16,14 @@ const getBITZ = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT
 
         // return !/(^|\/)\.[^\/\.]/g.test(item)
     })
-    .map((i,index)=>{ //Initial File 
+    .map((txt,i)=>{ //Initial File 
+
+
         return {
-            id:index+1,
-            name:cleanName(i),
-            fileName:i,
-            rarity:addRarity(i)
+            id:i+1,
+            name:cleanName(txt),
+            fileName:txt,
+            rarity:addRarity(txt)
         }
     })
 }
@@ -141,6 +142,18 @@ const METANET = { //maps to the (dynamic) file names - to allow a METADATA (net)
 
 }
 
+
+let RARITYNET = {}, bitLayerz = []; //FOR EACH of the BITZSETS BITZ length. Init blank grid.
+for(let i=0; i<BITZSET.length;i++){ //layerz
+    bitLayerz = BITZSET[i].BITZ; //total variations, from FILE read-.
+    for(let j=0; j<bitLayerz.length ;j++){ //for each variation INIT RARITY MAP-.
+        RARITYNET[ `${i+1}:${j+1}` ] = {count:0} //init all BIT-SEGMENT variations-.
+    }
+    
+}
+
+
+
 //KRYPTOSCOPE - many images and text creating random scenes... telling a dimensional variation story.
 //sometimes need to resize or position layers to match canvas, 1k, 1k.
 const layers = [
@@ -229,4 +242,4 @@ const layers = [
 //     rarity: 'addRarity(i)'
 //   },
 
-module.exports = {layers, width, height, editionNum, BITZSET, totalCARDZ, METANET}
+module.exports = {layers, width, height, editionNum, BITZSET, totalCARDZ, METANET, RARITYNET}

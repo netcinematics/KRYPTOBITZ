@@ -2,12 +2,13 @@ console.log('KRYPTOBITZ - Server on.')
 const fs = require("fs");
 const myArgs = process.argv.slice(2); //CMD LINE args. Split by space into Array;
 const { createCanvas, loadImage} = require("canvas");
-const {layers, width, height, editionNum, BITZSET, totalCARDZ, METANET} = require('./config1.js')
+const {layers, width, height, editionNum, BITZSET, totalCARDZ, METANET, RARITYNET} = require('./config1.js')
 
 const canvas = createCanvas(width,height)
 const ctx = canvas.getContext("2d")
 
-let dateStamp = `00000${Date.now()}`;
+let DSTAMP = `00${Date.now()}`;
+let uniqueDNA = {}; //TODO read/write to file-.
 const rootPATH = __dirname; //C:\PROJECTS\VSCODE_PROJECTS\KRYPTOBITZ
 const edition = (editionNum) ? editionNum : 1; ; //ARG, number of sets of krypto BITZ
 // totalCARDZ = (totalCARDZ) ? totalCARDZ : 1; ; //ARG, number of sets of krypto BITZ
@@ -57,7 +58,7 @@ const addAttributes = (_element, _layer) => { //populate metadata values
     decodedHash.push({[_layer.id]: _element.id}) //how to decode, 1 array to join
 }
 
-//Random Layer, render inside image ctx.
+//Random Layer, render inside image ctx. //TODO remove?
 function drawLayer(_layer, _edition){ //Add RANDOMNESS-.
     let element = _layer.elements[ Math.floor(Math.random() * _layer.elements.length)     ] //RANDOM PICK a BITSET
     // addMetadata(element, _layer);
@@ -309,38 +310,96 @@ function drawIMGZ(_currentCardNum, _BITZSET){
     const cp = loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
     const tm = loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
 
-
+  
    //Calclulate which images get in, an array of IMG-PATHS
    let selectedBITZ = [], randomBIT = null;
    for( let i = 0; i<_BITZSET.length;i++){
        randomBIT = _BITZSET[i].BITZ[ Math.floor(Math.random() * _BITZSET[i].BITZ.length)     ] //RANDOM PICK a BITSET
-       console.log("SELECTED-BIT", randomBIT)
+    //    console.log("SELECTED-BIT", randomBIT)
        randomBIT.PATH = _BITZSET[i].PATH;
        selectedBITZ.push(randomBIT)
    }
+
+   //Build DNA for uniqueDNA checker, and also add count of BIT SEGMENTS to RARITYNET-.
+   let bitSegment = null, bitDNA = '';
+   for(let i = 0; i<selectedBITZ.length;i++){
+        bitSegment = `${i+1}:${selectedBITZ[i].id}`;
+        bitDNA += `${bitSegment}${(i+1===selectedBITZ.length)?'':'.'}`
+        //SAVE SEGMENT-COUNT METADATA for RARITY Analytics-.
+        if(RARITYNET[bitSegment]){ //FOUND: add COUNT-.
+            RARITYNET[bitSegment].count += 1;
+        } else { debugger; console.log("SHOULD NEVER HAPPEN.","INIT SYSTEM is missing variations")
+            RARITYNET[bitSegment] = {count:1};
+        }
+    }
+
+    //IF selectedBITZ are UNIQUE
+    if(bitDNA && !uniqueDNA[bitDNA]){ //CONFIRMED UNIQUE-.
+        uniqueDNA[bitDNA] = {bitz:selectedBITZ};  //FOR UNIQUENESS DIAGNOSTICS-.
+    } else { console.log('DUPLICATE DETECTED:',bitDNA, "iteration", _currentCardNum); 
+        //Change hero and check again
+    }
+
+//**********************************DISPLAY*****************
+
+
+
+   //Calculate RARITYNET - update only each selected BITZ.
+//    let bitKEYS = Object.keys(uniqueDNA), bitKEY='';
+//    for(let i=0; i<bitKEYS.length;i++){ //COUNT EACH OF TYPE, for SUB SCORE, and total SCORE.
+//         bitKEY = bitKEYS[i];
+//         bitSPLIT = bitKEY.split(".");
+//         bitSPLIT.pop(); //remove end split-.
+//         for(let j=0; j<bitSPLIT.length;j++){
+//             if(RARITYNET[bitSPLIT[j]]){ //FOUND: add COUNT-.
+//                 RARITYNET[bitSPLIT[j]].count += 1;
+//             } else { //NEW: start COUNT-.
+//                 RARITYNET[bitSPLIT[j]] = {count:1};
+//             }
+//         }
+//    }
+   //COUNT of USE compared to RUN COUNT - gives precise ratio. 
+//    let rarityKEYS = Object.keys(RARITYNET);
+//    for(let i=0; i<rarityKEYS.length;i++ ){
+//      RARITYNET[rarityKEYS[i]].ratio = parseFloat(Number(RARITYNET[rarityKEYS[i]].count/totalCARDZ.toFixed(2)));
+//    }
+//    debugger;
+//    //Compile SET RATIOs back to Rarity MetaData, and calculate AVG RARITY SCORE. 
+//    let rarityRatio = 0; //TODO this needs to be AFTER FULL UNIQUE SET.
+//    for(let i=0; i<bitKEYS.length; i++){
+//         bitKEY = bitKEYS[i];
+//         bitSPLIT = bitKEY.split(".");
+//         bitSPLIT.pop(); //remove end split-.
+//         for(let j=0; j< bitSPLIT.length; j++){ //WRITE EACH SUB RATIO-.
+//             rarityRatio += parseFloat(RARITYNET[bitSPLIT[j]].ratio.toFixed(2));
+//             uniqueDNA[bitKEY][bitSPLIT[j]] = RARITYNET[bitSPLIT[j]].ratio;
+//         }
+//         uniqueDNA[bitKEY].avgRarityRatio = rarityRatio / bitSPLIT.length;
+//     }
+//    //IF DNA equals runOnce is gold, or DNA match is slvr
+//    //IF DNA equals _slvr or _gld, change frame
+
 //    selectedBITZ = updateBITZSETMetaData(selectedBITZ);
    //LOAD IMG-PATHS into array of PROMISE OBJECTS, for IMG LOADING
    promisedBITZ = [];
    for( let i = 0; i<selectedBITZ.length;i++){
         let selectedBIT = selectedBITZ[i];
-        console.log("IMGPATH:",selectedBIT);
+        // console.log("IMGPATH:",selectedBIT);
         let imgPromise = loadImage(`${selectedBIT.PATH}${selectedBIT.fileName}`)
         // let imgPromise = loadImage(`${rootPATH}\\assets_set1\\starz\\sky1a.png`)
         promisedBITZ.push( imgPromise )
    }
-   console.log("CHOZEN-BITZ",promisedBITZ)
+
+ 
+
+
+
+
+//    console.log("CHOZEN-BITZ",promisedBITZ)
    //LOAD IMGs, called by Promise. When all selected images load, then BUILD.
    Promise.all(promisedBITZ) //waits for all IMGZ to load before rendering.
    .then( (imageSet) => { // .all([ logo, cp, tm, sky1,bg1,hero1 ])
-        console.log('BITZ-LOADED',imageSet)
-
-        //RE-UNITE the IMG with its METADATA.
-        // if(imageSet.length===selectedBITZ.length){
-
-        //     for(var i = 0; i<selectedBITZ.length;i++){//put the img with the metadata
-                
-        //     }
-        // }
+        // console.log('BITZ-LOADED',imageSet)
 
 
         var newLayer = addNewLayer(layers);
@@ -358,7 +417,7 @@ function drawIMGZ(_currentCardNum, _BITZSET){
         }
 
 
-   });
+   }).catch( (e) => {console.log(e)});
 //    let element = _layer.elements[ Math.floor(Math.random() * _layer.elements.length)     ] //RANDOM PICK a BITSET
 //    let selectedBIT = BITZSET.BITZ[ Math.floor(Math.random() * BITZSET.BITZ.length)     ] //RANDOM PICK a BITSET
 //   console.log("SELECTED BIT", selectedBIT)
@@ -383,7 +442,7 @@ function drawIMGZ(_currentCardNum, _BITZSET){
 
         newLayerContext.drawImage(data[0],30, 22, 55, 55)
         newLayerContext.drawImage(data[1],26, 940, 32, 32)
-        newLayerContext.drawImage(data[2],958, 50, 32, 32)
+        newLayerContext.drawImage(data[2],948, 50, 32, 32)
 
         
         function drawNUMZ(_currentCardNum, _selectedBITZ){
@@ -396,11 +455,6 @@ function drawIMGZ(_currentCardNum, _BITZSET){
             newLayerContext.textBaseline = "top";
             newLayerContext.textAlign = "left";
             newLayerContext.fillText("1 of 1", 36, 74);
-            // ctx.fillStyle = "#333333";
-            // ctx.font = "bold 12pt calibri";
-            // ctx.textBaseline = "top";
-            // ctx.textAlign = "left";
-            // ctx.fillText("1 of 1", 40, 74);
             
             newLayer = addNewLayer(layers);
             newLayerContext = newLayer.getContext("2d");
@@ -422,7 +476,7 @@ function drawIMGZ(_currentCardNum, _BITZSET){
             newLayerContext.textBaseline = "top";
             newLayerContext.textAlign = "right";
             newLayerContext.shadowColor="black";
-            newLayerContext.fillText("KRYPTOBITZ", 955, 28);
+            newLayerContext.fillText("KRYPTOBITZ", 945, 28);
 
 
             newLayer = addNewLayer(layers);
@@ -514,6 +568,24 @@ function drawIMGZ(_currentCardNum, _BITZSET){
             newLayerContext.fillStyle="steelblue";
             newLayerContext.fillText(`${subLBL2}`,629,938); 
 
+            //DYNAMIC SET #DATESTAMP  _NUMBER RAN.
+            var newLayer = addNewLayer(layers);
+            newLayerContext = newLayer.getContext("2d");
+            newLayerContext.fillStyle = "#333333";
+            newLayerContext.font = "10pt calibri";
+            newLayerContext.textBaseline = "top";
+            newLayerContext.textAlign = "right";
+            newLayerContext.fillText(`set ${DSTAMP}`, 930, 60);
+
+            var newLayer = addNewLayer(layers);
+            newLayerContext = newLayer.getContext("2d");
+            newLayerContext.fillStyle = "#333333";
+            newLayerContext.font = "10pt calibri";
+            newLayerContext.textBaseline = "top";
+            newLayerContext.textAlign = "right";
+            newLayerContext.fillText(`run ${totalCARDZ}`, 961, 60);
+
+
 
         }
         drawNUMZ(_currentCardNum, selectedBITZ);
@@ -530,10 +602,10 @@ function drawIMGZ(_currentCardNum, _BITZSET){
     });
 }
 // drawIMGZ();
-
+ //todo rename totalcardz to totalNIFTYZ
 for(let i = 1; i <= totalCARDZ; i++){
     // let bitz = BITZSET[i]; //layers dimension
-    drawIMGZ(i,BITZSET)
+    drawIMGZ(i,BITZSET) //todo rename function to... paintNIFTY
     // BITZSET.forEach((bitz)=>{  //LOOP NUMBER OF (bitz) sky, bg, char, frame, ...
     //     // drawLayer(layer, i);
     //     drawIMGZ(bitz,i)
@@ -542,11 +614,45 @@ for(let i = 1; i <= totalCARDZ; i++){
 
 }
 
+//CALCULATE INDIVIDUAL IMAGE RARITY, by average of SEGMENT/SELECTION rarity.
+
+
+   //**************ORIGINALITY************RARITY****************
+   //ALL CARDZ are SELECTED. BEFORE RENDER, CALCULATE RARITY-.
+   let rarityKEYS = Object.keys(RARITYNET);
+   for(let i=0; i<rarityKEYS.length;i++ ){ //calculate rarity ratio for SEGMENTS-.
+       if(!RARITYNET[rarityKEYS[i]].count){continue} //skip zero-.
+       RARITYNET[rarityKEYS[i]].ratio = parseFloat(Number(RARITYNET[rarityKEYS[i]].count/totalCARDZ).toFixed(2));
+       console.log("SEG-RATES:",rarityKEYS[i],RARITYNET[rarityKEYS[i]].ratio )
+   }
+   
+
+//    uniqueDNA[bitDNA] = {bitz:selectedBITZ};
+
+   let uniqueNIFTYs = Object.keys(uniqueDNA), aNIFTY='', NIFTYRARITYRATIO=0;
+   for(let i=0; i<uniqueNIFTYs.length;i++){ //COUNT EACH OF TYPE, for SUB SCORE, and total SCORE.
+        NIFTYRARITYRATIO = 0;
+        aNIFTY = uniqueDNA[ uniqueNIFTYs[i] ] //to update UNIQUEDNA
+        bitKEY = uniqueNIFTYs[i];
+        bitSPLIT = bitKEY.split(".");
+        for(let j=0; j<bitSPLIT.length;j++){ //lookup rarity in rarity net
+            if(aNIFTY && !aNIFTY.rarity){ aNIFTY.rarity = {};}
+            aNIFTY.rarity[bitSPLIT[j]] = RARITYNET[bitSPLIT[j]];//update UNIQUE DNA 
+            NIFTYRARITYRATIO += RARITYNET[bitSPLIT[j]].ratio;
+        }
+        aNIFTY.rarity.NFTRARITYRATIO = Number(NIFTYRARITYRATIO / bitSPLIT.length).toFixed(2);
+        console.log("NFT-RARITY:",bitKEY, aNIFTY.rarity.NFTRARITYRATIO)
+        //for 2 images 0 shared: 0.5, 1 shared: 0.625, 2 shared: 0.75
+   }
+
+
+   //TODO: write uniqueDNA to .json file to generate total unique sets.
+   
+
 
 
 
 return
-debugger;
 
         // const logo = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
         // const cp = await loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)

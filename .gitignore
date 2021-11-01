@@ -3,7 +3,9 @@ asset*
 output*
 *bak*
 *.xcf
-
+GIMPZ
+*PreDn*
+*Dns*
 
 # Logs
 logs
