@@ -328,16 +328,84 @@ function drawIMGZ(_currentCardNum, _BITZSET){
         //SAVE SEGMENT-COUNT METADATA for RARITY Analytics-.
         if(RARITYNET[bitSegment]){ //FOUND: add COUNT-.
             RARITYNET[bitSegment].count += 1;
-        } else { debugger; console.log("SHOULD NEVER HAPPEN.","INIT SYSTEM is missing variations")
+        } else { debugger; console.log("SHOULD NEVER HAPPEN.","INIT SYSTEM covers all variations")
             RARITYNET[bitSegment] = {count:1};
         }
     }
-
+    //********************************************TEST DUPES
+    // let dupe = {}, rKeyz = Object.keys(uniqueDNA);
+    // if(rKeyz.length){
+    //     dupe = rKeyz[0];
+    //     bitDNA = dupe; //TEST DUPE OVERRIDE-.
+    // }
+    //********************************************TEST DUPES
     //IF selectedBITZ are UNIQUE
     if(bitDNA && !uniqueDNA[bitDNA]){ //CONFIRMED UNIQUE-.
         uniqueDNA[bitDNA] = {bitz:selectedBITZ};  //FOR UNIQUENESS DIAGNOSTICS-.
-    } else { console.log('DUPLICATE DETECTED:',bitDNA, "iteration", _currentCardNum); 
-        //Change hero and check again
+    } else { console.log('DUPLICATE DETECTED:', bitDNA, "iteration", _currentCardNum); 
+        return;
+        //SEARCH for most rare, in RARITYNET, and replace dupe, in selectedBITZ.
+        let rarityKEYS = Object.keys(RARITYNET), replaceAttempt=1, oldSEGS=bitDNA.split('.');
+        let oldSEG="", newSEG="", currSEG="", currLVL=0, newDNA="";
+        for(let i=0; i<rarityKEYS.length;i++ ){ //find 0 count for all layers.
+            currSEG = rarityKEYS[i];
+            // currSEG = currKEY.split(".")[replaceAttempt-1]
+            currLVL = parseInt(currSEG.split(":")[0]);
+            oldSEG = oldSEGS[replaceAttempt-1]; 
+            console.log('OLDSEG:',oldSEG)
+            if(!oldSEG){debugger;}
+            if(currLVL > replaceAttempt){ //all full, none found
+                newDNA += oldSEGS[replaceAttempt-1]
+                replaceAttempt=currLVL; console.log("FULLSET",currLVL) }
+            if(replaceAttempt > currLVL  ){
+                continue; //already replaced this level.
+            } else if(RARITYNET[currSEG].count===0){ 
+                console.log('DUPE-REPLACE:', oldSEG,'with', currSEG)
+                let atEND = (currLVL>=oldSEGS.length);
+                newDNA += `${currSEG}${(!atEND)?'.':''}` //build up DNA name, with new 0 segs, if available-.
+
+                // newSEG = RARITYNET[currSEG];
+                if(RARITYNET[oldSEG].count===0){debugger;}
+                RARITYNET[currSEG].count += 1; //increase count in NEW unique dna
+                RARITYNET[oldSEG].count -=1;
+                // RARITYNET[currSEG]
+                //decrease count in OLD unique dna
+                replaceAttempt++;//Try to collect 2 layers of count 0, to change
+
+                if(atEND){
+                    console.log('NEWDNA',newDNA);
+                    break;
+                }
+
+            } 
+            
+            //else if(replaceAttempt >= 5){continue}
+
+        }
+        //COMBINE new UNIQUE KEY into uniqueDNA-.
+        uniqueDNA[newDNA] = {bitz:[]};
+        //GETBITZ for new DNA.
+        // selectedBITZ = [];
+        let newBITZ = newDNA.split('.'), bitTGT='', bitLVL=0, bitID='', newBIT={};
+        for( let i = 0; i<newBITZ.length;i++){
+            bitTGT = newBITZ[i];
+            bitLVL = parseInt(bitTGT.split(':')[0])
+            bitID = parseInt(bitTGT.split(':')[1])
+            console.log("FINDBITZ:",bitTGT)
+            newBIT = BITZSET[bitLVL-1].BITZ[bitID-1];
+            uniqueDNA[newDNA].bitz.push(newBIT)
+            // selectedBITZ.push(BITZSET[bitLVL-1])
+        }
+    //     for( let i = 0; i<selectedBITZ.length;i++){
+    //         let selectedBIT = selectedBITZ[i];
+    //         // console.log("IMGPATH:",selectedBIT);
+    //         let imgPromise = loadImage(`${selectedBIT.PATH}${selectedBIT.fileName}`)
+    //         // let imgPromise = loadImage(`${rootPATH}\\assets_set1\\starz\\sky1a.png`)
+    //         promisedBITZ.push( imgPromise )
+    //    }
+
+
+
     }
 
 //**********************************DISPLAY*****************
@@ -381,7 +449,7 @@ function drawIMGZ(_currentCardNum, _BITZSET){
 
 //    selectedBITZ = updateBITZSETMetaData(selectedBITZ);
    //LOAD IMG-PATHS into array of PROMISE OBJECTS, for IMG LOADING
-   promisedBITZ = [];
+   let promisedBITZ = [];
    for( let i = 0; i<selectedBITZ.length;i++){
         let selectedBIT = selectedBITZ[i];
         // console.log("IMGPATH:",selectedBIT);
@@ -593,7 +661,7 @@ function drawIMGZ(_currentCardNum, _BITZSET){
         drawImage(mainCanvasContext, layers);
         
         //edition = 1;
-        
+     
         const outputPATH = "./output1"
         fs.writeFileSync(`${outputPATH}/TESTIMG${_currentCardNum}.png`,canvas.toBuffer("image/png"))
         // fs.writeFileSync(`${outputPATH}/TESTIMG${edition}.png`,canvas.toBuffer("image/png"))
@@ -624,6 +692,7 @@ for(let i = 1; i <= totalCARDZ; i++){
        if(!RARITYNET[rarityKEYS[i]].count){continue} //skip zero-.
        RARITYNET[rarityKEYS[i]].ratio = parseFloat(Number(RARITYNET[rarityKEYS[i]].count/totalCARDZ).toFixed(2));
        console.log("SEG-RATES:",rarityKEYS[i],RARITYNET[rarityKEYS[i]].ratio )
+       if(RARITYNET[rarityKEYS[i]].ratio < 0){debugger;}
    }
    
 
@@ -640,8 +709,11 @@ for(let i = 1; i <= totalCARDZ; i++){
             aNIFTY.rarity[bitSPLIT[j]] = RARITYNET[bitSPLIT[j]];//update UNIQUE DNA 
             NIFTYRARITYRATIO += RARITYNET[bitSPLIT[j]].ratio;
         }
-        aNIFTY.rarity.NFTRARITYRATIO = Number(NIFTYRARITYRATIO / bitSPLIT.length).toFixed(2);
+        if(!NIFTYRARITYRATIO){debugger;}
+       
+        aNIFTY.rarity.NFTRARITYRATIO = parseFloat(Number(NIFTYRARITYRATIO / bitSPLIT.length).toFixed(2));
         console.log("NFT-RARITY:",bitKEY, aNIFTY.rarity.NFTRARITYRATIO)
+        if(aNIFTY.rarity.NFTRARITYRATIO===NaN){debugger;}
         //for 2 images 0 shared: 0.5, 1 shared: 0.625, 2 shared: 0.75
    }
 
