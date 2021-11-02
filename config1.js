@@ -2,8 +2,8 @@ const fs = require("fs");
 const dir = __dirname; //C:\PROJECTS\VSCODE_PROJECTS\KRYPTOBITZ
 const width = 1000;
 const height = 1000;
-const editionNum = 2; //number of sets to run
-const totalCARDZ = 44;
+// const editionNum = 2; //number of sets to run
+const totalCARDZ = 3;
 
 // getIMGFILES to array - each is variation
 const getBITZ = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
@@ -23,52 +23,52 @@ const getBITZ = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT
             id:i+1,
             name:cleanName(txt),
             fileName:txt,
-            rarity:addRarity(txt)
+            //rarity:addRarity(txt)
         }
     })
 }
 
 
 //Rename to getIMGFILES to array - each is variation
-const getElements = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
-    return fs.readdirSync(path) //Load-ALL-IMGS, from DYNO PATH.
-    .filter((item)=>{
-        if(item.indexOf('.png') || item.indexOf('.jpg') || item.indexOf('.svg') ){
-            return !/(^|\/)\.[^\/\.]/g.test(item)
-        } 
-        return [];
-    })
-    .map((i,index)=>{
-        return {
-            id:index+1,
-            name:cleanName(i),
-            fileName:i,
-            rarity:addRarity(i)
-        }
-    })
-}
+// const getElements = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
+//     return fs.readdirSync(path) //Load-ALL-IMGS, from DYNO PATH.
+//     .filter((item)=>{
+//         if(item.indexOf('.png') || item.indexOf('.jpg') || item.indexOf('.svg') ){
+//             return !/(^|\/)\.[^\/\.]/g.test(item)
+//         } 
+//         return [];
+//     })
+//     .map((i,index)=>{
+//         return {
+//             id:index+1,
+//             name:cleanName(i),
+//             fileName:i,
+//             rarity:addRarity(i)
+//         }
+//     })
+// }
 
-const rarity = [
-    { key:"", val:"original"},
-    { key:"_r", val:"rare"},
-    { key:"_sr", val:"super rare"},
-]
+// const rarity = [
+//     { key:"", val:"original"},
+//     { key:"_r", val:"rare"},
+//     { key:"_sr", val:"super rare"},
+// ]
 
-const addRarity = (_str)=>{
-    let itemRarity;
-    rarity.forEach((r) => { //if "" or "_r" or "_sr" in file name.
-        if(_str.includes(r.key)) {
-            itemRarity = r.val;
-        }
-    });
-    return itemRarity;
-}
+// const addRarity = (_str)=>{
+//     let itemRarity;
+//     rarity.forEach((r) => { //if "" or "_r" or "_sr" in file name.
+//         if(_str.includes(r.key)) {
+//             itemRarity = r.val;
+//         }
+//     });
+//     return itemRarity;
+// }
 
 const cleanName = (_str) => {    //converts image file name to text string
     let name = _str.slice(0, -4);
-    rarity.forEach((r)=>{
-        name = name.replace(r.key,"");
-    });
+    // rarity.forEach((r)=>{
+    //     name = name.replace(r.key,"");
+    // });
     return name;
 }
 
@@ -142,61 +142,61 @@ const METANET = { //maps to the (dynamic) file names - to allow a METADATA (net)
 
 }
 
-
-let RARITYNET = {}, bitLayerz = []; //FOR EACH of the BITZSETS BITZ length. Init blank grid.
-for(let i=0; i<BITZSET.length;i++){ //layerz
-    bitLayerz = BITZSET[i].BITZ; //total variations, from FILE read-.
-    for(let j=0; j<bitLayerz.length ;j++){ //for each variation INIT RARITY MAP-.
-        RARITYNET[ `${i+1}:${j+1}` ] = {count:0} //init all BIT-SEGMENT variations-.
+let RARITYNET = {}
+function initRARITYNET(){
+    RARITYNET = {}, bitLayerz = []; //FOR EACH of the BITZSETS BITZ length. Init blank grid in RARITYNET.
+    for(let i=0; i<BITZSET.length;i++){ //layerz
+        bitLayerz = BITZSET[i].BITZ; //total variations, from FILE read-.
+        for(let j=0; j<bitLayerz.length ;j++){ //for each variation INIT RARITY MAP-.
+            RARITYNET[ `${i+1}:${j+1}` ] = {count:0} //init all BIT-SEGMENT variations-.
+        }
     }
-    
 }
-
-
+initRARITYNET();
 
 //KRYPTOSCOPE - many images and text creating random scenes... telling a dimensional variation story.
 //sometimes need to resize or position layers to match canvas, 1k, 1k.
-const layers = [
-{
-    id:1,
-    name:"layer1 starz",
-    location: `${dir}/assets_set1/starz/`,
-    elements: getElements(`${dir}/assets_set1/starz/`),
-    size: {width:width,height:height},
-    position: {x:0,y:0},
-},
-{
-    id:2,
-    name:"layer2 bgz",
-    location: `${dir}/assets_set1/bgz/`,
-    elements: getElements(`${dir}/assets_set1/bgz/`),
-    size: {width:width,height:height},
-    position: {x:0,y:0},
-},
-{
-    id:3,
-    name:"layer3 char",
-    location: `${dir}/assets_set1/heroz/`,
-    elements: getElements(`${dir}/assets_set1/heroz/`),
-    size: {width:width,height:height},
-    position: {x:0,y:0},
-},
-{
-    id:4,
-    name:"layer4 frame",
-    location: `${dir}/assets_set1/framez/`,
-    elements: getElements(`${dir}/assets_set1/framez/`),
-    size: {width:width,height:height},
-    position: {x:0,y:0},
-},
+// const layers = [
 // {
-//     id:5,
-//     name:"layer5 bg",
-//     location: `${dir}/background/`,
+//     id:1,
+//     name:"layer1 starz",
+//     location: `${dir}/assets_set1/starz/`,
+//     elements: getElements(`${dir}/assets_set1/starz/`),
+//     size: {width:width,height:height},
 //     position: {x:0,y:0},
-//     size: {width:width,height:height}
 // },
-]
+// {
+//     id:2,
+//     name:"layer2 bgz",
+//     location: `${dir}/assets_set1/bgz/`,
+//     elements: getElements(`${dir}/assets_set1/bgz/`),
+//     size: {width:width,height:height},
+//     position: {x:0,y:0},
+// },
+// {
+//     id:3,
+//     name:"layer3 char",
+//     location: `${dir}/assets_set1/heroz/`,
+//     elements: getElements(`${dir}/assets_set1/heroz/`),
+//     size: {width:width,height:height},
+//     position: {x:0,y:0},
+// },
+// {
+//     id:4,
+//     name:"layer4 frame",
+//     location: `${dir}/assets_set1/framez/`,
+//     elements: getElements(`${dir}/assets_set1/framez/`),
+//     size: {width:width,height:height},
+//     position: {x:0,y:0},
+// },
+// // {
+// //     id:5,
+// //     name:"layer5 bg",
+// //     location: `${dir}/background/`,
+// //     position: {x:0,y:0},
+// //     size: {width:width,height:height}
+// // },
+// ]
 
 
 
@@ -222,7 +222,7 @@ const layers = [
 //     size: { width: 1000, height: 1000 }
 //   }
 //EXAMPLE2
- console.log(layers[0].elements); //ELEMENTS are BITZ in BITSETZ
+//  console.log(layers[0].elements); //ELEMENTS are BITZ in BITSETZ
  //Read 1st BIT of BITSET, DYNOBITZ and STATICBITZ. DYNOBITSETS. Are randomly flexed.
  //Run validate BITZ, validated UNIQUE, calculate RANDOMNESS, each BIT has a BITRATE and a BITSCORE
  //SIGNIFICANTLY RARE CARD INSERTION: convert a small set of common cards to _sr
@@ -242,4 +242,5 @@ const layers = [
 //     rarity: 'addRarity(i)'
 //   },
 
-module.exports = {layers, width, height, editionNum, BITZSET, totalCARDZ, METANET, RARITYNET}
+module.exports = {BITZSET, totalCARDZ, METANET, RARITYNET, width, height}
+// module.exports = {layers, width, height, editionNum, BITZSET, totalCARDZ, METANET, RARITYNET}
