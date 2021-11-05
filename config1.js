@@ -5,6 +5,8 @@ const height = 1000;
 // const editionNum = 2; //number of sets to run
 const totalCARDZ = 3;
 
+const IPFS_URI = "ipfs://Qm..."
+
 // getIMGFILES to array - each is variation
 const getBITZ = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
     return fs.readdirSync(path) //Load-ALL-IMGS, from DYNO IMAGE PATH.
