@@ -1,6 +1,64 @@
 console.log('KRYPTOBITZ - Server on.')
 const fs = require("fs");
-const myArgs = process.argv.slice(2); //CMD LINE args. Split by space into Array;
+const rootPATH = __dirname; //C:\PROJECTS\VSCODE_PROJECTS\KRYPTOBITZ
+
+const COMMANDZ = process.argv.slice(2); //CMD LINE args. Split by space into Array;
+if(COMMANDZ[0]==='2'){ //IPFS MODE-.
+    console.log('RUNNING IN IPFS IMAGE UPDATE MODE');
+    console.log('Updating Metadata files with IPFS base URI')
+
+    // ETH metadata 
+    const namePrefix = "KRYPTOBITZ";
+    const description = "NFT Generative Art Project, 2021. HEROZ from KRYPTOSPAZE!";
+    const IPFS_URI = "ipfs://...";
+    const youTubeURL = `https://www.youtube.com/watch?v=M1-hZgIlAkc`
+    const externalURL = `https://netcinematics.github.io/CRYPTOSPAZE/`
+    // "use strict";
+
+    // const path = require("path");
+    // const isLocal = typeof process.pkg === "undefined";
+    // const basePath = isLocal ? process.cwd() : path.dirname(process.execPath);
+    // const { NETWORK } = require(path.join(basePath, "constants/network.js"));
+    // const fs = require("fs");
+    
+    // console.log(path.join(basePath, "/src/config.js"));
+    // const {
+    //   baseUri,
+    //   description,
+    //   namePrefix,
+    //   network,
+    //   solanaMetadata,
+    // } = require(path.join(basePath, "/src/config.js"));
+    debugger;
+    // read json data
+    // let rawdata = fs.readFileSync(`${rootPATH}/output1/json/EXAMPLEmetadata.json`);
+    let rawdata = fs.readFileSync(`${rootPATH}/output1/json/_metadataALL.json`);
+    let data = JSON.parse(rawdata);
+    data.forEach((item) => {  //Update metadata to OpenSea data structure
+        console.log("WINs",item)
+
+        item.name = `${namePrefix} #${item.cardNum}`;
+        item.description = description;
+        item.image = `${IPFS_URI}/${item.cardNum}.png`;
+        item.external_url = externalURL
+        item.youtube_url = youTubeURL
+        fs.writeFileSync(
+            `${rootPATH}/output1/json/${item.cardNum}.json`,
+            JSON.stringify(item, null, 2)
+        );
+    });
+    
+    fs.writeFileSync(
+      `${rootPATH}/output1/json/_metadataALL.json`,
+      JSON.stringify(data, null, 2)
+    );
+
+
+
+    return;
+}
+
+
 const { createCanvas, loadImage} = require("canvas");
 const {BITZSET, totalCARDZ, METANET, RARITYNET, width, height} = require('./config1.js')
 
@@ -8,11 +66,10 @@ const canvas = createCanvas(width,height)
 const ctx = canvas.getContext("2d")
 
 let DSTAMP= new Date();
-console.log("Running:",DSTAMP.getUTCMonth(), DSTAMP.getUTCDate(), DSTAMP.getUTCFullYear(),);
+console.log("Running IMG mode:",DSTAMP.getUTCMonth(), DSTAMP.getUTCDate(), DSTAMP.getUTCFullYear(),);
 // let DSTAMP = `00${Date.now()}`;
 
-let uniqueDNA = {}; //TODO read/write to file-.
-const rootPATH = __dirname; //C:\PROJECTS\VSCODE_PROJECTS\KRYPTOBITZ
+let uniqueDNA = {}; //TODO read/write to file-.  todo rename to 
 // const edition = (editionNum) ? editionNum : 1; ; //ARG, number of sets of krypto BITZ
 // totalCARDZ = (totalCARDZ) ? totalCARDZ : 1; ; //ARG, number of sets of krypto BITZ
 
@@ -28,9 +85,10 @@ const rootPATH = __dirname; //C:\PROJECTS\VSCODE_PROJECTS\KRYPTOBITZ
 function saveLayer(_canvas, _edition){ //WHERE TO SAVE KRYPTOBIT-.
     // fs.writeFileSync("./output1/newImage.png",_canvas.toBuffer("image/png"))
     const outputPATH = "./output1"
+    fs.writeFileSync(`${outputPATH}/images/KBZ1_${_currentCardNum}.png`,_canvas.toBuffer("image/png"))
     // fs.writeFileSync(`${outputPATH}/kbz_${dateStamp+_edition}.png`,_canvas.toBuffer("image/png"))
     // fs.writeFileSync(`${outputPATH}/newImage${_edition}.png`,_canvas.toBuffer("image/png"))
-    fs.writeFileSync(`${outputPATH}/TESTIMG${_edition}.png`,_canvas.toBuffer("image/png"))
+    // fs.writeFileSync(`${outputPATH}/TESTIMG${_edition}.png`,_canvas.toBuffer("image/png"))
     console.log("IMAGE SAVED to  ",outputPATH)
 }
 
@@ -676,12 +734,12 @@ function drawIMGZ(_currentCardNum, _BITZSET){
         
         drawImage(mainCanvasContext, layers);
         
-        //edition = 1;
-     
-        const outputPATH = "./output1"
-        fs.writeFileSync(`${outputPATH}/TESTIMG${_currentCardNum}.png`,canvas.toBuffer("image/png"))
+        const outputPATH = "./output1" //ACTUAL NAME OF THE IMAGES BEING SAVED TO EACH IMAGE FILE.
+        fs.writeFileSync(`${outputPATH}/images/KBZ_${_currentCardNum}_${new Date().toISOString().split(":")[0]}.png`,canvas.toBuffer("image/png"))
+        // fs.writeFileSync(`${outputPATH}/TESTIMG${_currentCardNum}.png`,canvas.toBuffer("image/png"))
         // fs.writeFileSync(`${outputPATH}/TESTIMG${edition}.png`,canvas.toBuffer("image/png"))
         
+        fs.writeFileSync(`${outputPATH}/json/KBZ_${_currentCardNum}_${new Date().toISOString().split(":")[0]}.json`, JSON.stringify(selectedBITZ));
         
     });
     
@@ -744,7 +802,8 @@ for(let i = 1; i <= totalCARDZ; i++){
     // fs.writeFileSync("./output1/HEROZ_METABITZ.json", JSON.stringify(metadata));
    //TODO tokenize TGTFOLDER and SRCFOLDER
     // var stream = fs.createWriteStream(`./output1/HEROZ_METABITZ_${new Date().toISOString().split(":")[0]}.json`, {flags:'a'});
-    var stream = fs.createWriteStream(`./output1/HEROZ_METABITZ_${new Date().toISOString().split(":")[0]}.json`, {flags:'w'});
+    // var stream = fs.createWriteStream(`./output1/HEROZ_METABITZ_${new Date().toISOString().split(":")[0]}.json`, {flags:'w'});
+    var stream = fs.createWriteStream(`./output1/json/KBZ_META_${new Date().toISOString().split(":")[0]}.json`, {flags:'a'});
     console.log("WRITE-METABITZ",new Date().toISOString());
     let STAMPNAME = new Date().toISOString().split(":")[0];
     stream.write(`{"${STAMPNAME}":${JSON.stringify(METABITZ)}`);
@@ -756,7 +815,7 @@ for(let i = 1; i <= totalCARDZ; i++){
 
 
 
-
+console.log("END. IMAGES CREATED.")
 return
 
         // const logo = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
@@ -810,7 +869,7 @@ return;
 
     // fs.readFile("./output1/_metadata.json", (err, data) => {
         // if (err) throw err;
-        fs.writeFileSync("./output1/_metadata.json", JSON.stringify(metadata));
+        fs.writeFileSync("./output1/json/_metadata.json", JSON.stringify(metadata));
     // })
 }
 main();

@@ -3,7 +3,7 @@ const dir = __dirname; //C:\PROJECTS\VSCODE_PROJECTS\KRYPTOBITZ
 const width = 1000;
 const height = 1000;
 // const editionNum = 2; //number of sets to run
-const totalCARDZ = 3;
+const totalCARDZ = 11;
 
 const IPFS_URI = "ipfs://Qm..."
 
