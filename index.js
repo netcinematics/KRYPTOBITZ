@@ -12,6 +12,11 @@ const {BITZSET, TOTAL_CARDZ, METANET, RARITYNET, IDENTITYNET, OS_META_MODEL, wid
 // }
 
 const COMMANDZ = process.argv.slice(2); //CMD LINE args. Split by space into Array;
+/****************************************************\
+ * IPFS update uri - MODE-. 
+ * RUN:  node index 2     
+ * RESULT: replaces the IFPS PATH from CONFIG.
+\****************************************************/
 if(COMMANDZ[0]==='2'){ //IPFS MODE-.
     console.log('RUNNING IN IPFS IMAGE UPDATE MODE');
     console.log('Updating Metadata files with IPFS base URI')
@@ -39,9 +44,10 @@ if(COMMANDZ[0]==='2'){ //IPFS MODE-.
     return;
 }//END IPFS MODE-.
 
-//BUILD-IMG MODE-.
+/****************************************************\
+ * BUILD-IMG - MODE-.
+\****************************************************/
 const { createCanvas, loadImage} = require("canvas");
-
 const canvas = createCanvas(width,height)
 const ctx = canvas.getContext("2d")
 
@@ -53,12 +59,11 @@ console.log("Running IMG mode, creation date:",DSTAMP);
 function main_NIFTYFACTORY(){
     
     //TODO modularize CANVASLAYERZ
-    var mainCanvasContext = ctx; //document.getElementById("myCanvas").getContext("2d");
+    var CANVAS_LAYERZ = ctx; //document.getElementById("myCanvas").getContext("2d");
 
     /* Creates our layer's array */
     var layers = [];  //allows for ctx to write multiple times with clearRect abstracted out.
-//todo rename canvas_layerz
-    function addNewLayer(layers) { //TODO rename addCanvasLayer
+    function addLAYERZ(layers) { 
       /* Creates the layer as a new canvas */
       var layer = createCanvas(width,height)
       var layerContext = layer.getContext("2d");
@@ -74,7 +79,8 @@ function main_NIFTYFACTORY(){
     }
     
     /* Draws each layer on top of the other */
-    function drawImage(canvasContext, layers) { //TODO rename to drawCanvasLayer
+    // function drawImage(canvasContext, layers) { //TODO rename to drawCanvasLayer
+    function paintLAYERZ(canvasContext, layers) { //TODO rename to drawCanvasLayer
       /* Clears the original canvas */
       canvasContext.clearRect(0, 0, 400, 200);
       for(var i = 0; i < layers.length; i++) {
@@ -142,16 +148,16 @@ function drawBITZ(_currentCardNum, _BITZSET){
    Promise.all(promisedBITZ) //waits for all IMGZ to load before rendering.
    .then( (imageSet) => { // .all([ logo, cp, tm, sky1,bg1,hero1 ])
         // console.log('BITZ-LOADED',imageSet)
-        var newLayer = addNewLayer(layers); //todo update addNewLayer to addLAYERZ with layerz
-        var newLayerContext = newLayer.getContext("2d");
+        var newLayerZ = addLAYERZ(layers); 
+        var layerCTX = newLayerZ.getContext("2d");
         //BITZSET in CONFIG populates LAYERBITZ in VIEW.
         //The LAYER BITZ are ENCASED here imageSet[0], imageSet[1] - from BITZSET
-        // newLayerContext.drawImage(imageSet[0],0, 0, 1000, 1000) //sky
-        // newLayerContext.drawImage(imageSet[1],0, 0, 1000, 1000) //bg
-        // newLayerContext.drawImage(imageSet[2],0, 0, 1000, 1000) //hero
-        // newLayerContext.drawImage(imageSet[3],0, 0, 1000, 1000) //frame
+        // layerCTX.drawImage(imageSet[0],0, 0, 1000, 1000) //sky
+        // layerCTX.drawImage(imageSet[1],0, 0, 1000, 1000) //bg
+        // layerCTX.drawImage(imageSet[2],0, 0, 1000, 1000) //hero
+        // layerCTX.drawImage(imageSet[3],0, 0, 1000, 1000) //frame
         for(var i = 0; i<imageSet.length;i++){ //dynamic draw layerz
-            newLayerContext.drawImage(imageSet[i],0, 0, 1000, 1000) //todo make dynamic size
+            layerCTX.drawImage(imageSet[i],0, 0, 1000, 1000) //todo make dynamic size
         }
    }).catch( (e) => {console.log(e)});
 
@@ -166,61 +172,57 @@ function drawBITZ(_currentCardNum, _BITZSET){
         // ctx.drawImage(logo,30, 22, 55, 55)
         // ctx.drawImage(cp,26, 940, 32, 32)
         // ctx.drawImage(tm,960, 45, 32, 32)
-        var newLayer = addNewLayer(layers);
-        var newLayerContext = newLayer.getContext("2d");
-
-        newLayerContext.drawImage(data[0],30, 22, 55, 55)
-        newLayerContext.drawImage(data[1],26, 940, 32, 32)
-        newLayerContext.drawImage(data[2],948, 50, 32, 32)
-
+        var newLayerZ = addLAYERZ(layers);
+        var layerCTX = newLayerZ.getContext("2d");
+        layerCTX.drawImage(data[0],30, 22, 55, 55)
+        layerCTX.drawImage(data[1],26, 940, 32, 32)
+        layerCTX.drawImage(data[2],948, 50, 32, 32)
         
         function drawNUMZ(_currentCardNum, _selectedBITZ){
-            
-            
-            var newLayer = addNewLayer(layers); //TODO rename "layers" to canvas_setz
-            newLayerContext = newLayer.getContext("2d");
-            newLayerContext.fillStyle = "#333333";
-            newLayerContext.font = "bold 14pt calibri";
-            newLayerContext.textBaseline = "top";
-            newLayerContext.textAlign = "left";
-            newLayerContext.fillText("1 of 1", 36, 74);
+            var newLayerZ = addLAYERZ(layers); 
+            layerCTX = newLayerZ.getContext("2d");
+            layerCTX.fillStyle = "#333333";
+            layerCTX.font = "bold 14pt calibri";
+            layerCTX.textBaseline = "top";
+            layerCTX.textAlign = "left";
+            layerCTX.fillText("1 of 1", 36, 74);
                 
-            newLayer = addNewLayer(layers);
-            newLayerContext = newLayer.getContext("2d");
-            newLayerContext.fillStyle = "skyblue";
-            newLayerContext.font = "bold 22pt Impact";
-            newLayerContext.textBaseline = "top";
-            newLayerContext.textAlign = "right";
-            newLayerContext.shadowColor="black";
-            newLayerContext.fillText("KRYPTOBITZ", 945, 28);
+            newLayerZ = addLAYERZ(layers);
+            layerCTX = newLayerZ.getContext("2d");
+            layerCTX.fillStyle = "skyblue";
+            layerCTX.font = "bold 22pt Impact";
+            layerCTX.textBaseline = "top";
+            layerCTX.textAlign = "right";
+            layerCTX.shadowColor="black";
+            layerCTX.fillText("KRYPTOBITZ", 945, 28);
 
-            newLayer = addNewLayer(layers);
-            newLayerContext = newLayer.getContext("2d");
-            newLayerContext.font="18pt calibri";
-            newLayerContext.shadowColor="skyblue";
-            newLayerContext.textBaseline = "bottom";
-            newLayerContext.textAlign = "right";
-            newLayerContext.shadowBlur=4;
-            newLayerContext.lineWidth=4;
-            newLayerContext.fillStyle = "skyblue";
-            newLayerContext.strokeText("2 0 2 1",136,969);
-            newLayerContext.shadowBlur=4;
-            newLayerContext.fillStyle="steelblue";
-            newLayerContext.fillText("2 0 2 1",136,968);
+            newLayerZ = addLAYERZ(layers);
+            layerCTX = newLayerZ.getContext("2d");
+            layerCTX.font="18pt calibri";
+            layerCTX.shadowColor="skyblue";
+            layerCTX.textBaseline = "bottom";
+            layerCTX.textAlign = "right";
+            layerCTX.shadowBlur=4;
+            layerCTX.lineWidth=4;
+            layerCTX.fillStyle = "skyblue";
+            layerCTX.strokeText("2 0 2 1",136,969);
+            layerCTX.shadowBlur=4;
+            layerCTX.fillStyle="steelblue";
+            layerCTX.fillText("2 0 2 1",136,968);
         
-            newLayer = addNewLayer(layers);
-            newLayerContext = newLayer.getContext("2d");
-            newLayerContext.font="italic 12pt Verdana";
-            newLayerContext.shadowColor="skyblue";
-            newLayerContext.textBaseline = "bottom";
-            newLayerContext.textAlign = "right";
-            newLayerContext.shadowBlur=2;
-            newLayerContext.lineWidth=4;
-            newLayerContext.fillStyle = "darkpurple";
-            newLayerContext.strokeText("spazeFalcon",968,970);
-            newLayerContext.shadowBlur=2;
-            newLayerContext.fillStyle="steelblue";
-            newLayerContext.fillText("spazeFalcon",967,969);
+            newLayerZ = addLAYERZ(layers);
+            layerCTX = newLayerZ.getContext("2d");
+            layerCTX.font="italic 12pt Verdana";
+            layerCTX.shadowColor="skyblue";
+            layerCTX.textBaseline = "bottom";
+            layerCTX.textAlign = "right";
+            layerCTX.shadowBlur=2;
+            layerCTX.lineWidth=4;
+            layerCTX.fillStyle = "darkpurple";
+            layerCTX.strokeText("spazeFalcon",968,970);
+            layerCTX.shadowBlur=2;
+            layerCTX.fillStyle="steelblue";
+            layerCTX.fillText("spazeFalcon",967,969);
 
             //-----------DYNAMIC----TXTs---------------------------
             let nameLBL = '', subLBL1 = '', subLBL2 = '', subMSG1='', rareMSG='', fNAME='', metaNODE=null;
@@ -237,87 +239,87 @@ function drawBITZ(_currentCardNum, _BITZSET){
                 }
             }
             //-----------DYNAMIC----TXTs---------------------------
-            newLayer = addNewLayer(layers);
-            newLayerContext = newLayer.getContext("2d");
-            newLayerContext.font="33pt impact";
-            newLayerContext.shadowColor="yellow";
-            newLayerContext.shadowBlur=6;
-            newLayerContext.lineWidth=4;
+            newLayerZ = addLAYERZ(layers);
+            layerCTX = newLayerZ.getContext("2d");
+            layerCTX.font="33pt impact";
+            layerCTX.shadowColor="yellow";
+            layerCTX.shadowBlur=6;
+            layerCTX.lineWidth=4;
             let itemNUM = "00"+_currentCardNum;
-            newLayerContext.strokeText(itemNUM,92,70);
-            newLayerContext.textAlign = "left";
-            newLayerContext.shadowBlur=0;
-            newLayerContext.fillStyle="white";
-            newLayerContext.fillText(itemNUM,92,70);
+            layerCTX.strokeText(itemNUM,92,70);
+            layerCTX.textAlign = "left";
+            layerCTX.shadowBlur=0;
+            layerCTX.fillStyle="white";
+            layerCTX.fillText(itemNUM,92,70);
 
             //NAME LBL -  let nameLBL = "OrbyOrbot";
-            newLayer = addNewLayer(layers);
-            newLayerContext = newLayer.getContext("2d");
-            newLayerContext.font="32pt Verdana";
-            newLayerContext.shadowColor="skyblue";
-            newLayerContext.textBaseline = "bottom";
-            newLayerContext.textAlign = "center";
-            newLayerContext.shadowBlur=2;
-            newLayerContext.lineWidth=4;
-            newLayerContext.fillStyle = "skyblue";
-            newLayerContext.strokeText(`${nameLBL}`,500,888);
-            newLayerContext.shadowBlur=4;
-            newLayerContext.fillStyle="steelblue";
-            newLayerContext.fillText(`${nameLBL}`,499,887);
+            newLayerZ = addLAYERZ(layers);
+            layerCTX = newLayerZ.getContext("2d");
+            layerCTX.font="32pt Verdana";
+            layerCTX.shadowColor="skyblue";
+            layerCTX.textBaseline = "bottom";
+            layerCTX.textAlign = "center";
+            layerCTX.shadowBlur=2;
+            layerCTX.lineWidth=4;
+            layerCTX.fillStyle = "skyblue";
+            layerCTX.strokeText(`${nameLBL}`,500,888);
+            layerCTX.shadowBlur=4;
+            layerCTX.fillStyle="steelblue";
+            layerCTX.fillText(`${nameLBL}`,499,887);
 
             //SUB LBL1 -  let subLBL1 = "GODRAYS"; //COSMOBLAST //BLASTABLACKHOLE
-            newLayer = addNewLayer(layers);
-            newLayerContext = newLayer.getContext("2d");
-            newLayerContext.font="italic 22pt Verdana";
-            newLayerContext.shadowColor="skyblue";
-            newLayerContext.textBaseline = "bottom";
-            newLayerContext.textAlign = "center";
-            newLayerContext.shadowBlur=6;
-            newLayerContext.lineWidth=4;
-            newLayerContext.fillStyle = "#CCCCCC";
-            newLayerContext.strokeText(`${subLBL1}`,350,939);
-            newLayerContext.shadowBlur=2;
-            newLayerContext.fillStyle="steelblue";
-            newLayerContext.fillText(`${subLBL1}`,349,938);
+            newLayerZ = addLAYERZ(layers);
+            layerCTX = newLayerZ.getContext("2d");
+            layerCTX.font="italic 22pt Verdana";
+            layerCTX.shadowColor="skyblue";
+            layerCTX.textBaseline = "bottom";
+            layerCTX.textAlign = "center";
+            layerCTX.shadowBlur=6;
+            layerCTX.lineWidth=4;
+            layerCTX.fillStyle = "#CCCCCC";
+            layerCTX.strokeText(`${subLBL1}`,350,939);
+            layerCTX.shadowBlur=2;
+            layerCTX.fillStyle="steelblue";
+            layerCTX.fillText(`${subLBL1}`,349,938);
 
-            newLayer = addNewLayer(layers);
-            newLayerContext = newLayer.getContext("2d");
-            newLayerContext.font="italic 22pt Verdana";
-            newLayerContext.shadowColor="skyblue";
-            newLayerContext.textBaseline = "bottom";
-            newLayerContext.textAlign = "center";
-            newLayerContext.shadowBlur=6;
-            newLayerContext.lineWidth=4;
-            newLayerContext.fillStyle = "#CCCCCC";
-            newLayerContext.strokeText(`${subLBL2}`,630,939);
-            newLayerContext.shadowBlur=2;
-            newLayerContext.fillStyle="steelblue";
-            newLayerContext.fillText(`${subLBL2}`,629,938); 
+            newLayerZ = addLAYERZ(layers);
+            layerCTX = newLayerZ.getContext("2d");
+            layerCTX.font="italic 22pt Verdana";
+            layerCTX.shadowColor="skyblue";
+            layerCTX.textBaseline = "bottom";
+            layerCTX.textAlign = "center";
+            layerCTX.shadowBlur=6;
+            layerCTX.lineWidth=4;
+            layerCTX.fillStyle = "#CCCCCC";
+            layerCTX.strokeText(`${subLBL2}`,630,939);
+            layerCTX.shadowBlur=2;
+            layerCTX.fillStyle="steelblue";
+            layerCTX.fillText(`${subLBL2}`,629,938); 
 
             //DYNAMIC SET #DATESTAMP  _NUMBER RAN.
-            var newLayer = addNewLayer(layers);
-            newLayerContext = newLayer.getContext("2d");
-            newLayerContext.fillStyle = "#333333";
-            newLayerContext.font = "10pt calibri";
-            newLayerContext.textBaseline = "top";
-            newLayerContext.textAlign = "right";
-            newLayerContext.fillText(`set ${DSTAMP}`, 890, 60);
+            var newLayerZ = addLAYERZ(layers);
+            layerCTX = newLayerZ.getContext("2d");
+            layerCTX.fillStyle = "#333333";
+            layerCTX.font = "10pt calibri";
+            layerCTX.textBaseline = "top";
+            layerCTX.textAlign = "right";
+            layerCTX.fillText(`set ${DSTAMP}`, 890, 60);
 
-            var newLayer = addNewLayer(layers);
-            newLayerContext = newLayer.getContext("2d");
-            newLayerContext.fillStyle = "#333333";
-            newLayerContext.font = "10pt calibri";
-            newLayerContext.textBaseline = "top";
-            newLayerContext.textAlign = "right";
-            newLayerContext.fillText(`cardz ${TOTAL_CARDZ}`, 940, 60);
+            var newLayerZ = addLAYERZ(layers);
+            layerCTX = newLayerZ.getContext("2d");
+            layerCTX.fillStyle = "#333333";
+            layerCTX.font = "10pt calibri";
+            layerCTX.textBaseline = "top";
+            layerCTX.textAlign = "right";
+            layerCTX.fillText(`cardz ${TOTAL_CARDZ}`, 940, 60);
 
-            var newLayer = addNewLayer(layers);
-            newLayerContext = newLayer.getContext("2d");
-            newLayerContext.fillStyle = "#333333";
-            newLayerContext.font = "12pt calibri";
-            newLayerContext.textBaseline = "bottom";
-            newLayerContext.textAlign = "left";
-            newLayerContext.fillText(`kbz ${IDENTITY_BIT}`,33,940);
+            var newLayerZ = addLAYERZ(layers);
+            layerCTX = newLayerZ.getContext("2d");
+            layerCTX.fillStyle = "#333333";
+            layerCTX.font = "12pt calibri";
+            layerCTX.textBaseline = "bottom";
+            layerCTX.textAlign = "left";
+            layerCTX.fillText(`kbz ${IDENTITY_BIT}`,33,940);
 
             //TODO _slvr _gold
 
@@ -325,7 +327,8 @@ function drawBITZ(_currentCardNum, _BITZSET){
 
         }
         drawNUMZ(_currentCardNum, selectedBITZ);
-        drawImage(mainCanvasContext, layers);     //update this name to paintLAYERZ
+        // drawImage(CANVAS_LAYERZ, layers);     //update this name to paintLAYERZ
+        paintLAYERZ(CANVAS_LAYERZ, layers);    
 
         console.log("Writing IMAGE and METABITZ...",_currentCardNum)
         const outputPATH = "./output1" //ACTUAL NAME OF THE IMAGES BEING SAVED TO EACH IMAGE FILE.
