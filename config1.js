@@ -4,7 +4,16 @@ const width = 1000;
 const height = 1000;
 const TOTAL_CARDZ = 11;
 
-const IPFS_URI = "ipfs://Qm..."
+// const IPFS_URI = "ipfs://Qm..."
+
+let OS_META_MODEL = { //OpenSea metadata 
+    namePrefix : "KRYPTOBITZ",
+    description : "NFT Generative Art Project, 2021. HEROZ from KRYPTOSPAZE!",
+    IPFS_URI : "ipfs://...Replaced_with_IPFS_uri...",
+    youTubeURL : `https://www.youtube.com/watch?v=M1-hZgIlAkc`,
+    externalURL : `https://netcinematics.github.io/CRYPTOSPAZE/`,
+}
+
 
 // getIMGFILES to array - each is variation
 const getBITZ = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
@@ -178,4 +187,4 @@ initIDENTITYNET();
 //18000 KRYPTOBITZ set 3  KBZv3
 
 
-module.exports = {BITZSET, TOTAL_CARDZ, METANET, RARITYNET, IDENTITYNET, width, height}
+module.exports = {BITZSET, TOTAL_CARDZ, METANET, RARITYNET, IDENTITYNET, OS_META_MODEL, width, height}

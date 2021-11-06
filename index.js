@@ -1,14 +1,15 @@
 console.log('KRYPTOBITZ - Server on.')
 const fs = require("fs");
 const rootPATH = __dirname; //C:\PROJECTS\\KRYPTOBITZ
+const {BITZSET, TOTAL_CARDZ, METANET, RARITYNET, IDENTITYNET, OS_META_MODEL, width, height} = require('./config1.js')
 
-//todo move ot config
-    //OpenSea metadata 
-    const namePrefix = "KRYPTOBITZ";
-    const description = "NFT Generative Art Project, 2021. HEROZ from KRYPTOSPAZE!";
-    const IPFS_URI = "ipfs://...Replaced_with_IPFS_uri...";
-    const youTubeURL = `https://www.youtube.com/watch?v=M1-hZgIlAkc`
-    const externalURL = `https://netcinematics.github.io/CRYPTOSPAZE/`
+// let OS_META_MODEL = { //OpenSea metadata 
+//     namePrefix : "KRYPTOBITZ",
+//     description : "NFT Generative Art Project, 2021. HEROZ from KRYPTOSPAZE!",
+//     IPFS_URI : "ipfs://...Replaced_with_IPFS_uri...",
+//     youTubeURL : `https://www.youtube.com/watch?v=M1-hZgIlAkc`,
+//     externalURL : `https://netcinematics.github.io/CRYPTOSPAZE/`,
+// }
 
 const COMMANDZ = process.argv.slice(2); //CMD LINE args. Split by space into Array;
 if(COMMANDZ[0]==='2'){ //IPFS MODE-.
@@ -17,12 +18,14 @@ if(COMMANDZ[0]==='2'){ //IPFS MODE-.
     let rawdata = fs.readFileSync(`${rootPATH}/output1/json/_metadataMAIN.json`);
     let data = JSON.parse(rawdata);
     data.forEach((item) => {  //Update metadata to OpenSea data structure
-        // item.name = `${namePrefix} #${item.cardNum}`;
         console.log("UPDATE IPFS",item.name)
-        // item.description = description; //TODO - link to METADATA, append?
-        item.image = `${IPFS_URI}/${item.cardNum}.png`;     //IPFS PATH
-        // item.external_url = externalURL
-        // item.youtube_url = youTubeURL
+        item.image = `${OS_META_MODEL.IPFS_URI}/${item.cardNum}.png`;     //IPFS PATH
+        // item.name = `${OS_META_MODEL.namePrefix} #${item.cardNum}`;
+        // item.description = description; //TODO - link to METADATA, append? 
+        // todo Yes for TXT. idea - add on infinite metadata?
+        // todo NFT DESCRIPTION FOOTER
+        // item.external_url = OS_META_MODEL.externalURL
+        // item.youtube_url = OS_META_MODEL.youTubeURL
         fs.writeFileSync(`${rootPATH}/output1/json/${item.cardNum}.json`,
             JSON.stringify(item, null, 2)
         );
@@ -38,7 +41,6 @@ if(COMMANDZ[0]==='2'){ //IPFS MODE-.
 
 //BUILD-IMG MODE-.
 const { createCanvas, loadImage} = require("canvas");
-const {BITZSET, TOTAL_CARDZ, METANET, RARITYNET, IDENTITYNET, width, height} = require('./config1.js')
 
 const canvas = createCanvas(width,height)
 const ctx = canvas.getContext("2d")
@@ -332,12 +334,12 @@ function drawBITZ(_currentCardNum, _BITZSET){
         function setMETABITZ(){//COMPILE OPENSEA STYLE METADATA-. For Upload to IPFS through pinata-.
             let metaBIT = {}
             metaBIT.cardNum = _currentCardNum;
-            metaBIT.name = `${namePrefix} #00${_currentCardNum}`;
+            metaBIT.name = `${OS_META_MODEL.namePrefix} #00${_currentCardNum}`;
             // console.log("set METABIT",metaBIT.name)
-            metaBIT.description = description; //TODO LINK TO METANET!
+            metaBIT.description = OS_META_MODEL.description; //TODO LINK TO METANET!
             metaBIT.image = 'run ipfs to replace this uri';//`${IPFS_URI}/${_currentCardNum}.png`;     //IPFS PATH
-            metaBIT.external_url = externalURL;
-            metaBIT.youtube_url = youTubeURL;
+            metaBIT.external_url = OS_META_MODEL.externalURL;
+            metaBIT.youtube_url = OS_META_MODEL.youTubeURL;
             metaBIT.attributes = [] //todo connnect to identitynet/?
             // metaBIT.attributes = [
             //     {
@@ -364,7 +366,7 @@ function drawBITZ(_currentCardNum, _BITZSET){
         } setMETABITZ();
         function finishMETABITZ(){ //OPTIMIZATION: SAVE ONLY ONCE- at the end-.
             if(_currentCardNum===TOTAL_CARDZ){ //FINAL-CARD-. Finish METABITZ-.
-                console.log("WRITE METABITZ:",METABITZOS.length,TOTAL_CARDZ)
+                console.log("WRITE METABITZ:",METABITZOS.length,"of",TOTAL_CARDZ)
                 fs.writeFileSync(`./output1/json/_metadataMAIN.json`, JSON.stringify(METABITZOS));
                 calculateRARITY();
             } //else{ console.log("not end",_currentCardNum) }
@@ -456,7 +458,7 @@ main_NIFTYFACTORY();
 // }
 
 
-//TODO - GENERATE - generativeART: NFTs, Banners, AVATARZ, trading cards, kryptokoinz, kryptobitz
-//TODO - GENERATE - various outputs: clean, signed, licensed, avatar cutout, video METALINK.
-//METADATA - GENERATED - with TOKEN. Record what happened. Add extra TXT, LNK, VID, SND.
+// generativeART: NFTs, Banners, AVATARZ, trading cards, kryptokoinz, kryptobitz
+// - various outputs: clean, signed, licensed, avatar cutout, video METALINK.
+//METADATA -  Add extra TXT, LNK, VID, SND.
 
