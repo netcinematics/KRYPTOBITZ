@@ -14,33 +14,14 @@ const COMMANDZ = process.argv.slice(2); //CMD LINE args. Split by space into Arr
 if(COMMANDZ[0]==='2'){ //IPFS MODE-.
     console.log('RUNNING IN IPFS IMAGE UPDATE MODE');
     console.log('Updating Metadata files with IPFS base URI')
-
-
-    // "use strict";
-
-    // const path = require("path");
-    // const isLocal = typeof process.pkg === "undefined";
-    // const basePath = isLocal ? process.cwd() : path.dirname(process.execPath);
-    // const { NETWORK } = require(path.join(basePath, "constants/network.js"));
-    // const fs = require("fs");
-    
-    // console.log(path.join(basePath, "/src/config.js"));
-    // const {
-    //   baseUri,
-    //   description,
-    //   namePrefix,
-    //   network,
-    //   solanaMetadata,
-    // } = require(path.join(basePath, "/src/config.js"));
-    debugger;
-    // read json data
+  
     // let rawdata = fs.readFileSync(`${rootPATH}/output1/json/EXAMPLEmetadata.json`);
     let rawdata = fs.readFileSync(`${rootPATH}/output1/json/_metadataMAIN.json`);
     let data = JSON.parse(rawdata);
     data.forEach((item) => {  //Update metadata to OpenSea data structure
         // item.name = `${namePrefix} #${item.cardNum}`;
         console.log("UPDATE IPFS",item.name)
-        // item.description = description;
+        // item.description = description; //TODO - link to METADATA, append?
         item.image = `${IPFS_URI}/${item.cardNum}.png`;     //IPFS PATH
         // item.external_url = externalURL
         // item.youtube_url = youTubeURL
@@ -60,20 +41,22 @@ if(COMMANDZ[0]==='2'){ //IPFS MODE-.
 
 //BUILD-IMG MODE-.
 const { createCanvas, loadImage} = require("canvas");
-const {BITZSET, totalCARDZ, METANET, RARITYNET, width, height} = require('./config1.js')
+const {BITZSET, TOTAL_CARDZ, METANET, RARITYNET, IDENTITYNET, width, height} = require('./config1.js')
 
 const canvas = createCanvas(width,height)
 const ctx = canvas.getContext("2d")
 
 let METABITZOS = [] //OpenSea Metdata BITZ-.
 
-let DSTAMP= new Date();
-console.log("Running IMG mode:",DSTAMP.getUTCMonth(), DSTAMP.getUTCDate(), DSTAMP.getUTCFullYear(),);
+// let DSTAMP= new Date(); //todo
+let DSTAMP= new Date().toISOString().split("T")[0]; //todo
+// console.log("Running IMG mode:",DSTAMP.getUTCMonth(), DSTAMP.getUTCDate(), DSTAMP.getUTCFullYear(),);
+console.log("Running IMG mode, creation date:",DSTAMP);
 // let DSTAMP = `00${Date.now()}`;
 
-let uniqueDNA = {}; //TODO read/write to file-.  todo rename to identity net?
+//let uniqueDNA = {}; //TODO read/write to file-.  todo rename to identity net?
 // const edition = (editionNum) ? editionNum : 1; ; //ARG, number of sets of krypto BITZ
-// totalCARDZ = (totalCARDZ) ? totalCARDZ : 1; ; //ARG, number of sets of krypto BITZ
+// TOTAL_CARDZ = (TOTAL_CARDZ) ? TOTAL_CARDZ : 1; ; //ARG, number of sets of krypto BITZ
 
 // let hash = []; //be able to rebuild img from hash.
 // let metadata = [];
@@ -189,19 +172,20 @@ function drawIMGZ(_currentCardNum, _BITZSET){
         }
     }
     //********************************************TEST DUPES
-    // let dupe = {}, rKeyz = Object.keys(uniqueDNA);
+    // let dupe = {}, rKeyz = Object.keys(IDENTITYNET);
     // if(rKeyz.length){
     //     dupe = rKeyz[0];
     //     bitDNA = dupe; //TEST DUPE OVERRIDE-.
     // }
     //********************************************TEST DUPES
     //UNIQUENESS: TEST IF selectedBITZ are UNIQUE
-    if(bitDNA && !uniqueDNA[bitDNA]){ //CONFIRMED UNIQUE-.
-        uniqueDNA[bitDNA] = {bitz:selectedBITZ};  //FOR UNIQUENESS DIAGNOSTICS-.
+    if(bitDNA && !IDENTITYNET[bitDNA]){ //CONFIRMED UNIQUE-.
+        IDENTITYNET[bitDNA] = {bitz:selectedBITZ};  //FOR UNIQUENESS DIAGNOSTICS-.
     } else { console.log('DUPLICATE DETECTED:', bitDNA, "iteration", _currentCardNum); 
         _currentCardNum--; //TRY AGAIN-.
         //TODO: clean up raritynet, uniqueID - UniqueIdentityNet?
         return false;
+        //TODO: remove all this, test new method.
         //SEARCH for most rare, in RARITYNET, and replace dupe, in selectedBITZ.
         let rarityKEYS = Object.keys(RARITYNET), replaceAttempt=1, oldSEGS=bitDNA.split('.');
         let oldSEG="", newSEG="", currSEG="", currLVL=0, newDNA="";
@@ -241,7 +225,7 @@ function drawIMGZ(_currentCardNum, _BITZSET){
 
         }
         //COMBINE new UNIQUE KEY into uniqueDNA-.
-        uniqueDNA[newDNA] = {bitz:[]};
+        IDENTITYNET[newDNA] = {bitz:[]};
         //GETBITZ for new DNA.
         // selectedBITZ = [];
         let newBITZ = newDNA.split('.'), bitTGT='', bitLVL=0, bitID='', newBIT={};
@@ -251,7 +235,7 @@ function drawIMGZ(_currentCardNum, _BITZSET){
             bitID = parseInt(bitTGT.split(':')[1])
             console.log("FINDBITZ:",bitTGT)
             newBIT = BITZSET[bitLVL-1].BITZ[bitID-1];
-            uniqueDNA[newDNA].bitz.push(newBIT)
+            IDENTITYNET[newDNA].bitz.push(newBIT)
             // selectedBITZ.push(BITZSET[bitLVL-1])
         }
     //     for( let i = 0; i<selectedBITZ.length;i++){
@@ -270,7 +254,7 @@ function drawIMGZ(_currentCardNum, _BITZSET){
 
 
    //Calculate RARITYNET - update only each selected BITZ.
-//    let bitKEYS = Object.keys(uniqueDNA), bitKEY='';
+//    let bitKEYS = Object.keys(IDENTITYNET), bitKEY='';
 //    for(let i=0; i<bitKEYS.length;i++){ //COUNT EACH OF TYPE, for SUB SCORE, and total SCORE.
 //         bitKEY = bitKEYS[i];
 //         bitSPLIT = bitKEY.split(".");
@@ -286,7 +270,7 @@ function drawIMGZ(_currentCardNum, _BITZSET){
    //COUNT of USE compared to RUN COUNT - gives precise ratio. 
 //    let rarityKEYS = Object.keys(RARITYNET);
 //    for(let i=0; i<rarityKEYS.length;i++ ){
-//      RARITYNET[rarityKEYS[i]].ratio = parseFloat(Number(RARITYNET[rarityKEYS[i]].count/totalCARDZ.toFixed(2)));
+//      RARITYNET[rarityKEYS[i]].ratio = parseFloat(Number(RARITYNET[rarityKEYS[i]].count/TOTAL_CARDZ.toFixed(2)));
 //    }
 //    debugger;
 //    //Compile SET RATIOs back to Rarity MetaData, and calculate AVG RARITY SCORE. 
@@ -297,9 +281,9 @@ function drawIMGZ(_currentCardNum, _BITZSET){
 //         bitSPLIT.pop(); //remove end split-.
 //         for(let j=0; j< bitSPLIT.length; j++){ //WRITE EACH SUB RATIO-.
 //             rarityRatio += parseFloat(RARITYNET[bitSPLIT[j]].ratio.toFixed(2));
-//             uniqueDNA[bitKEY][bitSPLIT[j]] = RARITYNET[bitSPLIT[j]].ratio;
+//             IDENTITYNET[bitKEY][bitSPLIT[j]] = RARITYNET[bitSPLIT[j]].ratio;
 //         }
-//         uniqueDNA[bitKEY].avgRarityRatio = rarityRatio / bitSPLIT.length;
+//         IDENTITYNET[bitKEY].avgRarityRatio = rarityRatio / bitSPLIT.length;
 //     }
 //    //IF DNA equals runOnce is gold, or DNA match is slvr
 //    //IF DNA equals _slvr or _gld, change frame
@@ -467,7 +451,6 @@ function drawIMGZ(_currentCardNum, _BITZSET){
             newLayerContext.shadowBlur=6;
             newLayerContext.lineWidth=4;
             newLayerContext.fillStyle = "#CCCCCC";
-            // let subLBL1 = "cozmoblast";// _BITZSET[_currentCardNum+1].layerDetail1;
             newLayerContext.strokeText(`${subLBL1}`,350,939);
             newLayerContext.shadowBlur=2;
             newLayerContext.fillStyle="steelblue";
@@ -482,7 +465,6 @@ function drawIMGZ(_currentCardNum, _BITZSET){
             newLayerContext.shadowBlur=6;
             newLayerContext.lineWidth=4;
             newLayerContext.fillStyle = "#CCCCCC";
-            // let subLBL2 = "mountain range";// _BITZSET[_currentCardNum+1].layerDetail2;
             newLayerContext.strokeText(`${subLBL2}`,630,939);
             newLayerContext.shadowBlur=2;
             newLayerContext.fillStyle="steelblue";
@@ -496,7 +478,8 @@ function drawIMGZ(_currentCardNum, _BITZSET){
             newLayerContext.textBaseline = "top";
             newLayerContext.textAlign = "right";
             newLayerContext.fillText(
-                `set ${DSTAMP.getUTCMonth()}:${DSTAMP.getUTCDate()}:${DSTAMP.getUTCFullYear()}`
+                // `set ${DSTAMP.getUTCMonth()}:${DSTAMP.getUTCDate()}:${DSTAMP.getUTCFullYear()}`
+                `set ${DSTAMP}`
                 , 890, 60);
 
             var newLayer = addNewLayer(layers);
@@ -505,7 +488,7 @@ function drawIMGZ(_currentCardNum, _BITZSET){
             newLayerContext.font = "10pt calibri";
             newLayerContext.textBaseline = "top";
             newLayerContext.textAlign = "right";
-            newLayerContext.fillText(`cardz ${totalCARDZ}`, 940, 60);
+            newLayerContext.fillText(`cardz ${TOTAL_CARDZ}`, 940, 60);
 
             var newLayer = addNewLayer(layers);
             newLayerContext = newLayer.getContext("2d");
@@ -513,7 +496,10 @@ function drawIMGZ(_currentCardNum, _BITZSET){
             newLayerContext.font = "12pt calibri";
             newLayerContext.textBaseline = "bottom";
             newLayerContext.textAlign = "left";
-            newLayerContext.fillText(`uid ${bitDNA}`,33,940);
+            newLayerContext.fillText(`kbz ${bitDNA}`,33,940);
+
+            //TODO _slvr _gold
+            //TODO bitDNA rename to IDENTITY
 
 
 
@@ -564,9 +550,9 @@ function drawIMGZ(_currentCardNum, _BITZSET){
             METABITZOS.push(metaBIT)
         } setMETABITZ();
         function saveMETABITZ(){ //OPTIMIZATION: SAVE ONLY ONCE- at the end-.
-            if(_currentCardNum===totalCARDZ){
+            if(_currentCardNum===TOTAL_CARDZ){
                 fs.writeFileSync(`./output1/json/_metadataMAIN.json`, JSON.stringify(METABITZOS));
-                console.log("WRITE METABITZ:",METABITZOS.length,totalCARDZ)
+                console.log("WRITE METABITZ:",METABITZOS.length,TOTAL_CARDZ)
             } //else{ console.log("not end",_currentCardNum) }
         } saveMETABITZ();
         // fs.writeFileSync(`${outputPATH}/json/KBZ_${_currentCardNum}.json`, JSON.stringify(selectedBITZ));
@@ -579,14 +565,14 @@ function drawIMGZ(_currentCardNum, _BITZSET){
     return true;//drawIMGZ success
 } //END drawIMGZ
 // drawIMGZ();
- //todo rename totalcardz to totalNIFTYZ
-for(let i = 1; i <= totalCARDZ; i++){
+ //todo rename TOTAL_CARDZ to totalNIFTYZ
+for(let i = 1; i <= TOTAL_CARDZ; i++){
     // let bitz = BITZSET[i]; //layers dimension
     let result = drawIMGZ(i,BITZSET) //todo rename function to... paintNIFTY
     if(!result){ //DUPLICATE-ROLL-BACK-.
         i--; debugger;
     }
-    // if(i===totalCARDZ){ //LAST-CARD-.
+    // if(i===TOTAL_CARDZ){ //LAST-CARD-.
     //     console.log("LAST CARD",METABITZOS.length)
     // }
 
@@ -597,26 +583,23 @@ for(let i = 1; i <= totalCARDZ; i++){
 
 
 //CALCULATE INDIVIDUAL IMAGE RARITY, by average of SEGMENT/SELECTION count ratio.
-
+//TODO move into function CALCULATE_RARITY, called by last IMG-.
 
    //**************ORIGINALITY************RARITY****************
    //ALL CARDZ are SELECTED. BEFORE RENDER, CALCULATE RARITY-.
    let rarityKEYS = Object.keys(RARITYNET);
    for(let i=0; i<rarityKEYS.length;i++ ){ //calculate rarity ratio for SEGMENTS-.
        if(!RARITYNET[rarityKEYS[i]].count){continue} //skip zero-.
-       RARITYNET[rarityKEYS[i]].ratio = parseFloat(Number(RARITYNET[rarityKEYS[i]].count/totalCARDZ).toFixed(2));
+       RARITYNET[rarityKEYS[i]].ratio = parseFloat(Number(RARITYNET[rarityKEYS[i]].count/TOTAL_CARDZ).toFixed(2));
        console.log("SEGMENT-RATIO:",rarityKEYS[i],RARITYNET[rarityKEYS[i]].ratio )
        if(RARITYNET[rarityKEYS[i]].ratio < 0){debugger;}
    }
-   //todo revisit, with uniqueDNA, and convert into IDENTITYNET?
    //todo flip the rarity score to be of 100% rarity. Meaning only instance.
 
-//    uniqueDNA[bitDNA] = {bitz:selectedBITZ};
-
-   let uniqueNIFTYs = Object.keys(uniqueDNA), aNIFTY='', NIFTYRARITYRATIO=0;
+   let uniqueNIFTYs = Object.keys(IDENTITYNET), aNIFTY='', NIFTYRARITYRATIO=0;
    for(let i=0; i<uniqueNIFTYs.length;i++){ //COUNT EACH OF TYPE, for SUB SCORE, and total SCORE.
         NIFTYRARITYRATIO = 0;
-        aNIFTY = uniqueDNA[ uniqueNIFTYs[i] ] //to update UNIQUEDNA
+        aNIFTY = IDENTITYNET[ uniqueNIFTYs[i] ] //to update IDENTITYNET
         bitKEY = uniqueNIFTYs[i];
         bitSPLIT = bitKEY.split(".");
         for(let j=0; j<bitSPLIT.length;j++){ //lookup rarity in rarity net
@@ -632,20 +615,27 @@ for(let i = 1; i <= totalCARDZ; i++){
         //for 2 images 0 shared: 0.5, 1 shared: 0.625, 2 shared: 0.75
    }
 
-   let METABITZ = {RARITYNET,uniqueDNA,METANET,DSTAMP:new Date().toISOString().split(":")[0]}
-   //TODO: write uniqueDNA to .json file to generate total unique sets.
+   //TODO: IDENTITYNET calculate 1st, last, middle card as _slvr_last_1st _once_gld
+
+
+   let METABITZ = {RARITYNET,IDENTITYNET,METANET,DSTAMP:new Date().toISOString()}
+   //TODO: write IDENTITYNET to .json file to generate total unique sets.
 //    function writeMetaData(){
     // fs.writeFileSync("./output1/HEROZ_METABITZ.json", JSON.stringify(metadata));
    //TODO tokenize TGTFOLDER and SRCFOLDER
     // var stream = fs.createWriteStream(`./output1/HEROZ_METABITZ_${new Date().toISOString().split(":")[0]}.json`, {flags:'a'});
     // var stream = fs.createWriteStream(`./output1/HEROZ_METABITZ_${new Date().toISOString().split(":")[0]}.json`, {flags:'w'});
-    var stream = fs.createWriteStream(`./output1/KBZ_METANET_${new Date().toISOString().split(":")[0]}.json`, {flags:'a'});
-    console.log("WRITE-METABITZ",new Date().toISOString());
-    let STAMPNAME = new Date().toISOString().split(":")[0];
-    stream.write(`{"${STAMPNAME}":${JSON.stringify(METABITZ)}`);
-    console.log(new Date().toISOString().split(":")[0]);
-    stream.end();
 
+   //TODO combine this with write out IDENTITYNET
+
+   console.log("WRITE-METABITZ",new Date().toISOString());
+    var stream = fs.createWriteStream(`./output1/KBZ_METANET_${new Date().toISOString().split(":")[0]}.json`, {flags:'a'});
+    stream.write(`{"${new Date().toISOString()}":${JSON.stringify(METABITZ)}`);
+    stream.end();
+    // let STAMPNAME = new Date().toISOString().split(":")[0];
+    // stream.write(`{"${STAMPNAME}":${JSON.stringify(METABITZ)}`);
+    // console.log(new Date().toISOString().split(":")[0]);
++
 
 // }
 
