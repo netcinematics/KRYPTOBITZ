@@ -535,10 +535,32 @@ function drawIMGZ(_currentCardNum, _BITZSET){
             metaBIT.cardNum = _currentCardNum;
             metaBIT.name = `${namePrefix} #00${_currentCardNum}`;
             console.log("set METABIT",metaBIT.name)
-            metaBIT.description = description;
+            metaBIT.description = description; //TODO LINK TO METANET!
             metaBIT.image = 'run ipfs to replace this uri';//`${IPFS_URI}/${_currentCardNum}.png`;     //IPFS PATH
             metaBIT.external_url = externalURL;
             metaBIT.youtube_url = youTubeURL;
+            metaBIT.attributes = [] //todo connnect to identitynet/?
+            // metaBIT.attributes = [
+            //     {
+            //       "trait_type": "Base", 
+            //       "value": "Starfish"
+            //     },  
+            //     {
+            //       "display_type": "boost_number", 
+            //       "trait_type": "Aqua Power", 
+            //       "value": 40
+            //     }, 
+            //     {
+            //       "display_type": "boost_percentage", 
+            //       "trait_type": "Stamina Increase", 
+            //       "value": 10
+            //     }, 
+            //     {
+            //       "display_type": "number", 
+            //       "trait_type": "Generation", 
+            //       "value": 2
+            //     }
+            //   ];
             METABITZOS.push(metaBIT)
         } setMETABITZ();
         function saveMETABITZ(){ //OPTIMIZATION: SAVE ONLY ONCE- at the end-.
