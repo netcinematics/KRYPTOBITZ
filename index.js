@@ -2,17 +2,20 @@ console.log('KRYPTOBITZ - Server on.')
 const fs = require("fs");
 const rootPATH = __dirname; //C:\PROJECTS\VSCODE_PROJECTS\KRYPTOBITZ
 
+//todo move ot config
+    //OpenSea metadata 
+    const namePrefix = "KRYPTOBITZ";
+    const description = "NFT Generative Art Project, 2021. HEROZ from KRYPTOSPAZE!";
+    const IPFS_URI = "ipfs://...Replaced_with_IPFS_uri...";
+    const youTubeURL = `https://www.youtube.com/watch?v=M1-hZgIlAkc`
+    const externalURL = `https://netcinematics.github.io/CRYPTOSPAZE/`
+
 const COMMANDZ = process.argv.slice(2); //CMD LINE args. Split by space into Array;
 if(COMMANDZ[0]==='2'){ //IPFS MODE-.
     console.log('RUNNING IN IPFS IMAGE UPDATE MODE');
     console.log('Updating Metadata files with IPFS base URI')
 
-    // ETH metadata 
-    const namePrefix = "KRYPTOBITZ";
-    const description = "NFT Generative Art Project, 2021. HEROZ from KRYPTOSPAZE!";
-    const IPFS_URI = "ipfs://...";
-    const youTubeURL = `https://www.youtube.com/watch?v=M1-hZgIlAkc`
-    const externalURL = `https://netcinematics.github.io/CRYPTOSPAZE/`
+
     // "use strict";
 
     // const path = require("path");
@@ -32,44 +35,43 @@ if(COMMANDZ[0]==='2'){ //IPFS MODE-.
     debugger;
     // read json data
     // let rawdata = fs.readFileSync(`${rootPATH}/output1/json/EXAMPLEmetadata.json`);
-    let rawdata = fs.readFileSync(`${rootPATH}/output1/json/_metadataALL.json`);
+    let rawdata = fs.readFileSync(`${rootPATH}/output1/json/_metadataMAIN.json`);
     let data = JSON.parse(rawdata);
     data.forEach((item) => {  //Update metadata to OpenSea data structure
-        console.log("WINs",item)
-
-        item.name = `${namePrefix} #${item.cardNum}`;
-        item.description = description;
-        item.image = `${IPFS_URI}/${item.cardNum}.png`;
-        item.external_url = externalURL
-        item.youtube_url = youTubeURL
+        // item.name = `${namePrefix} #${item.cardNum}`;
+        console.log("UPDATE IPFS",item.name)
+        // item.description = description;
+        item.image = `${IPFS_URI}/${item.cardNum}.png`;     //IPFS PATH
+        // item.external_url = externalURL
+        // item.youtube_url = youTubeURL
         fs.writeFileSync(
             `${rootPATH}/output1/json/${item.cardNum}.json`,
             JSON.stringify(item, null, 2)
         );
     });
     
-    fs.writeFileSync(
-      `${rootPATH}/output1/json/_metadataALL.json`,
+    fs.writeFileSync(  //WRITE OUT IPFS PATH
+      `${rootPATH}/output1/json/_metadataMAIN.json`,
       JSON.stringify(data, null, 2)
     );
 
-
-
     return;
-}
+}//END IPFS MODE-.
 
-
+//BUILD-IMG MODE-.
 const { createCanvas, loadImage} = require("canvas");
 const {BITZSET, totalCARDZ, METANET, RARITYNET, width, height} = require('./config1.js')
 
 const canvas = createCanvas(width,height)
 const ctx = canvas.getContext("2d")
 
+let METABITZOS = [] //OpenSea Metdata BITZ-.
+
 let DSTAMP= new Date();
 console.log("Running IMG mode:",DSTAMP.getUTCMonth(), DSTAMP.getUTCDate(), DSTAMP.getUTCFullYear(),);
 // let DSTAMP = `00${Date.now()}`;
 
-let uniqueDNA = {}; //TODO read/write to file-.  todo rename to 
+let uniqueDNA = {}; //TODO read/write to file-.  todo rename to identity net?
 // const edition = (editionNum) ? editionNum : 1; ; //ARG, number of sets of krypto BITZ
 // totalCARDZ = (totalCARDZ) ? totalCARDZ : 1; ; //ARG, number of sets of krypto BITZ
 
@@ -81,239 +83,28 @@ let uniqueDNA = {}; //TODO read/write to file-.  todo rename to
 // const edition = (myArgs.length > 0) ? Number(myArgs[0]) : 1; ; //ARG, number of sets of krypto BITZ
 // const edition = 1; //number of sets of krypto BITZ
 
-//TODO rename to saveBITZ
-function saveLayer(_canvas, _edition){ //WHERE TO SAVE KRYPTOBIT-.
-    // fs.writeFileSync("./output1/newImage.png",_canvas.toBuffer("image/png"))
-    const outputPATH = "./output1"
-    fs.writeFileSync(`${outputPATH}/images/KBZ1_${_currentCardNum}.png`,_canvas.toBuffer("image/png"))
-    // fs.writeFileSync(`${outputPATH}/kbz_${dateStamp+_edition}.png`,_canvas.toBuffer("image/png"))
-    // fs.writeFileSync(`${outputPATH}/newImage${_edition}.png`,_canvas.toBuffer("image/png"))
-    // fs.writeFileSync(`${outputPATH}/TESTIMG${_edition}.png`,_canvas.toBuffer("image/png"))
-    console.log("IMAGE SAVED to  ",outputPATH)
-}
-
-
-// const addMetadata = (_edition) => {
-//     let dateTime = Date.now(); //13 digit unique id, time stamp US Mountain Time.
-//     let tempMetadata = {
-//         hash: hash.join(""),      //layer, element, layer, element numbering.
-//         decodedHash: decodedHash,
-//         edition: _edition,
-//         date: dateTime,
-//         attributes: attributes,
-//     }
-//     metadata.push(tempMetadata);
-//     attributes = [];//clear data to defaults
-//     hash = [];
-//     decodedHash = [];
-// }
-//END of giant LOOP, call METADATA, and loop again. GEN1, GEN2, GEN3 Generations of BITZ.
-
-// const addAttributes = (_element, _layer) => { //populate metadata values
-//     let tempAttr = {
-//         id: _element.id,
-//         layer: _layer.name,
-//         name: _element.name,
-//         rarity: _element.rarity,
-//     }
-//     attributes.push(tempAttr); //for reconstruction
-//     hash.push(_layer.id); //know what layer for decode
-//     hash.push(_element.id); //know what layer for decodedHash
-//     decodedHash.push({[_layer.id]: _element.id}) //how to decode, 1 array to join
-// }
-
-//Random Layer, render inside image ctx. //TODO remove?
-// function drawLayer(_layer, _edition){ //Add RANDOMNESS-.
-//     let element = _layer.elements[ Math.floor(Math.random() * _layer.elements.length)     ] //RANDOM PICK a BITSET
-//     // addMetadata(element, _layer);
-//     console.log("IMG - ELEMENT: ", element)
-//     addAttributes(element, _layer)
-//     console.log('LOAD IMG1:',`${_layer.location}${element.fileName}`)
-
-//     loadImage(`${_layer.location}${element.fileName}`)
-//     .then( (data)=>{
-//         let image = data;
-//         ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
-//         addNumberTxt(edition); //works but needs move out
-//         // addIconIMG(_layer);
-//         saveLayer(canvas, _edition); //BITSETS converted into KRYPTOBITZ. $KBZ
-//     }).catch( (e) => { debugger;   })
-
-
-
-    // const image = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
-    // const image = await loadImage(`${_layer.location}${element.fileName}`)
-    //const image = await loadImage("./assets_set1/kryptobitz_set1_sky4b.jpg")
-    // ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
-    // ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
-    // ctx.drawImage(image, 0, 0, 1000, 1000)
-    // addIconIMG(_layer);
-    // const logo = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
-    // const cp = await loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
-    // const tm = await loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
-    // ctx.drawImage(logo,30, 22, 55, 55)
-    // ctx.drawImage(cp,26, 940, 32, 32)
-    // ctx.drawImage(tm,960, 45, 32, 32)
-    
-    // addNumberTxt(edition);
-    // console.log("create IMG layer: ", _edition, _layer.name, "with", element.name)
-    // saveLayer(canvas, _edition); //BITSETS converted into KRYPTOBITZ. $KBZ
+//TODO rename to saveBITZ, remove?
+// function saveLayer(_canvas, _edition){ //WHERE TO SAVE KRYPTOBIT-.
+//     // fs.writeFileSync("./output1/newImage.png",_canvas.toBuffer("image/png"))
+//     const outputPATH = "./output1"
+//     fs.writeFileSync(`${outputPATH}/images/KBZ1_${_currentCardNum}.png`,_canvas.toBuffer("image/png"))
+//     // fs.writeFileSync(`${outputPATH}/kbz_${dateStamp+_edition}.png`,_canvas.toBuffer("image/png"))
+//     // fs.writeFileSync(`${outputPATH}/newImage${_edition}.png`,_canvas.toBuffer("image/png"))
+//     // fs.writeFileSync(`${outputPATH}/TESTIMG${_edition}.png`,_canvas.toBuffer("image/png"))
+//     console.log("IMAGE SAVED to  ",outputPATH)
 // }
 
 
-
-//Random Layer, render inside image ctx.
-// async function drawLayerAsync(_layer, _edition){ //Add RANDOMNESS-.
-//     let element = _layer.elements[ Math.floor(Math.random() * _layer.elements.length)     ] //RANDOM PICK a BITSET
-//     // addMetadata(element, _layer);
-//     console.log("IMG - ELEMENT: ", element)
-//     addAttributes(element, _layer)
-//     console.log('LOAD IMG1:',`${_layer.location}${element.fileName}`)
-//     // const image = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
-//     const image = await loadImage(`${_layer.location}${element.fileName}`)
-//     //const image = await loadImage("./assets_set1/kryptobitz_set1_sky4b.jpg")
-//     // ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
-//     ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
-//     // ctx.drawImage(image, 0, 0, 1000, 1000)
-//     // addIconIMG(_layer);
-//     // const logo = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
-//     // const cp = await loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
-//     // const tm = await loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
-//     // ctx.drawImage(logo,30, 22, 55, 55)
-//     // ctx.drawImage(cp,26, 940, 32, 32)
-//     // ctx.drawImage(tm,960, 45, 32, 32)
-    
-//     addNumberTxt(edition);
-//     console.log("create IMG layer: ", _edition, _layer.name, "with", element.name)
-//     saveLayer(canvas, _edition); //BITSETS converted into KRYPTOBITZ. $KBZ
-// }
-// async function addIconIMG(_layer) {
-//     //void ctx.drawImage(image, dx, dy, dWidth, dHeight);
-//     // console.log('LOAD IMG2:',`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
-//     // const image = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
-//     // ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height)
-//     // ctx.drawImage(image, 20,20,440,440);
-//     // ctx.drawImage(image, _layer.position.y, _layer.position.x, _layer.size.width, _layer.size.height);
-//     const logo = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
-//     const cp = await loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
-//     const tm = await loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
-//     ctx.drawImage(logo,30, 22, 55, 55)
-//     ctx.drawImage(cp,26, 940, 32, 32)
-//     ctx.drawImage(tm,960, 45, 32, 32)
-// }
-
-// const addNumberTxt = (_edition) => {
-
-//     let itemNUM = "00"+_edition;
-
-//     ctx.fillStyle = "#333333";
-//     ctx.font = "bold 12pt calibri";
-//     ctx.textBaseline = "top";
-//     ctx.textAlign = "left";
-//     ctx.fillText("1 of 1", 40, 74);
-
-//     ctx.font="33pt impact";
-//     ctx.shadowColor="yellow";
-//     ctx.shadowBlur=6;
-//     ctx.lineWidth=4;
-//     ctx.strokeText(itemNUM,95,25);
-//     ctx.textAlign = "left";
-//     ctx.shadowBlur=0;
-//     ctx.fillStyle="white";
-//     ctx.fillText(itemNUM,95,25);
-
-//     ctx.fillStyle = "skyblue";
-//     ctx.font = "bold 22pt Impact";
-//     ctx.textBaseline = "top";
-//     ctx.textAlign = "right";
-//     ctx.shadowColor="black";
-//     ctx.fillText("KRYPTOBITZ", 955, 28);
-
-//     ctx.font="18pt calibri";
-//     ctx.shadowColor="skyblue";
-//     ctx.textBaseline = "bottom";
-//     ctx.textAlign = "right";
-//     ctx.shadowBlur=6;
-//     ctx.lineWidth=4;
-//     ctx.fillStyle = "skyblue";
-//     ctx.strokeText("2 0 2 1",136,969);
-//     ctx.shadowBlur=4;
-//     ctx.fillStyle="steelblue";
-//     ctx.fillText("2 0 2 1",136,968);
-
-//     ctx.font="italic 20pt Verdana";
-//     ctx.shadowColor="skyblue";
-//     ctx.textBaseline = "bottom";
-//     ctx.textAlign = "right";
-//     ctx.shadowBlur=6;
-//     ctx.lineWidth=4;
-//     ctx.fillStyle = "skyblue";
-//     ctx.strokeText("spazeFalcon",965,969);
-//     ctx.shadowBlur=4;
-//     ctx.fillStyle="steelblue";
-//     ctx.fillText("spazeFalcon",964,968);
-
-//     // saveLayer(canvas, _edition);
 
 // //EXAMPLE: GRADIENT-.
 // //     var grad = ctx.createLinearGradient(0,0,200,0);
 // // grad.addColorStop(0, "white");
 // // grad.addColorStop(0.5, "red");
 // // grad.addColorStop(1, "black");
-
 // // ctx.fillStyle = grad;
 // // ctx.fillRect(0,0,400,200);
 
-// /*  NUM LAYOUTS - WITHOUT FRAME
 
-//     ctx.fillStyle = "#333333";
-//     ctx.font = "bold 12pt calibri";
-//     ctx.textBaseline = "top";
-//     ctx.textAlign = "left";
-//     ctx.fillText("1 of 1", 28, 60);
-
-//     ctx.font="33pt impact";
-//     ctx.shadowColor="yellow";
-//     ctx.shadowBlur=6;
-//     ctx.lineWidth=4;
-//     ctx.strokeText("001",85,10);
-//     ctx.textAlign = "left";
-//     ctx.shadowBlur=0;
-//     ctx.fillStyle="white";
-//     ctx.fillText("001",85,10);
-
-//     ctx.fillStyle = "skyblue";
-//     ctx.font = "bold 22pt Impact";
-//     ctx.textBaseline = "top";
-//     ctx.textAlign = "right";
-//     ctx.shadowColor="black";
-//     ctx.fillText("KRYPTOBITZ", 977, 12);
-
-//     ctx.font="18pt calibri";
-//     ctx.shadowColor="skyblue";
-//     ctx.textBaseline = "bottom";
-//     ctx.textAlign = "right";
-//     ctx.shadowBlur=6;
-//     ctx.lineWidth=4;
-//     ctx.fillStyle = "skyblue";
-//     ctx.strokeText("2 0 2 1",122,981);
-//     ctx.shadowBlur=4;
-//     ctx.fillStyle="steelblue";
-//     ctx.fillText("2 0 2 1",122,980);
-
-//     ctx.font="italic 22pt Verdana";
-//     ctx.shadowColor="skyblue";
-//     ctx.textBaseline = "bottom";
-//     ctx.textAlign = "right";
-//     ctx.shadowBlur=6;
-//     ctx.lineWidth=4;
-//     ctx.fillStyle = "skyblue";
-//     ctx.strokeText("spazeFalcon",979,989);
-//     ctx.shadowBlur=4;
-//     ctx.fillStyle="steelblue";
-//     ctx.fillText("spazeFalcon",978,988);
-
-// */
 
 // }
 
@@ -333,6 +124,7 @@ function saveLayer(_canvas, _edition){ //WHERE TO SAVE KRYPTOBIT-.
 //METADATA - GENERATED - with TOKEN. Record what happened. Add extra TXT.
 function main(){
     
+    //TODO modularize CANVASLAYERZ
     var mainCanvasContext = ctx; //document.getElementById("myCanvas").getContext("2d");
 
     /* Creates our layer's array */
@@ -384,15 +176,15 @@ function drawIMGZ(_currentCardNum, _BITZSET){
        selectedBITZ.push(randomBIT)
    }
 
-   //Build DNA for uniqueDNA checker, and also add count of BIT SEGMENTS to RARITYNET-.
+   // add count of BIT SEGMENTS to RARITYNET-.
    let bitSegment = null, bitDNA = '';
    for(let i = 0; i<selectedBITZ.length;i++){
         bitSegment = `${i+1}:${selectedBITZ[i].id}`;
         bitDNA += `${bitSegment}${(i+1===selectedBITZ.length)?'':'.'}`
         //SAVE SEGMENT-COUNT METADATA for RARITY Analytics-.
         if(RARITYNET[bitSegment]){ //FOUND: add COUNT-.
-            RARITYNET[bitSegment].count += 1;
-        } else { debugger; console.log("SHOULD NEVER HAPPEN.","INIT SYSTEM covers all variations")
+            RARITYNET[bitSegment].count += 1; //Simple count of the used SEGMENT-.
+        } else { debugger; console.log("Not initialized.","INIT SYSTEM needs to init this.")
             RARITYNET[bitSegment] = {count:1};
         }
     }
@@ -403,7 +195,7 @@ function drawIMGZ(_currentCardNum, _BITZSET){
     //     bitDNA = dupe; //TEST DUPE OVERRIDE-.
     // }
     //********************************************TEST DUPES
-    //IF selectedBITZ are UNIQUE
+    //UNIQUENESS: TEST IF selectedBITZ are UNIQUE
     if(bitDNA && !uniqueDNA[bitDNA]){ //CONFIRMED UNIQUE-.
         uniqueDNA[bitDNA] = {bitz:selectedBITZ};  //FOR UNIQUENESS DIAGNOSTICS-.
     } else { console.log('DUPLICATE DETECTED:', bitDNA, "iteration", _currentCardNum); 
@@ -525,11 +317,7 @@ function drawIMGZ(_currentCardNum, _BITZSET){
 
  
 
-
-
-
-//    console.log("CHOZEN-BITZ",promisedBITZ)
-   //LOAD IMGs, called by Promise. When all selected images load, then BUILD.
+   //------------------LOAD IMGs, called by Promise. When all selected images load, then BUILD.
    Promise.all(promisedBITZ) //waits for all IMGZ to load before rendering.
    .then( (imageSet) => { // .all([ logo, cp, tm, sky1,bg1,hero1 ])
         // console.log('BITZ-LOADED',imageSet)
@@ -733,16 +521,39 @@ function drawIMGZ(_currentCardNum, _BITZSET){
         drawNUMZ(_currentCardNum, selectedBITZ);
         
         drawImage(mainCanvasContext, layers);
-        
+
+        console.log("Writing IMAGE...",_currentCardNum)
         const outputPATH = "./output1" //ACTUAL NAME OF THE IMAGES BEING SAVED TO EACH IMAGE FILE.
-        fs.writeFileSync(`${outputPATH}/images/KBZ_${_currentCardNum}_${new Date().toISOString().split(":")[0]}.png`,canvas.toBuffer("image/png"))
+        fs.writeFileSync(`${outputPATH}/images/KBZ_${_currentCardNum}.png`,canvas.toBuffer("image/png"))
+        // fs.writeFileSync(`${outputPATH}/images/KBZ_${_currentCardNum}_${new Date().toISOString().split(":")[0]}.png`,canvas.toBuffer("image/png"))
         // fs.writeFileSync(`${outputPATH}/TESTIMG${_currentCardNum}.png`,canvas.toBuffer("image/png"))
         // fs.writeFileSync(`${outputPATH}/TESTIMG${edition}.png`,canvas.toBuffer("image/png"))
         
-        fs.writeFileSync(`${outputPATH}/json/KBZ_${_currentCardNum}_${new Date().toISOString().split(":")[0]}.json`, JSON.stringify(selectedBITZ));
         
-    });
-    
+        function setMETABITZ(){//COMPILE OPENSEA STYLE METADATA-. For Upload to IPFS through pinata-.
+            let metaBIT = {}
+            metaBIT.cardNum = _currentCardNum;
+            metaBIT.name = `${namePrefix} #00${_currentCardNum}`;
+            console.log("set METABIT",metaBIT.name)
+            metaBIT.description = description;
+            metaBIT.image = 'run ipfs to replace this uri';//`${IPFS_URI}/${_currentCardNum}.png`;     //IPFS PATH
+            metaBIT.external_url = externalURL;
+            metaBIT.youtube_url = youTubeURL;
+            METABITZOS.push(metaBIT)
+        } setMETABITZ();
+        function saveMETABITZ(){ //OPTIMIZATION: SAVE ONLY ONCE- at the end-.
+            if(_currentCardNum===totalCARDZ){
+                fs.writeFileSync(`./output1/json/_metadataMAIN.json`, JSON.stringify(METABITZOS));
+                console.log("WRITE METABITZ:",METABITZOS.length,totalCARDZ)
+            } //else{ console.log("not end",_currentCardNum) }
+        } saveMETABITZ();
+        // fs.writeFileSync(`${outputPATH}/json/KBZ_${_currentCardNum}.json`, JSON.stringify(selectedBITZ));
+        // fs.writeFileSync(`${outputPATH}/json/KBZ_${_currentCardNum}_${new Date().toISOString().split(":")[0]}.json`, JSON.stringify(selectedBITZ));
+        
+    })
+    // .finally( ()=>{
+    //     console.log("finallyMETABITZ:",METABITZOS.length)
+    // });
     return true;//drawIMGZ success
 } //END drawIMGZ
 // drawIMGZ();
@@ -751,17 +562,19 @@ for(let i = 1; i <= totalCARDZ; i++){
     // let bitz = BITZSET[i]; //layers dimension
     let result = drawIMGZ(i,BITZSET) //todo rename function to... paintNIFTY
     if(!result){ //DUPLICATE-ROLL-BACK-.
-        i--;
+        i--; debugger;
     }
-    // BITZSET.forEach((bitz)=>{  //LOOP NUMBER OF (bitz) sky, bg, char, frame, ...
-    //     // drawLayer(layer, i);
-    //     drawIMGZ(bitz,i)
-    // });
+    // if(i===totalCARDZ){ //LAST-CARD-.
+    //     console.log("LAST CARD",METABITZOS.length)
+    // }
 
 
 }
 
-//CALCULATE INDIVIDUAL IMAGE RARITY, by average of SEGMENT/SELECTION rarity.
+
+
+
+//CALCULATE INDIVIDUAL IMAGE RARITY, by average of SEGMENT/SELECTION count ratio.
 
 
    //**************ORIGINALITY************RARITY****************
@@ -770,10 +583,11 @@ for(let i = 1; i <= totalCARDZ; i++){
    for(let i=0; i<rarityKEYS.length;i++ ){ //calculate rarity ratio for SEGMENTS-.
        if(!RARITYNET[rarityKEYS[i]].count){continue} //skip zero-.
        RARITYNET[rarityKEYS[i]].ratio = parseFloat(Number(RARITYNET[rarityKEYS[i]].count/totalCARDZ).toFixed(2));
-       console.log("SEG-RATES:",rarityKEYS[i],RARITYNET[rarityKEYS[i]].ratio )
+       console.log("SEGMENT-RATIO:",rarityKEYS[i],RARITYNET[rarityKEYS[i]].ratio )
        if(RARITYNET[rarityKEYS[i]].ratio < 0){debugger;}
    }
-   
+   //todo revisit, with uniqueDNA, and convert into IDENTITYNET?
+   //todo flip the rarity score to be of 100% rarity. Meaning only instance.
 
 //    uniqueDNA[bitDNA] = {bitz:selectedBITZ};
 
@@ -803,7 +617,7 @@ for(let i = 1; i <= totalCARDZ; i++){
    //TODO tokenize TGTFOLDER and SRCFOLDER
     // var stream = fs.createWriteStream(`./output1/HEROZ_METABITZ_${new Date().toISOString().split(":")[0]}.json`, {flags:'a'});
     // var stream = fs.createWriteStream(`./output1/HEROZ_METABITZ_${new Date().toISOString().split(":")[0]}.json`, {flags:'w'});
-    var stream = fs.createWriteStream(`./output1/json/KBZ_META_${new Date().toISOString().split(":")[0]}.json`, {flags:'a'});
+    var stream = fs.createWriteStream(`./output1/KBZ_METANET_${new Date().toISOString().split(":")[0]}.json`, {flags:'a'});
     console.log("WRITE-METABITZ",new Date().toISOString());
     let STAMPNAME = new Date().toISOString().split(":")[0];
     stream.write(`{"${STAMPNAME}":${JSON.stringify(METABITZ)}`);
@@ -815,61 +629,26 @@ for(let i = 1; i <= totalCARDZ; i++){
 
 
 
-console.log("END. IMAGES CREATED.")
+console.log("END of MAIN")
 return
 
-        // const logo = await loadImage(`${rootPATH}\\copyrightNetCinematics\\nxlogo1.png`)
-        // const cp = await loadImage(`${rootPATH}\\copyrightNetCinematics\\cp1.png`)
-        // const tm = await loadImage(`${rootPATH}\\copyrightNetCinematics\\tm1.png`)
-    // ctx.drawImage(logo,30, 22, 55, 55)
-    // ctx.drawImage(cp,26, 940, 32, 32)
-    // ctx.drawImage(tm,960, 45, 32, 32)
-    
-    //NEED TO CREATE LAYERS, LOAD LAYER IMG, RENDER LAYERS, SAVE END IMAGE
-    /* Creates new layer and adds a square to it */
-    var newLayer = addNewLayer(layers);
-    var newLayerContext = newLayer.getContext("2d");
-    newLayerContext.fillStyle = "#FF0000";
-    newLayerContext.fillRect(0, 0, 80, 100);
-
-    /* Creates new layer and adds a square to it */
-    newLayer = addNewLayer(layers);
-    newLayerContext = newLayer.getContext("2d");
-    newLayerContext.fillStyle = "#00FF00";
-    newLayerContext.fillRect(10, 10, 80, 100);
-
-    /* Creates new layer and adds a square to it */
-    newLayer = addNewLayer(layers);
-    newLayerContext = newLayer.getContext("2d");
-    newLayerContext.fillStyle = "#0000FF";
-    newLayerContext.fillRect(20, 20, 80, 100);
-
-    /* On each change to the layers, draw the image again */
-    drawImage(mainCanvasContext, layers);
-
-    //edition = 1;
-
-    const outputPATH = "./output1"
-    fs.writeFileSync(`${outputPATH}/TESTIMG${edition}.png`,canvas.toBuffer("image/png"))
-
-return;
-
-    //Create each Edition, BITSET, BITFLEX
-    for(let i = 1; i <= edition; i++){ //LOOP NUMBER OF CARDZ CARDNUM
+    // //Create each Edition, BITSET, BITFLEX
+    // for(let i = 1; i <= edition; i++){ //LOOP NUMBER OF CARDZ CARDNUM
 
         
-        // layers.forEach((layer)=>{  //LOOP NUMBER OF LAYERZ (bitz) sky, bg, char, frame, ...
-            // drawLayer(layer, i);
-        // });
-        // addNumberTxt(i); //broke
-        // saveLayer(canvas, edition); 
-        addMetadata(i)
-        console.log("Edition: ",i)
-    }
+    //     // layers.forEach((layer)=>{  //LOOP NUMBER OF LAYERZ (bitz) sky, bg, char, frame, ...
+    //         // drawLayer(layer, i);
+    //     // });
+    //     // addNumberTxt(i); //broke
+    //     // saveLayer(canvas, edition); 
+    //     addMetadata(i)
+    //     console.log("Edition: ",i)
+    // }
 
     // fs.readFile("./output1/_metadata.json", (err, data) => {
         // if (err) throw err;
-        fs.writeFileSync("./output1/json/_metadata.json", JSON.stringify(metadata));
+        // fs.writeFileSync("./output1/json/_metadata.json", JSON.stringify(metadata));
     // })
+  
 }
 main();
