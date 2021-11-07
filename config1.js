@@ -12,7 +12,6 @@ let OS_META_MODEL = { //OpenSea metadata
     externalURL : `https://netcinematics.github.io/CRYPTOSPAZE/`,
 }
 
-
 // getIMGFILES to array - each is variation
 const getBITZ = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT levels.
     return fs.readdirSync(path) //Load-ALL-IMGS - from DYNO IMAGE PATH.
@@ -77,10 +76,9 @@ const BITZSET = [  //LAYERZ of BITZ, in BITZSETS, chosen at random for view. Mak
         size: {width:width,height:height},
         position: {x:0,y:0},
     },
-
 ]
 
-//TODO: TXT, useOnce
+//TODO: TXT, useOnce, gld, slvr
 //MODEL: "hero1a":{nameLBL:"", subLBL1:"", subLBL2:""}  <--LEGEND-.
 /*****************************************************************************\
  * METANET - Add (infinite) data... off chain. IPFS - Layer 2-. TXT, SND, VID, LNK.
@@ -123,55 +121,84 @@ const METANET = { //maps to the (dynamic) file names - to allow a METADATA (net)
    "frame1f":{},
 }
 
-function initMETANET_attributes(){
+function initMETANET_attributes(){ //separate "attributes", for TXT and other (TRAITS) to scale-.
     let metaKeys = Object.keys(METANET), metaKEY = ''
+    // let printDateStr = `${new Date().toISOString().split("T")[0]}`
+    // printDateStr += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`    
     for(var i=0; i<metaKeys.length;i++){
         metaKEY = metaKeys[i];
         if(metaKEY==='hero1a'){METANET[metaKEY].attributes=[
             {"trait_type":"HERO","value":"SPAZEBOT"}, 
-            {"display_type": "boost_number","trait_type":"LazerPower","value": 44}, 
-            {"display_type": "boost_percentage","trait_type":"ZoomVision","value": 11}, 
-            {"display_type": "number","trait_type":"Run","value": new Date().toISOString().split("T")[0]}
-        ]} else if (metaKEY==='frame1a'){METANET[metaKEY].attributes=[{"trait_type":"frame_color","value":"cyan"}, 
+            {"trait_type":"NAME","value":"OrbyOrbot"}, 
+            {"display_type": "boost_number","trait_type":"RainboPower","value": 88}, 
+            {"display_type": "boost_percentage","trait_type":"ZoomVision","value": 33}, 
+        ]} else if (metaKEY==='hero2a'){METANET[metaKEY].attributes=[{"trait_type":"NAME","value":"MaxzaDratz"}, 
+            {"trait_type":"HERO","value":"DRAT"}, 
+            {"display_type": "boost_number","trait_type":"CleverWit","value": 44}, 
+            {"display_type": "boost_percentage","trait_type":"Quickness","value": 55},             
+        ]} else if (metaKEY==='hero3a'){METANET[metaKEY].attributes=[{"trait_type":"NAME","value":"LukkeeDargon"}, 
+            {"trait_type":"HERO","value":"DARGON"}, 
+            {"display_type": "boost_number","trait_type":"DeepWizdom","value": 88}, 
+            {"display_type": "boost_percentage","trait_type":"Longevity","value": 77},             
+        ]} else if (metaKEY==='hero4a'){METANET[metaKEY].attributes=[{"trait_type":"NAME","value":"KriminalZawd"}, 
+            {"trait_type":"ANTIHERO","value":"ZAWD"}, 
+            {"display_type": "boost_percentage","trait_type":"Heartlessness","value": 66},            
+        ]} else if (metaKEY==='hero4b'){METANET[metaKEY].attributes=[{"trait_type":"NAME","value":"Zawd Sees!"}, 
+            {"trait_type":"ANTIHERO","value":"ZAWD"}, 
+            {"display_type": "boost_percentage","trait_type":"DeepWizdom","value": 11},            
+        ]} else if (metaKEY==='hero5a'){METANET[metaKEY].attributes=[{"trait_type":"NAME","value":"DarkoBot"}, 
+            {"trait_type":"ANTIHERO","value":"DARKOBOT"}, 
+            {"display_type": "boost_percentage","trait_type":"Mezmorize","value": 11},            
+        ]} else if (metaKEY==='hero5b'){METANET[metaKEY].attributes=[{"trait_type":"NAME","value":"DarkoBot Meta"}, 
+            {"trait_type":"ANTIHERO","value":"DARKOBOT"}, 
+            {"display_type": "boost_percentage","trait_type":"SuperSonic","value": 77},            
+        ]} else if (metaKEY==='hero5c'){METANET[metaKEY].attributes=[{"trait_type":"NAME","value":"DarkoBot Ghost"}, 
+            {"trait_type":"ANTIHERO","value":"DARKOBOT"}, 
+            {"display_type": "boost_percentage","trait_type":"Invisibility","value": 55},            
+        ]} else if (metaKEY==='hero6a'){METANET[metaKEY].attributes=[{"trait_type":"NAME","value":"ZapBotz"}, 
+            {"trait_type":"ANTIHERO","value":"ZAPBOT"}, 
+            {"display_type": "boost_number","trait_type":"PowerLazer","value": 22}, 
+        ]} else if (metaKEY==='hero6b'){METANET[metaKEY].attributes=[{"trait_type":"NAME","value":"ZapBotz Meta"}, 
+            {"trait_type":"ANTIHERO","value":"ZAPBOT"}, 
+            {"display_type": "boost_number","trait_type":"PowerLazer","value": 22}, 
+            {"display_type": "boost_percentage","trait_type":"ZapBlast","value": 88},             
+        ]} else if (metaKEY==='sky1a'){METANET[metaKEY].attributes=[{"trait_type":"sky","value":"HighNoonMoon"}, 
+        ]} else if (metaKEY==='sky1b'){METANET[metaKEY].attributes=[{"trait_type":"sky","value":"Moonrise"}, 
+        ]} else if (metaKEY==='sky1c'){METANET[metaKEY].attributes=[{"trait_type":"sky","value":"Moonset"}, 
+        ]} else if (metaKEY==='sky2a'){METANET[metaKEY].attributes=[{"trait_type":"sky","value":"GodRayRise"}, 
+        ]} else if (metaKEY==='sky2b'){METANET[metaKEY].attributes=[{"trait_type":"sky","value":"GodRayNoon"}, 
+        ]} else if (metaKEY==='sky2c'){METANET[metaKEY].attributes=[{"trait_type":"sky","value":"GodRaySets"}, 
+        ]} else if (metaKEY==='sky3a'){METANET[metaKEY].attributes=[{"trait_type":"sky","value":"CozmoBlast"}, 
+        ]} else if (metaKEY==='sky3b'){METANET[metaKEY].attributes=[{"trait_type":"sky","value":"CozmoBlastBlackHole"}, 
+        ]} else if (metaKEY==='sky4a'){METANET[metaKEY].attributes=[{"trait_type":"sky","value":"LonelyPlanet"}, 
+        ]} else if (metaKEY==='sky4b'){METANET[metaKEY].attributes=[{"trait_type":"sky","value":"SunAndMoon"}, 
+        ]} else if (metaKEY==='bg1a'){METANET[metaKEY].attributes=[{"trait_type":"background","value":"DesertNight"}, 
+        ]} else if (metaKEY==='bg1b'){METANET[metaKEY].attributes=[{"trait_type":"background","value":"DesertDay"}, 
+        ]} else if (metaKEY==='bg2a'){METANET[metaKEY].attributes=[{"trait_type":"background","value":"Desolation"}, 
+        ]} else if (metaKEY==='bg2b'){METANET[metaKEY].attributes=[{"trait_type":"background","value":"DesolateNight"}, 
+        ]} else if (metaKEY==='bg2c'){METANET[metaKEY].attributes=[{"trait_type":"background","value":"NightRoad"}, 
+        ]} else if (metaKEY==='bg2d'){METANET[metaKEY].attributes=[{"trait_type":"background","value":"DarkRoad"}, 
+        ]} else if (metaKEY==='bg3a'){METANET[metaKEY].attributes=[{"trait_type":"background","value":"GreyMountains"}, 
+        ]} else if (metaKEY==='bg3b'){METANET[metaKEY].attributes=[{"trait_type":"background","value":"MountainRange"}, 
+        ]} else if (metaKEY==='frame1a'){METANET[metaKEY].attributes=[{"trait_type":"","value":"cyan"}, 
         ]} else if (metaKEY==='frame1b'){METANET[metaKEY].attributes=[{"trait_type":"frame_color","value":"purple"}, 
         ]} else if (metaKEY==='frame1c'){METANET[metaKEY].attributes=[{"trait_type":"frame_color","value":"green"}, 
         ]} else if (metaKEY==='frame1d'){METANET[metaKEY].attributes=[{"trait_type":"frame_color","value":"orange"}, 
         ]} else if (metaKEY==='frame1e'){METANET[metaKEY].attributes=[{"trait_type":"frame_color","value":"maroon"}, 
         ]} else if (metaKEY==='frame1f'){METANET[metaKEY].attributes=[{"trait_type":"frame_color","value":"red"}, 
-        ]} else {METANET[metaKEY].attributes=[{"trait_type":"example1","value":"valu1"}, 
+        ]}//EXAMPLE //else {METANET[metaKEY].attributes=[{"trait_type":"example1","value":"valu1"}, 
             // {"display_type": "boost_number","trait_type":"SuperPower","value": 44}, 
             // {"display_type": "boost_percentage","trait_type":"Zoom Vision","value": 11}, 
             // {"display_type": "number","trait_type":"Run","value": new Date().toISOString().split("T")[0]}
-        ]}
+        // ]}
+
+
     }
 } initMETANET_attributes();
-
-    // metaBIT.attributes = [
-            //     {
-            //       "trait_type": "Base", 
-            //       "value": "Starfish"
-            //     },  
-            //     {
-            //       "display_type": "boost_number", 
-            //       "trait_type": "Aqua Power", 
-            //       "value": 40
-            //     }, 
-            //     {
-            //       "display_type": "boost_percentage", 
-            //       "trait_type": "Stamina Increase", 
-            //       "value": 10
-            //     }, 
-            //     {
-            //       "display_type": "number", 
-            //       "trait_type": "Generation", 
-            //       "value": 2
-            //     }
-            //   ];
 
 /*****************************************************************************\
  * END - METANET -
 \*****************************************************************************/
-
 
 /*****************************************************************************\
  * RARITYNET - initialize a COUNT of all SEGMENTS-. Calculate Ratio separately-.
@@ -191,8 +218,6 @@ initRARITYNET();
  * END - RARITYNET -
 \*****************************************************************************/
 
-
-
 /*****************************************************************************\
  * IDENTITYNET - by key, populate IDENTITY BITZ-.
  * GUARANTEED UNIQUE SYSTEM - of MULTIPLE BATCHES OF CARDZ-.
@@ -202,15 +227,12 @@ initRARITYNET();
 \*****************************************************************************/
 let IDENTITYNET = {} //simple count of occurence-.
 function initIDENTITYNET(){ //CONFIRMED UNIQUE IDB: identity bit-. (hash).
-    //TODO read IDENTITYNET from file BTZ_IDENTITYNET_date
-    //TODO write to IDENTITYNET, all the new cardz, and IPFS? 
-    //Or maybe just DSTAMP born (birthday)
+    //todo calculate every possible identity, to find the ones one yet chosen.
 }
 initIDENTITYNET();
 /*****************************************************************************\
  * END - IDENTITYNET -
 \*****************************************************************************/
-
 
 //KRYPTOSCOPE - many images and text creating random scenes... telling a dimensional variation story.
 //sometimes need to resize or position layers to match canvas, 1k, 1k.

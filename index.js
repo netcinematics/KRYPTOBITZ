@@ -11,8 +11,11 @@ const COMMANDZ = process.argv.slice(2); //CMD LINE args. -> node index 2
  * RESULT: to replace the IFPS PATH from CONFIG.
 \****************************************************/
 if(COMMANDZ[0]==='2'){ //IPFS MODE-.
-    console.log('RUNNING IN IPFS IMAGE UPDATE MODE');
+    let publishDateStr = `${new Date().toISOString().split("T")[0]}`
+    publishDateStr += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}` 
+    console.log('RUNNING IN IPFS IMAGE UPDATE MODE',publishDateStr);
     console.log('Updating Metadata files with IPFS base URI')
+    console.log('NOTE: do not run twice in 1 min. It will duplicate signature attribute.')
     // if(!fs.existsSync(`./output1/json/${DSTAMP}`)){ fs.mkdirSync(`./output1/json/${DSTAMP}`); }
     // let rawdata = fs.readFileSync(`${rootPATH}/output1/json/${DSTAMP}/_metadataMAIN.json`);
     let rawdata = fs.readFileSync(`${rootPATH}/output1/json/_metadataMAIN.json`);
@@ -20,13 +23,24 @@ if(COMMANDZ[0]==='2'){ //IPFS MODE-.
     data.forEach((item) => {  //Update metadata to OpenSea data structure
         console.log("UPDATE IPFS",item.name)
         item.image = `${OS_META_MODEL.IPFS_URI}/${item.cardNum}.png`;     //IPFS PATH
+        item.signature_date = new Date().toISOString();
+        item.attributes.push( 
+            {"trait_type":"SERIES","value":"KRYPTOBITZ"}, 
+            {"trait_type":"SET","value":"1"}, 
+            {"trait_type":"YEAR","value":"2021"}, 
+            {"trait_type":"ARTIST","value":"SPAZEFALCON"}, 
+            {"trait_type":"publish_date","value":publishDateStr} 
+        );
+            //todo move this to config, and maybe prior loop?
+        
         // item.name = `${OS_META_MODEL.namePrefix} #${item.cardNum}`;
         // item.description = description; 
-        // todo NFT LGL DESCRIPTION FOOTER
-        // item.external_url = OS_META_MODEL.externalURL
-        // item.youtube_url = OS_META_MODEL.youTubeURL
-        if(!fs.existsSync(`./output1/json/${DSTAMP}`)){ fs.mkdirSync(`./output1/json/${DSTAMP}`); }
-        fs.writeFileSync(`${rootPATH}/output1/json/${DSTAMP}/${item.cardNum}.json`,
+
+
+        // if(!fs.existsSync(`./output1/json/${DSTAMP}`)){ fs.mkdirSync(`./output1/json/${DSTAMP}`); }
+        // fs.writeFileSync(`${rootPATH}/output1/json/${DSTAMP}/${item.cardNum}.json`,
+        if(!fs.existsSync(`./output1/json/${publishDateStr}`)){ fs.mkdirSync(`./output1/json/${publishDateStr}`); }
+        fs.writeFileSync(`${rootPATH}/output1/json/${publishDateStr}/${item.cardNum}.json`,
             JSON.stringify(item, null, 2)
         );
     });
@@ -107,8 +121,8 @@ function drawBITZ(_currentCardNum, _BITZSET){
             RARITYNET[bitSegment] = {count:1};
         }
     }
-//   todo //IF DNA equals runOnce is gold, or DNA match is slvr
-//   todo  //IF DNA equals _slvr or _gld, change frame
+//   nogo //IF DNA equals runOnce is gold, or DNA match is slvr
+//   nogo  //IF DNA equals _slvr or _gld, change frame
 
 /************************************************************\
  * ASYNCHRONOUS - IMAGE - LOAD
@@ -298,29 +312,43 @@ function drawBITZ(_currentCardNum, _BITZSET){
             layerCTX.textAlign = "left";
             layerCTX.fillText(`kbz ${IDENTITY_BIT}`,33,940);
 
-            //TODO _slvr _gold
+            //nogo _slvr _gold
         }
         drawNUMZ(_currentCardNum, selectedBITZ);
         paintLAYERZ(CANVAS_LAYERZ, layerz);    
 
         console.log("Writing IMAGE and METABITZ...",_currentCardNum)
         // const outputPATH = "./output1" //ACTUAL NAME OF THE IMAGES BEING SAVED TO EACH IMAGE FILE.
+        // let filePATH = `${new Date().toISOString().split("T")[0]}`
+        // filePATH += `_${new Date().toTimeString().split(' ')[0].replaceAll(':','_')}`
         let filePATH = `${new Date().toISOString().split("T")[0]}`
+        filePATH += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
         // let filePATH = `${Date.now()}`
         if(!fs.existsSync(`./output1/images/${filePATH}`)){ fs.mkdirSync(`./output1/images/${filePATH}`); }
         fs.writeFileSync(`./output1/images/${filePATH}/KBZ_${_currentCardNum}.png`,canvas.toBuffer("image/png"))
         
         function setMETABITZ(){//COMPILE OPENSEA STYLE METADATA-. For Upload to IPFS through pinata-.
             let metaBIT = {}, idb=[], idbName ='';
+            metaBIT.identity = IDENTITY_BIT;
             metaBIT.cardNum = _currentCardNum;
+            metaBIT.print_date = new Date().toISOString();
             metaBIT.name = `${OS_META_MODEL.namePrefix} #00${_currentCardNum}`;
             // console.log("set METABIT",metaBIT.name)
-            metaBIT.description = OS_META_MODEL.description; //TODO LINK TO METANET!
+            metaBIT.description = OS_META_MODEL.description + `\n NFT Collectible by spazeFalcon. All Rights Reserved 2021.`; 
+            
+            
+            //nogo LINK TO METANET!
+
+
+
+
+
+
             metaBIT.image = 'run ipfs to replace this uri';//`${IPFS_URI}/${_currentCardNum}.png`;     //IPFS PATH
             metaBIT.external_url = OS_META_MODEL.externalURL;
             metaBIT.youtube_url = OS_META_MODEL.youTubeURL;
             metaBIT.attributes = [] //connect to identitynet
-            // metaBIT.attributes = IDENTITYNET[IDENTITY_BIT].bitz
+            //UPDATE-ATTRIBUTES from config
             if(IDENTITYNET[IDENTITY_BIT] && IDENTITYNET[IDENTITY_BIT].bitz){
                 for(var i=0; i<IDENTITYNET[IDENTITY_BIT].bitz.length;i++){
                     // idb = IDENTITYNET[IDENTITY_BIT].bitz[i]
@@ -345,8 +373,8 @@ function drawBITZ(_currentCardNum, _BITZSET){
                 console.log("WRITE METABITZ:",METABITZOS.length,"of",TOTAL_CARDZ)
                 // if(!fs.existsSync(`./output1/json/${DSTAMP}`)){ fs.mkdirSync(`./output1/json/${DSTAMP}`); }
                 //  fs.writeFileSync(`./output1/json/${DSTAMP}/_metadataMAIN.json`, JSON.stringify(METABITZOS));
-                 fs.writeFileSync(`./output1/json/_metadataMAIN.json`, JSON.stringify(METABITZOS));
                 calculateRARITY();
+                 fs.writeFileSync(`./output1/json/_metadataMAIN.json`, JSON.stringify(METABITZOS));
                 writeMETANETtoFILE();
             } //else{ console.log("not end",_currentCardNum) }
         } finishMETABITZ();
@@ -383,7 +411,6 @@ function calculateRARITY(){
        if(!RARITYNET[rarityKEYS[i]].count){continue} //skip zero-.
        RARITYNET[rarityKEYS[i]].ratio = parseFloat(Number(RARITYNET[rarityKEYS[i]].count/TOTAL_CARDZ).toFixed(2));
        console.log("SEGMENT-RATIO:",rarityKEYS[i],RARITYNET[rarityKEYS[i]].ratio )
-       if(RARITYNET[rarityKEYS[i]].ratio < 0){debugger;}
    }
 
    let uniqueNIFTYs = Object.keys(IDENTITYNET), aNIFTY='', NIFTYRARITYRATIO=0;
@@ -401,10 +428,29 @@ function calculateRARITY(){
         aNIFTY.rarity.NFTRARITYRATIO = parseFloat(Number(NIFTYRARITYRATIO / bitSPLIT.length).toFixed(2));
         aNIFTY.rarity.NFTRARITYGRADE = Number(1 - aNIFTY.rarity.NFTRARITYRATIO).toFixed(2);
         console.log("NFT-RARITY:",bitKEY,"RATIO:", aNIFTY.rarity.NFTRARITYRATIO,"SCORE:",aNIFTY.rarity.NFTRARITYGRADE)
-        if(aNIFTY.rarity.NFTRARITYRATIO===NaN){debugger;}
+
+        
+        
+        //NOGO: IDENTITYNET calculate 1st, last, middle card as _slvr_last_1st _once_gld
+        //UPDATE RARITY SCORES in ATTRIBUTES - before writing to METAMAIN
+        let bitItem = null;
+        for(var k = 0; k<METABITZOS.length; k++){
+            bitItem = METABITZOS[k];
+            if(bitItem.identity===bitKEY){
+                bitItem.attributes.push(
+                    {"display_type": "boost_number","trait_type":"RARE-GRADE","value": aNIFTY.rarity.NFTRARITYGRADE}, 
+                    {"display_type": "boost_percentage","trait_type":"RARE-RATIO","value": aNIFTY.rarity.NFTRARITYRATIO}  
+                )
+                break;
+            }
+        }
+
+
    }
 
-   //TODO: IDENTITYNET calculate 1st, last, middle card as _slvr_last_1st _once_gld
+
+
+
 }
 function writeMETANETtoFILE(){ //write to master-meta-net-.
     let METABITZ = {'RARITYNET':RARITYNET,'IDENTITYNET':IDENTITYNET,
