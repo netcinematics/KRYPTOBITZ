@@ -2,9 +2,7 @@ const fs = require("fs");
 const DIR = __dirname; //C:\PROJECTS\KRYPTOBITZ
 const width = 1000;
 const height = 1000;
-const TOTAL_CARDZ = 11;
-
-// const IPFS_URI = "ipfs://Qm..."
+const TOTAL_CARDZ = 3;
 
 let OS_META_MODEL = { //OpenSea metadata 
     namePrefix : "KRYPTOBITZ",
@@ -23,30 +21,19 @@ const getBITZ = (path)=>{ //BITZ - INNER BIT - LEVEL. SubBIT level. and SuperBIT
             return !/(^|\/)\.[^\/\.]/g.test(item)
         } 
         return [];
-
-        // return !/(^|\/)\.[^\/\.]/g.test(item)
     })
     .map((txt,i)=>{ //Initial File 
-
-
         return {
             id:i+1,
-            name:cleanName(txt),
+            name:setName(txt),
             fileName:txt,
             //rarity:addRarity(txt)
         }
     })
 }
 
-
-
-
-//TODO
-const cleanName = (_str) => {    //converts image file name to text string
+const setName = (_str) => {    //converts image file name to text string
     let name = _str.slice(0, -4);
-    // rarity.forEach((r)=>{
-    //     name = name.replace(r.key,"");
-    // });
     return name;
 }
 
@@ -94,14 +81,14 @@ const BITZSET = [  //LAYERZ of BITZ, in BITZSETS, chosen at random for view. Mak
 ]
 
 //TODO: TXT, useOnce
-//TODO: update key to be IDENTITYNET
 //MODEL: "hero1a":{nameLBL:"", subLBL1:"", subLBL2:""}  <--LEGEND-.
 /*****************************************************************************\
- * METANET - Add (infinite) data... off chain. IPFS - Layer 2-.
+ * METANET - Add (infinite) data... off chain. IPFS - Layer 2-. TXT, SND, VID, LNK.
+ * MODE-STORY, TXT card can be added here. _story
 \*****************************************************************************/
 const METANET = { //maps to the (dynamic) file names - to allow a METADATA (net) through dynamically.
-   "hero1a":{nameLBL:"OrbyOrbot"}, //TODO by MODE-STORY, TXT card can be added here. _story
-   "hero2a":{nameLBL:"MaxzaDratz"}, //TODO tm placements here too
+   "hero1a":{nameLBL:"OrbyOrbot"}, 
+   "hero2a":{nameLBL:"MaxzaDratz"}, 
    "hero3a":{nameLBL:"LukkeeDargon",TXT:["hi!"]},
    "hero4a":{nameLBL:"KriminalZawd"},
    "hero4b":{nameLBL:"Zawd Sees!", useOnce:1},
@@ -128,7 +115,59 @@ const METANET = { //maps to the (dynamic) file names - to allow a METADATA (net)
    "bg2d":{subLBL2:"DarkRoad"},
    "bg3a":{subLBL2:"GreyMountains"},
    "bg3b":{subLBL2:"MountainRange"},
+   "frame1a":{},
+   "frame1b":{},
+   "frame1c":{},
+   "frame1d":{},
+   "frame1e":{},
+   "frame1f":{},
 }
+
+function initMETANET_attributes(){
+    let metaKeys = Object.keys(METANET), metaKEY = ''
+    for(var i=0; i<metaKeys.length;i++){
+        metaKEY = metaKeys[i];
+        if(metaKEY==='hero1a'){METANET[metaKEY].attributes=[
+            {"trait_type":"HERO","value":"SPAZEBOT"}, 
+            {"display_type": "boost_number","trait_type":"LazerPower","value": 44}, 
+            {"display_type": "boost_percentage","trait_type":"ZoomVision","value": 11}, 
+            {"display_type": "number","trait_type":"Run","value": new Date().toISOString().split("T")[0]}
+        ]} else if (metaKEY==='frame1a'){METANET[metaKEY].attributes=[{"trait_type":"frame_color","value":"cyan"}, 
+        ]} else if (metaKEY==='frame1b'){METANET[metaKEY].attributes=[{"trait_type":"frame_color","value":"purple"}, 
+        ]} else if (metaKEY==='frame1c'){METANET[metaKEY].attributes=[{"trait_type":"frame_color","value":"green"}, 
+        ]} else if (metaKEY==='frame1d'){METANET[metaKEY].attributes=[{"trait_type":"frame_color","value":"orange"}, 
+        ]} else if (metaKEY==='frame1e'){METANET[metaKEY].attributes=[{"trait_type":"frame_color","value":"maroon"}, 
+        ]} else if (metaKEY==='frame1f'){METANET[metaKEY].attributes=[{"trait_type":"frame_color","value":"red"}, 
+        ]} else {METANET[metaKEY].attributes=[{"trait_type":"example1","value":"valu1"}, 
+            // {"display_type": "boost_number","trait_type":"SuperPower","value": 44}, 
+            // {"display_type": "boost_percentage","trait_type":"Zoom Vision","value": 11}, 
+            // {"display_type": "number","trait_type":"Run","value": new Date().toISOString().split("T")[0]}
+        ]}
+    }
+} initMETANET_attributes();
+
+    // metaBIT.attributes = [
+            //     {
+            //       "trait_type": "Base", 
+            //       "value": "Starfish"
+            //     },  
+            //     {
+            //       "display_type": "boost_number", 
+            //       "trait_type": "Aqua Power", 
+            //       "value": 40
+            //     }, 
+            //     {
+            //       "display_type": "boost_percentage", 
+            //       "trait_type": "Stamina Increase", 
+            //       "value": 10
+            //     }, 
+            //     {
+            //       "display_type": "number", 
+            //       "trait_type": "Generation", 
+            //       "value": 2
+            //     }
+            //   ];
+
 /*****************************************************************************\
  * END - METANET -
 \*****************************************************************************/
