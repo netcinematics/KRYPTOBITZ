@@ -112,7 +112,7 @@ function drawBITZ(_currentCardNum, _BITZSET){
         _currentCardNum--; //TRY AGAIN-.
         return false;
     }
-    //COUNT-OCCURRENCE (of bit segment) - for RARITY Analytics-.
+    //COUNT-OCCURRENCE (of BIT segment) - for RARITY Analytics-.
     for(let i = 0; i<selectedBITZ.length;i++){ 
         bitSegment = `${i+1}:${selectedBITZ[i].id}`; //the singular variation. Layer count.
         if(RARITYNET[bitSegment]){ //FOUND: add COUNT-.
@@ -121,8 +121,8 @@ function drawBITZ(_currentCardNum, _BITZSET){
             RARITYNET[bitSegment] = {count:1};
         }
     }
-//   nogo //IF DNA equals runOnce is gold, or DNA match is slvr
-//   nogo  //IF DNA equals _slvr or _gld, change frame
+//   TODO //IF DNA equals runOnce is gold, or DNA match is slvr
+//   todo  //IF DNA equals _slvr or _gld, change frame
 
 /************************************************************\
  * ASYNCHRONOUS - IMAGE - LOAD
@@ -312,7 +312,7 @@ function drawBITZ(_currentCardNum, _BITZSET){
             layerCTX.textAlign = "left";
             layerCTX.fillText(`kbz ${IDENTITY_BIT}`,33,940);
 
-            //nogo _slvr _gold
+            //todo _slvr _gold
         }
         drawNUMZ(_currentCardNum, selectedBITZ);
         paintLAYERZ(CANVAS_LAYERZ, layerz);    
@@ -321,11 +321,20 @@ function drawBITZ(_currentCardNum, _BITZSET){
         // const outputPATH = "./output1" //ACTUAL NAME OF THE IMAGES BEING SAVED TO EACH IMAGE FILE.
         // let filePATH = `${new Date().toISOString().split("T")[0]}`
         // filePATH += `_${new Date().toTimeString().split(' ')[0].replaceAll(':','_')}`
-        let filePATH = `${new Date().toISOString().split("T")[0]}`
-        filePATH += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
+        // let filePATH = `${new Date().toISOString().split("T")[0]}`
+        // filePATH += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
         // let filePATH = `${Date.now()}`
-        if(!fs.existsSync(`./output1/images/${filePATH}`)){ fs.mkdirSync(`./output1/images/${filePATH}`); }
-        fs.writeFileSync(`./output1/images/${filePATH}/KBZ_${_currentCardNum}.png`,canvas.toBuffer("image/png"))
+        // if(!fs.existsSync(`./output1/images/${filePATH}`)){ fs.mkdirSync(`./output1/images/${filePATH}`); }
+        // fs.writeFileSync(`./output1/images/${filePATH}/KBZ_${_currentCardNum}.png`,canvas.toBuffer("image/png"))
+        //MAIN
+        if(!fs.existsSync(`./output1/images/IMGZ`)){ fs.mkdirSync(`./output1/images/IMGZ`); }
+        fs.writeFileSync(`./output1/images/IMGZ/KBZ_${_currentCardNum}.png`,canvas.toBuffer("image/png"))
+        
+        //BAK - image backup, dated by folder.
+        let IMG_DATE_STAMP = `${new Date().toISOString().split("T")[0]}`
+        IMG_DATE_STAMP += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
+        if(!fs.existsSync(`./output1/images/bak/${IMG_DATE_STAMP}`)){ fs.mkdirSync(`./output1/images/bak/${IMG_DATE_STAMP}`); }
+        fs.writeFileSync(`./output1/images/bak/${IMG_DATE_STAMP}/KBZ_${_currentCardNum}.png`,canvas.toBuffer("image/png"))
         
         function setMETABITZ(){//COMPILE OPENSEA STYLE METADATA-. For Upload to IPFS through pinata-.
             let metaBIT = {}, idb=[], idbName ='';
@@ -393,7 +402,7 @@ function startMETABITZ(){ //READ IN METANET from file, replicate STATE-.
     } catch( e ) { return; }
 }
 function createKRYPTOBITZ(){ //IMAGE-CREATION-FACTORY 
-    startMETABITZ();
+    // startMETABITZ(); //CONNECT WITH METANET-.
     for(let i = 1; i <= TOTAL_CARDZ; i++){
         let result = drawBITZ(i,BITZSET) 
         if(!result){ //DUPLICATE-ROLL-BACK-. 
@@ -403,16 +412,18 @@ function createKRYPTOBITZ(){ //IMAGE-CREATION-FACTORY
 } createKRYPTOBITZ();
 
 function calculateRARITY(){
-    console.log("CALCULATE RARITY")
+    console.log("CALCULATE RARITY.", "BITRATIO: useCount (1:2) / totalCardz",TOTAL_CARDZ)
  //**************ORIGINALITY************RARITY****************
    //ALL CARDZ are SELECTED. and UNIQUE, CALCULATE RARITY-.
    let rarityKEYS = Object.keys(RARITYNET);
    for(let i=0; i<rarityKEYS.length;i++ ){ //calculate rarity ratio for SEGMENTS-.
        if(!RARITYNET[rarityKEYS[i]].count){continue} //skip zero-.
        RARITYNET[rarityKEYS[i]].ratio = parseFloat(Number(RARITYNET[rarityKEYS[i]].count/TOTAL_CARDZ).toFixed(2));
-       console.log("SEGMENT-RATIO:",rarityKEYS[i],RARITYNET[rarityKEYS[i]].ratio )
+       console.log("BIT-RATIO: bit use",rarityKEYS[i],"across set is",RARITYNET[rarityKEYS[i]].ratio )
    }
 
+   console.log("CALCULATE: NFT-RARITY");
+   console.log("Add up BIT Rarity Ratios, for AVG RARITY RATIO.")
    let uniqueNIFTYs = Object.keys(IDENTITYNET), aNIFTY='', NIFTYRARITYRATIO=0;
    for(let i=0; i<uniqueNIFTYs.length;i++){ //COUNT EACH OF TYPE, for SUB SCORE, and total SCORE.
         NIFTYRARITYRATIO = 0;
@@ -424,14 +435,14 @@ function calculateRARITY(){
             aNIFTY.rarity[bitSPLIT[j]] = RARITYNET[bitSPLIT[j]];//update UNIQUE DNA 
             NIFTYRARITYRATIO += RARITYNET[bitSPLIT[j]].ratio;
         }
-        if(!NIFTYRARITYRATIO){debugger;}
         aNIFTY.rarity.NFTRARITYRATIO = parseFloat(Number(NIFTYRARITYRATIO / bitSPLIT.length).toFixed(2));
         aNIFTY.rarity.NFTRARITYGRADE = Number(1 - aNIFTY.rarity.NFTRARITYRATIO).toFixed(2);
         console.log("NFT-RARITY:",bitKEY,"RATIO:", aNIFTY.rarity.NFTRARITYRATIO,"SCORE:",aNIFTY.rarity.NFTRARITYGRADE)
 
         
         
-        //NOGO: IDENTITYNET calculate 1st, last, middle card as _slvr_last_1st _once_gld
+        //TODO: IDENTITYNET calculate 1st, last, middle card as _slvr_last_1st _once_gld
+
         //UPDATE RARITY SCORES in ATTRIBUTES - before writing to METAMAIN
         let bitItem = null;
         for(var k = 0; k<METABITZOS.length; k++){

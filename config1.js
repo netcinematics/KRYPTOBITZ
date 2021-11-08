@@ -2,7 +2,7 @@ const fs = require("fs");
 const DIR = __dirname; //C:\PROJECTS\KRYPTOBITZ
 const width = 1000;
 const height = 1000;
-const TOTAL_CARDZ = 3;
+const TOTAL_CARDZ = 4;
 
 let OS_META_MODEL = { //OpenSea metadata 
     namePrefix : "KRYPTOBITZ",
