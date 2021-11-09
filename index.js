@@ -83,14 +83,43 @@ function main_NIFTYFACTORY(){
     }
 
 function drawBITZ(_currentCardNum, _BITZSET){
-   //RANDOM SELECTOR: Calclulate which images get in, an array of IMG-PATHS
-   let selectedBITZ = [], randomBIT = null;
+    let selectedBITZ = [], randomBIT = null, useOnce=0;
+    let firstLast = (_currentCardNum===1 || _currentCardNum===TOTAL_CARDZ)?1:0;
+    
+    //RANDOM SELECTOR: Calclulate which images get in, an array of IMG-PATHS
    for( let i = 0; i<_BITZSET.length;i++){
        randomBIT = _BITZSET[i].BITZ[ Math.floor(Math.random() * _BITZSET[i].BITZ.length)     ] //RANDOM PICK a BITSET
-    //    console.log("SELECTED-BIT", randomBIT)
+       console.log("SELECTED-BIT", randomBIT.name)
+
+
+       if(METANET["USEONCE"].indexOf(randomBIT.name) > -1){ //FOUND a USEONCE BIT in random selection.
+            // console.log("FOUND a USEONCE")
+            // if(RARITYNET[randomBIT.name] && RARITYNET[randomBIT.name].count){
+            //     console.log("USEONCE DUPLICATE DETECTED",randomBIT.name, "RERUN" )
+            //     _currentCardNum--; //TRY AGAIN-.
+            //     return false;
+            // } else {
+                METANET["USEONCE"].splice(METANET["USEONCE"].indexOf(randomBIT.name),1) //once
+                console.log("ONE-OF-A-KIND FIND!",randomBIT.name)
+                randomBIT.useOnce = 1;
+                // RARITYNET[randomBIT.name].useOnce = 1;
+                useOnce = randomBIT;
+                // RARITYNET[randomBIT.name].useOnce = 1; //flag rarity net-.
+            // }
+       } else if(firstLast){ //ADD on a SLVR
+            randomBIT.firstLast = 1;
+        //   RARITYNET[randomBIT.name].useOnce = 1;
+       }
        randomBIT.PATH = _BITZSET[i].PATH;
        selectedBITZ.push(randomBIT)
    }
+//    let selectedBITZ = [], randomBIT = null;
+//    for( let i = 0; i<_BITZSET.length;i++){
+//        randomBIT = _BITZSET[i].BITZ[ Math.floor(Math.random() * _BITZSET[i].BITZ.length)     ] //RANDOM PICK a BITSET
+//     //    console.log("SELECTED-BIT", randomBIT)
+//        randomBIT.PATH = _BITZSET[i].PATH;
+//        selectedBITZ.push(randomBIT)
+//    }
    // INIT IDENTITY 
    let bitSegment = null, IDENTITY_BIT = '';
    for(let i = 0; i<selectedBITZ.length;i++){ //INIT ID for Confirmed Originality-.
@@ -98,6 +127,9 @@ function drawBITZ(_currentCardNum, _BITZSET){
         IDENTITY_BIT += `${bitSegment}${(i+1===selectedBITZ.length)?'':'.'}`
     }
     //********************************************TEST DUPES
+    // if(useonce){
+    //     // IDENTITY_BIT += '_gld'
+    // }
     // let rKeyz = Object.keys(IDENTITYNET);
     // if(rKeyz.length && !dupe){
     //     dupe = rKeyz[0];
@@ -105,10 +137,16 @@ function drawBITZ(_currentCardNum, _BITZSET){
     // }
     //********************************************TEST DUPES
     //UNIQUENESS: TEST IF selectedBITZ are UNIQUE
-    if(IDENTITY_BIT && !IDENTITYNET[IDENTITY_BIT]){ //CONFIRMED UNIQUE-.
-        IDENTITYNET[IDENTITY_BIT] = {bitz:selectedBITZ};  //FOR UNIQUENESS DIAGNOSTICS-.
+    if(IDENTITYNET[IDENTITY_BIT] && IDENTITYNET[IDENTITY_BIT].useOnce){
+        console.log('USE ONCE DETECTED:', IDENTITY_BIT, "RERUN"); 
+        _currentCardNum--; //TRY AGAIN-.
+        return false;
+    } else if(IDENTITY_BIT && !IDENTITYNET[IDENTITY_BIT]){ //CONFIRMED UNIQUE-.
+        IDENTITYNET[IDENTITY_BIT] = {bitz:selectedBITZ};  //COMPOSE-IDENTITY-BITZ.
+        if(useOnce){IDENTITYNET[IDENTITY_BIT].useOnce = 1;}
+        else if(firstLast){IDENTITYNET[IDENTITY_BIT].firstLast = 1;}
     } else { //DUPLICATE!
-        console.log('DUPLICATE DETECTED:', IDENTITY_BIT, "iteration", _currentCardNum); 
+        console.log('DUPLICATE DETECTED:', IDENTITY_BIT, "iteration", _currentCardNum,"RERUN"); 
         _currentCardNum--; //TRY AGAIN-.
         return false;
     }
@@ -117,12 +155,12 @@ function drawBITZ(_currentCardNum, _BITZSET){
         bitSegment = `${i+1}:${selectedBITZ[i].id}`; //the singular variation. Layer count.
         if(RARITYNET[bitSegment]){ //FOUND: add COUNT-.
             RARITYNET[bitSegment].count += 1; //Simple count of the used SEGMENT-.
+            if(useOnce){ RARITYNET[bitSegment].useOnce = 1 } //flag to add to ratio-.
+            else if(firstLast){ RARITYNET[bitSegment].firstLast = 1 }
         } else { debugger; console.log("Not initialized.","INIT SYSTEM needs to init this.")
             RARITYNET[bitSegment] = {count:1};
         }
     }
-//   TODO //IF DNA equals runOnce is gold, or DNA match is slvr
-//   todo  //IF DNA equals _slvr or _gld, change frame
 
 /************************************************************\
  * ASYNCHRONOUS - IMAGE - LOAD
@@ -134,10 +172,17 @@ function drawBITZ(_currentCardNum, _BITZSET){
         let selectedBIT = selectedBITZ[i];
         // console.log("IMGPATH:",selectedBIT);
         let imgPromise = loadImage(`${selectedBIT.PATH}${selectedBIT.fileName}`)
-        // let imgPromise = loadImage(`${rootPATH}\\assets_set1\\starz\\sky1a.png`)
         promisedBITZ.push( imgPromise )
-   }
-
+    }
+    
+    if(useOnce){ //ADD on a GLDFRM-.
+       let imgPromise = loadImage(`${rootPATH}\\copyrightNetCinematics\\frame1_gld.png`)
+       promisedBITZ.push( imgPromise )
+    } else if(firstLast){ //ADD on a SLVRFRM-.
+       let imgPromise = loadImage(`${rootPATH}\\copyrightNetCinematics\\frame1_slvr.png`)
+       promisedBITZ.push( imgPromise )
+    }
+    
    //-----------LOAD IMGs, called by Promise. When all selected images load, then BUILD.
    Promise.all(promisedBITZ) //waits for all IMGZ to load before rendering.
    .then( (imageSet) => { // .all([ logo, cp, tm, sky1,bg1,hero1 ])
@@ -225,6 +270,7 @@ function drawBITZ(_currentCardNum, _BITZSET){
                     if(metaNODE.nameLBL){ nameLBL = metaNODE.nameLBL } 
                     if(metaNODE.subLBL1){ subLBL1 = metaNODE.subLBL1 }
                     if(metaNODE.subLBL2){ subLBL2 = metaNODE.subLBL2 }
+                    //TODO slv gld : display flag
                     if(metaNODE.subMSG1){ subMSG1 = metaNODE.subMSG1 }
                     if(metaNODE.rareMSG){ rareMSG = metaNODE.rareMSG }
                 }
@@ -312,7 +358,26 @@ function drawBITZ(_currentCardNum, _BITZSET){
             layerCTX.textAlign = "left";
             layerCTX.fillText(`kbz ${IDENTITY_BIT}`,33,940);
 
-            //todo _slvr _gold
+            //slvr n gld
+            if(useOnce){
+                var newLayerZ = addLAYERZ(layerz);
+                layerCTX = newLayerZ.getContext("2d");
+                layerCTX.fillStyle = "gold";
+                layerCTX.font = "12pt calibri";
+                layerCTX.textBaseline = "bottom";
+                layerCTX.textAlign = "left";
+                layerCTX.fillText(`goldencard`,880,950);
+            } else if(firstLast) {
+                var newLayerZ = addLAYERZ(layerz);
+                layerCTX = newLayerZ.getContext("2d");
+                layerCTX.fillStyle = "silver";
+                layerCTX.font = "12pt calibri";
+                layerCTX.textBaseline = "bottom";
+                layerCTX.textAlign = "left";
+                layerCTX.fillText(`silvercard`,880,950);               
+            }
+
+
         }
         drawNUMZ(_currentCardNum, selectedBITZ);
         paintLAYERZ(CANVAS_LAYERZ, layerz);    
@@ -345,17 +410,13 @@ function drawBITZ(_currentCardNum, _BITZSET){
             // console.log("set METABIT",metaBIT.name)
             metaBIT.description = OS_META_MODEL.description + `\n NFT Collectible by spazeFalcon. All Rights Reserved 2021.`; 
             
-            
             //nogo LINK TO METANET!
-
-
-
-
-
 
             metaBIT.image = 'run ipfs to replace this uri';//`${IPFS_URI}/${_currentCardNum}.png`;     //IPFS PATH
             metaBIT.external_url = OS_META_MODEL.externalURL;
             metaBIT.youtube_url = OS_META_MODEL.youTubeURL;
+            if(useOnce){ metaBIT.useOnce = 1; }
+            else if(firstLast){ metaBIT.firstLast = 1; }
             metaBIT.attributes = [] //connect to identitynet
             //UPDATE-ATTRIBUTES from config
             if(IDENTITYNET[IDENTITY_BIT] && IDENTITYNET[IDENTITY_BIT].bitz){
@@ -374,7 +435,18 @@ function drawBITZ(_currentCardNum, _BITZSET){
                     // console.log("PUSHING ATTRS:",METANET[idbName])
                 }
             }
-        
+            if(useOnce){
+                metaBIT.attributes.push( 
+                    {"trait_type":"STATUS","value":"SUPER-RARE","display_type": "boost_percentage"}, 
+                    {"trait_type":"GLD","value":"GOLDEN-CARD","display_type": "boost_percentage"}, 
+                );
+            }
+            if(firstLast){
+                metaBIT.attributes.push(
+                    {"trait_type":"STATUS","value":"RARE","display_type": "boost_percentage"}, 
+                    {"trait_type":"SLVR","value":"SILVER-CARD","display_type": "boost_percentage"}, 
+                );
+            }
             METABITZOS.push(metaBIT)
         } setMETABITZ();
         function finishMETABITZ(){ //OPTIMIZATION: SAVE ONLY ONCE- at the end-.
@@ -434,6 +506,18 @@ function calculateRARITY(){
             if(aNIFTY && !aNIFTY.rarity){ aNIFTY.rarity = {};}
             aNIFTY.rarity[bitSPLIT[j]] = RARITYNET[bitSPLIT[j]];//update UNIQUE DNA 
             NIFTYRARITYRATIO += RARITYNET[bitSPLIT[j]].ratio;
+        }
+        if(aNIFTY.useOnce || aNIFTY.firstLast){ //ADD on a gld n silvr
+            console.log('GLD or SLVR Rarity Detected.')
+            let aRatio = 1/TOTAL_CARDZ;
+            NIFTYRARITYRATIO += aRatio;
+            bitSPLIT.push(1)
+            bitSPLIT.push(2)
+            bitSPLIT.push(3)
+            bitSPLIT.push(4)
+            bitSPLIT.push(5)
+            bitSPLIT.push(6)
+            bitSPLIT.push(7)
         }
         aNIFTY.rarity.NFTRARITYRATIO = parseFloat(Number(NIFTYRARITYRATIO / bitSPLIT.length).toFixed(2));
         aNIFTY.rarity.NFTRARITYGRADE = Number(1 - aNIFTY.rarity.NFTRARITYRATIO).toFixed(2);

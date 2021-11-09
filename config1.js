@@ -2,7 +2,7 @@ const fs = require("fs");
 const DIR = __dirname; //C:\PROJECTS\KRYPTOBITZ
 const width = 1000;
 const height = 1000;
-const TOTAL_CARDZ = 4;
+const TOTAL_CARDZ = 44;
 
 let OS_META_MODEL = { //OpenSea metadata 
     namePrefix : "KRYPTOBITZ",
@@ -102,8 +102,8 @@ const METANET = { //maps to the (dynamic) file names - to allow a METADATA (net)
    "sky2b":{subLBL1:"GodRayNoon"},
    "sky2c":{subLBL1:"GodRaySets"},
    "sky3a":{subLBL1:"CozmoBlast"},
-   "sky3b":{subLBL1:"CozmoBlastBlackHole"},
-   "sky4a":{subLBL1:"LonelyPlanet"},
+   "sky3b":{subLBL1:"CozmoBlastBlackHole", useOnce:1},
+   "sky4a":{subLBL1:"LonelyPlanet",useOnce:1},
    "sky4b":{subLBL1:"SunAndMoon"},
    "bg1a":{subLBL2:"DesertNight"},
    "bg1b":{subLBL2:"DesertDay"},
@@ -119,6 +119,8 @@ const METANET = { //maps to the (dynamic) file names - to allow a METADATA (net)
    "frame1d":{},
    "frame1e":{},
    "frame1f":{},
+   "USEONCE":["hero4b","hero5c","sky3b","sky4a"]
+//    "USEONCE":["hero1a","hero2a","hero3a","hero4a","hero4b","hero5c","sky3b","sky4a"]
 }
 
 function initMETANET_attributes(){ //separate "attributes", for TXT and other (TRAITS) to scale-.
