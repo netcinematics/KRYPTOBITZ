@@ -1,7 +1,9 @@
 console.log('KRYPTOBITZ - Server on.')
 const fs = require("fs");
-const rootPATH = __dirname; //C:\PROJECTS\\KRYPTOBITZ
-let DSTAMP= new Date().toISOString().split("T")[0]; //simple date, use FULL ISO as ISO-STAMP in other places.
+const rootPATH = __dirname; //C:\PROJECTS\\KRYPTOBITZ //todo maybe remove
+let DSTAMP= new Date().toISOString().split("T")[0]; //simple date, use FULL ISO as ISO-STAMP in other places. //todo maybe remove
+let DATE_STAMP_TAG = `${new Date().toISOString().split("T")[0]}`; //STRING TAG for nice DATE STAMP-.
+DATE_STAMP_TAG += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`;   
 let {BITZSET, TOTAL_CARDZ, METANET, RARITYNET, IDENTITYNET, OS_META_MODEL, width, height} = require('./config1.js')
 
 const COMMANDZ = process.argv.slice(2); //CMD LINE args. -> node index 2
@@ -15,40 +17,41 @@ if(COMMANDZ[0]==='2'){ //IPFS MODE-.
     publishDateStr += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}` 
     console.log('RUNNING IN IPFS IMAGE UPDATE MODE',publishDateStr);
     console.log('Updating Metadata files with IPFS base URI')
-    console.log('NOTE: do not run twice in 1 min. It will duplicate signature attribute.')
-    // if(!fs.existsSync(`./output1/json/${DSTAMP}`)){ fs.mkdirSync(`./output1/json/${DSTAMP}`); }
-    // let rawdata = fs.readFileSync(`${rootPATH}/output1/json/${DSTAMP}/_metadataMAIN.json`);
+    console.log('NOTE: do not run twice. It may duplicate signature attribute.')
+    //FILE READ: IPFS REPLACE, from METADATAMAIN.
     let rawdata = fs.readFileSync(`${rootPATH}/output1/json/_metadataMAIN.json`);
     let data = JSON.parse(rawdata);
     data.forEach((item) => {  //Update metadata to OpenSea data structure
         console.log("UPDATE IPFS",item.name)
         item.image = `${OS_META_MODEL.IPFS_URI}/${item.cardNum}.png`;     //IPFS PATH
         item.signature_date = new Date().toISOString();
-        item.attributes.push( 
-            {"trait_type":"SERIES","value":"KRYPTOBITZ"}, 
-            {"trait_type":"SET","value":"1"}, 
-            {"trait_type":"YEAR","value":"2021"}, 
-            {"trait_type":"ARTIST","value":"SPAZEFALCON"}, 
-            {"trait_type":"publish_date","value":publishDateStr} 
-        );
+        // item.attributes.push( //DEFAULT ATTRIBUTES.
+        //     {"trait_type":"SERIES","value":"KRYPTOBITZ"}, 
+        //     {"trait_type":"SET","value":"1"}, 
+        //     {"trait_type":"YEAR","value":"2021"}, 
+        //     {"trait_type":"ARTIST","value":"SPAZEFALCON"}, 
+        //     {"trait_type":"publish_date","value":publishDateStr} 
+        // );
             //todo move this to config, and maybe prior loop?
-        
-        // item.name = `${OS_META_MODEL.namePrefix} #${item.cardNum}`;
-        // item.description = description; 
 
-
-        // if(!fs.existsSync(`./output1/json/${DSTAMP}`)){ fs.mkdirSync(`./output1/json/${DSTAMP}`); }
-        // fs.writeFileSync(`${rootPATH}/output1/json/${DSTAMP}/${item.cardNum}.json`,
+        //FILE: WRITE - out IPFS JSON, to each NUMBERED FILE. No Need to Back. Can generate from Main-.
         if(!fs.existsSync(`./output1/json/${publishDateStr}`)){ fs.mkdirSync(`./output1/json/${publishDateStr}`); }
         fs.writeFileSync(`${rootPATH}/output1/json/${publishDateStr}/${item.cardNum}.json`,
             JSON.stringify(item, null, 2)
         );
     });
-    // if(!fs.existsSync(`./output1/json/${DSTAMP}`)){ fs.mkdirSync(`./output1/json/${DSTAMP}`); }
-    fs.writeFileSync(  //WRITE OUT IPFS PATH
-      `${rootPATH}/output1/json/_metadataMAIN.json`,
-    //   `${rootPATH}/output1/json/${DSTAMP}/_metadataMAIN.json`,
-      JSON.stringify(data, null, 2)
+    //FILE: WRITE - OUT IPFS REPLACEMENT in METADATA MAIN.
+    if(!fs.existsSync(`./output1/json`)){ fs.mkdirSync(`./output1/json`); }
+    fs.writeFileSync(  
+      `${rootPATH}/output1/json/_metadataMAIN.json`, JSON.stringify(data, null, 2)
+    ); //todo remove rootpath, to ./
+
+    //BAK - METADATA MAIN. dated on folder. Possible to hydrate prior runs, different run codes, new sets.
+    // let DATE_STAMP_TAG = `${new Date().toISOString().split("T")[0]}`
+    // DATE_STAMP_TAG += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
+    if(!fs.existsSync(`./output1/json/bak/${DATE_STAMP_TAG}`)){ fs.mkdirSync(`./output1/json/bak/${DATE_STAMP_TAG}`); }
+    fs.writeFileSync(
+        `./output1/json/bak/${DATE_STAMP_TAG}/_metadataMAIN.json`, JSON.stringify(data, null, 2)
     );
     return; //END SCRIPT-.
 }//END IPFS MODE-.
@@ -383,23 +386,15 @@ function drawBITZ(_currentCardNum, _BITZSET){
         paintLAYERZ(CANVAS_LAYERZ, layerz);    
 
         console.log("Writing IMAGE and METABITZ...",_currentCardNum)
-        // const outputPATH = "./output1" //ACTUAL NAME OF THE IMAGES BEING SAVED TO EACH IMAGE FILE.
-        // let filePATH = `${new Date().toISOString().split("T")[0]}`
-        // filePATH += `_${new Date().toTimeString().split(' ')[0].replaceAll(':','_')}`
-        // let filePATH = `${new Date().toISOString().split("T")[0]}`
-        // filePATH += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
-        // let filePATH = `${Date.now()}`
-        // if(!fs.existsSync(`./output1/images/${filePATH}`)){ fs.mkdirSync(`./output1/images/${filePATH}`); }
-        // fs.writeFileSync(`./output1/images/${filePATH}/KBZ_${_currentCardNum}.png`,canvas.toBuffer("image/png"))
-        //MAIN
+
+        //FILE WRITE: NUMBERED IMAGES (png)
         if(!fs.existsSync(`./output1/images/IMGZ`)){ fs.mkdirSync(`./output1/images/IMGZ`); }
         fs.writeFileSync(`./output1/images/IMGZ/KBZ_${_currentCardNum}.png`,canvas.toBuffer("image/png"))
-        
-        //BAK - image backup, dated by folder.
-        let IMG_DATE_STAMP = `${new Date().toISOString().split("T")[0]}`
-        IMG_DATE_STAMP += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
-        if(!fs.existsSync(`./output1/images/bak/${IMG_DATE_STAMP}`)){ fs.mkdirSync(`./output1/images/bak/${IMG_DATE_STAMP}`); }
-        fs.writeFileSync(`./output1/images/bak/${IMG_DATE_STAMP}/KBZ_${_currentCardNum}.png`,canvas.toBuffer("image/png"))
+        //BAK IMGZ, to ignored bak folder. dated on folder. Has the stamp on the card.
+        // let DATE_STAMP_TAG = `${new Date().toISOString().split("T")[0]}`
+        // DATE_STAMP_TAG += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
+        if(!fs.existsSync(`./output1/images/bak/${DATE_STAMP_TAG}`)){ fs.mkdirSync(`./output1/images/bak/${DATE_STAMP_TAG}`); }
+        fs.writeFileSync(`./output1/images/bak/${DATE_STAMP_TAG}/KBZ_${_currentCardNum}.png`,canvas.toBuffer("image/png"))
         
         function setMETABITZ(){//COMPILE OPENSEA STYLE METADATA-. For Upload to IPFS through pinata-.
             let metaBIT = {}, idb=[], idbName ='';
@@ -452,9 +447,8 @@ function drawBITZ(_currentCardNum, _BITZSET){
         function finishMETABITZ(){ //OPTIMIZATION: SAVE ONLY ONCE- at the end-.
             if(_currentCardNum===TOTAL_CARDZ){ //FINAL-CARD-. Finish METABITZ-.
                 console.log("WRITE METABITZ:",METABITZOS.length,"of",TOTAL_CARDZ)
-                // if(!fs.existsSync(`./output1/json/${DSTAMP}`)){ fs.mkdirSync(`./output1/json/${DSTAMP}`); }
-                //  fs.writeFileSync(`./output1/json/${DSTAMP}/_metadataMAIN.json`, JSON.stringify(METABITZOS));
                 calculateRARITY();
+                //FILE WRITE: METADATA MAIN - original run. No need to BAK. Still needs IPFS-.
                  fs.writeFileSync(`./output1/json/_metadataMAIN.json`, JSON.stringify(METABITZOS));
                 writeMETANETtoFILE();
             } //else{ console.log("not end",_currentCardNum) }
@@ -463,8 +457,9 @@ function drawBITZ(_currentCardNum, _BITZSET){
     return true;//drawBITZ success
 } //END drawBITZ
 
-function startMETABITZ(){ //READ IN METANET from file, replicate STATE-.
+function startMETABITZ(){ 
     try {
+        //FILE READ IN METANET from file, replicate STATE-.
         let rawdata = fs.readFileSync(`${rootPATH}/output1/json/KBZ_METANET.json`)
         let data = JSON.parse(rawdata);
         RARITYNET = data.RARITYNET;
@@ -522,8 +517,6 @@ function calculateRARITY(){
         aNIFTY.rarity.NFTRARITYRATIO = parseFloat(Number(NIFTYRARITYRATIO / bitSPLIT.length).toFixed(2));
         aNIFTY.rarity.NFTRARITYGRADE = Number(1 - aNIFTY.rarity.NFTRARITYRATIO).toFixed(2);
         console.log("NFT-RARITY:",bitKEY,"RATIO:", aNIFTY.rarity.NFTRARITYRATIO,"SCORE:",aNIFTY.rarity.NFTRARITYGRADE)
-
-        
         
         //TODO: IDENTITYNET calculate 1st, last, middle card as _slvr_last_1st _once_gld
 
@@ -539,23 +532,28 @@ function calculateRARITY(){
                 break;
             }
         }
-
-
    }
-
-
-
-
 }
+
 function writeMETANETtoFILE(){ //write to master-meta-net-.
     let METABITZ = {'RARITYNET':RARITYNET,'IDENTITYNET':IDENTITYNET,
                     'METANET':METANET,DSTAMP:new Date().toISOString()}
 
+    //FILE WRITE: METABITZ - the entire run state into FILE-. For reloading not BAK.
     console.log("WRITE-METABITZ",new Date().toISOString());
     var stream = fs.createWriteStream(`./output1/json/KBZ_METANET.json`, {flags:'w'}); //a append, w write-.
     // var stream = fs.createWriteStream(`./output1/KBZ_METANET_${new Date().toISOString().split(":")[0]}.json`, {flags:'a'});
     stream.write(`${JSON.stringify(METABITZ)}`);
     stream.end();
+
+    //FILE WRITE: BAK METANET - the entire run state into FILE-.
+    // let DATE_STAMP_TAG = `${new Date().toISOString().split("T")[0]}`
+    // DATE_STAMP_TAG += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
+    // if(!fs.existsSync(`./output1/bak`)){ fs.mkdirSync(`./output1/bak/${DATE_STAMP_TAG}`); }
+    // fs.writeFileSync(
+    //     `./output1/bak/${DATE_STAMP_TAG}/KBZ_METANET.json`, JSON.stringify(METABITZ)
+    // );
+
 
    console.log('collection UPDATE success')
 } //end CALCULATERARITY
