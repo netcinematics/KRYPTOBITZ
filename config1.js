@@ -7,7 +7,7 @@ const TOTAL_CARDZ = 44;
 let OS_META_MODEL = { //OpenSea metadata 
     namePrefix : "KRYPTOBITZ",
     description : "NFT Generative Art Project, 2021. HEROZ from KRYPTOSPAZE!",
-    IPFS_URI : "ipfs://Qmf8ENT69sUmDfN4TWJP7ht9HdrvvmFFgsoswHZE7oVVwm",  //replacement uri-.
+    IPFS_URI : "ipfs://QmNnd35jakQqCHYHDfZhkFCFufaJRZcQTTsuAhX99G2Gtm",  //replacement uri-.
     youTubeURL : `https://www.youtube.com/watch?v=M1-hZgIlAkc`,
     externalURL : `https://netcinematics.github.io/CRYPTOSPAZE/`,
 }
@@ -235,6 +235,20 @@ initIDENTITYNET();
 /*****************************************************************************\
  * END - IDENTITYNET -
 \*****************************************************************************/
+
+/*****************************************************************************\
+ * Connect to METANET - 
+\*****************************************************************************/
+// let METANET = {} //JSON object linked by ID across many platforms-.
+// function initMETANET(){ 
+    //todo this can look on IPFS to find... infinite LINKS of more data-.
+// }
+// initMETANET();
+/*****************************************************************************\
+ * END - METANET -
+\*****************************************************************************/
+
+
 
 //KRYPTOSCOPE - many images and text creating random scenes... telling a dimensional variation story.
 //sometimes need to resize or position layers to match canvas, 1k, 1k.

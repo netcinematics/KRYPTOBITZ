@@ -389,12 +389,12 @@ function drawBITZ(_currentCardNum, _BITZSET){
 
         //FILE WRITE: NUMBERED IMAGES (png)
         if(!fs.existsSync(`./output1/images/IMGZ`)){ fs.mkdirSync(`./output1/images/IMGZ`); }
-        fs.writeFileSync(`./output1/images/IMGZ/KBZ_${_currentCardNum}.png`,canvas.toBuffer("image/png"))
+        fs.writeFileSync(`./output1/images/IMGZ/${_currentCardNum}.png`,canvas.toBuffer("image/png"))
         //BAK IMGZ, to ignored bak folder. dated on folder. Has the stamp on the card.
         // let DATE_STAMP_TAG = `${new Date().toISOString().split("T")[0]}`
         // DATE_STAMP_TAG += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
         if(!fs.existsSync(`./output1/images/bak/${DATE_STAMP_TAG}`)){ fs.mkdirSync(`./output1/images/bak/${DATE_STAMP_TAG}`); }
-        fs.writeFileSync(`./output1/images/bak/${DATE_STAMP_TAG}/KBZ_${_currentCardNum}.png`,canvas.toBuffer("image/png"))
+        fs.writeFileSync(`./output1/images/bak/${DATE_STAMP_TAG}/${_currentCardNum}.png`,canvas.toBuffer("image/png"))
         
         function setMETABITZ(){//COMPILE OPENSEA STYLE METADATA-. For Upload to IPFS through pinata-.
             let metaBIT = {}, idb=[], idbName ='';
