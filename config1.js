@@ -7,9 +7,9 @@ const TOTAL_CARDZ = 44;
 let OS_META_MODEL = { //OpenSea metadata 
     namePrefix : "KRYPTOBITZ",
     description : "NFT Generative Art Project, 2021. HEROZ from KRYPTOSPAZE!",
-    IPFS_URI : "ipfs://QmNnd35jakQqCHYHDfZhkFCFufaJRZcQTTsuAhX99G2Gtm",  //replacement uri-.
+    IPFS_URI : "ipfs://QmaDxbHUeLkRhWQZik6j85nPHV9KBEhX2gqxXQhDNMbSN6",  //replacement uri-.
     youTubeURL : `https://www.youtube.com/watch?v=M1-hZgIlAkc`,
-    externalURL : `https://netcinematics.github.io/CRYPTOSPAZE/`,
+    externalURL : `https://netcinematics.github.io/KRYPTOSPAZE/`,
 }
 
 // getIMGFILES to array - each is variation
