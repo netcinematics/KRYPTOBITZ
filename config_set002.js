@@ -8,7 +8,7 @@ const ASSET_LIB = `assets_${SET_TXT}`;
 const BUILD_LIB = `build_${SET_TXT}`;
 //HINT: config IPFS, per set,
 const SET001_IPFS = "QmaDxbHUeLkRhWQZik6j85nPHV9KBEhX2gqxXQhDNMbSN6";
-const SET002_IPFS = "";
+const SET002_IPFS = "QmTfu65XeZPb1aXCvhF1JbpQouaQyajbFESUPVbVRqtF4b";
 
 let OS_META_MODEL = { //OpenSea metadata 
     namePrefix : "KRYPTOBITZ",

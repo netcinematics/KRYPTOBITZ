@@ -86,10 +86,12 @@ if(COMMANDZ[0]==='3'){ //IPFS MODE-.
     //BAK - METADATA MAIN. dated on folder. Possible to hydrate prior runs, different run codes, new sets.
     // let DATE_STAMP_TAG = `${new Date().toISOString().split("T")[0]}`
     // DATE_STAMP_TAG += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
-    if(!fs.existsSync(`./${BUILD_LIB}/json/bak/${DATE_STAMP_TAG}`)){ fs.mkdirSync(`./${BUILD_LIB}/json/bak/${DATE_STAMP_TAG}`); }
-    fs.writeFileSync(
-        `./${BUILD_LIB}/json/bak/${DATE_STAMP_TAG}/_metadataMAIN.json`, JSON.stringify(data, null, 2)
-    );
+    // if(!fs.existsSync(`./${BUILD_LIB}/json`)){ fs.mkdirSync(`./${BUILD_LIB}/json}`); }
+    // if(!fs.existsSync(`./${BUILD_LIB}/json/bak/`)){ fs.mkdirSync(`./${BUILD_LIB}/json/bak}`); }
+    // if(!fs.existsSync(`./${BUILD_LIB}/json/bak/${DATE_STAMP_TAG}`)){ fs.mkdirSync(`./${BUILD_LIB}/json/bak/${DATE_STAMP_TAG}`); }
+    // fs.writeFileSync(
+    //     `./${BUILD_LIB}/json/bak/${DATE_STAMP_TAG}/_metadataMAIN.json`, JSON.stringify(data, null, 2)
+    // );
     return; //END SCRIPT-.
 }//END IPFS MODE--------------------------------.
 

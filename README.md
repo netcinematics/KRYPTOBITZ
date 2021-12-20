@@ -44,7 +44,7 @@ OR * optional parameter MODES 2 or 3
 7) Upload IMGZ to IPFS
 8) paste IPFS PATH into config
 9) Run MODE 3 - IPFS PATH replace
-10) Upload JSON to IPFS (pinata)
+10) Upload JSON to IPFS (pinata) from /json/date_
 11) Get Smart Contract: ERC721 or ERC1155
 12) Update IPFS PATH as contract URI.
 13) Execute on TESTNET (Rinkeby, Mumbai)
