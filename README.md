@@ -27,14 +27,33 @@ OR * optional parameter MODES 2 or 3
 > $ node index 3
 
 - POPULATE IPFS PATH
+- CONFIGURE PATH in config_
 
 ----
 
 ## Getting Started
 
-- go to engine_ /config.js
-- set all the variables.
-- A METANET can exist ./ or not, to avoid duplicates.
+> STEPS
+1) Add new ASSETS
+2) Configure the _config
+3) Build the IMGZ and METADATA
+4) Check if you like them.
+5) ReBuild if you want to.
+6) Verify Uniqueness (MODE 2)
+7) Upload IMGZ to IPFS
+8) paste IPFS PATH into config
+9) Run MODE 3 - IPFS PATH replace
+10) Upload JSON to IPFS
+11) Get Smart Contract ERC721 or ERC1155
+12) Update IPFS PATH as contract URI.
+13) Execute on TESTNET (Rinkeby, Mumbai)
+14) VIEW test NFTs on Opensea.testnet
+15) Execute on MAINNET (ETH or MATIC)
+16) EDIT public COLLECTION on OpenSea
+17) Set Items for Sale.
+18) Celebrate! 
+
+- NOTE: *METANETs can exist at ./ , to avoid duplicates, or not, optional.
 
 ## EXAMPLE of LAYERZ technology
     //load all the images - at INIT

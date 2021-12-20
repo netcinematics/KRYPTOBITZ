@@ -6,11 +6,14 @@ const TOTAL_CARDZ = 22;  //how many cards will be generated.
 const SET_TXT = "set002" //used for path output name convention-.
 const ASSET_LIB = `assets_${SET_TXT}`;
 const BUILD_LIB = `build_${SET_TXT}`;
+//HINT: config IPFS, per set,
+const SET001_IPFS = "QmaDxbHUeLkRhWQZik6j85nPHV9KBEhX2gqxXQhDNMbSN6";
+const SET002_IPFS = "";
 
 let OS_META_MODEL = { //OpenSea metadata 
     namePrefix : "KRYPTOBITZ",
     description : "NFT Generative Art Project, 2021. HEROZ from KRYPTOSPAZE!",
-    IPFS_URI : "ipfs://QmaDxbHUeLkRhWQZik6j85nPHV9KBEhX2gqxXQhDNMbSN6",  //replacement uri-.
+    IPFS_URI : `ipfs://${SET002_IPFS}`,  //replacement uri-.
     youTubeURL : `https://www.youtube.com/watch?v=M1-hZgIlAkc`,
     externalURL : `https://netcinematics.github.io/KRYPTOSPAZE/`,
 }

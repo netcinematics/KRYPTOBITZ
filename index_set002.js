@@ -456,7 +456,7 @@ function drawBITZ(_currentCardNum, _BITZSET){
 
             metaBIT.image = 'run ipfs to replace this uri';//`${IPFS_URI}/${_currentCardNum}.png`;     //IPFS PATH
             metaBIT.external_url = OS_META_MODEL.externalURL;
-            metaBIT.youtube_url = OS_META_MODEL.youTubeURL;
+            // metaBIT.youtube_url = OS_META_MODEL.youTubeURL; this plays vid
             if(useOnce){ metaBIT.useOnce = 1; }
             else if(firstLast){ metaBIT.firstLast = 1; }
             metaBIT.attributes = [] //connect to identitynet
