@@ -3,21 +3,21 @@ Generative art, node server, token factory, NFT minter.
 
 ## Made with HTML5 Canvas
 
-npm init //get package.json
+> $ npm init //get package.json
 
-npm install canvas --save
+> $ npm install canvas --save
 
 ## How to Build
 
-npm install
+> $ npm install
 
 cd into engine_
 
-node index   //to build
+> $ node index   //to build
 
 OR 
 
-node index 2 //to set IPFS
+> $ node index 2 //to set IPFS
 
 ## Getting Started
 
