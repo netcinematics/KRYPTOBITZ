@@ -1,5 +1,6 @@
 # KRYPTOBITZ
-Generative art, node server, token factory, NFT minter.
+Generative art project, node server, token factory, NFT minter.
+With full life cycle architecture.
 
 ## Made with HTML5 Canvas
 
@@ -43,17 +44,19 @@ OR * optional parameter MODES 2 or 3
 7) Upload IMGZ to IPFS
 8) paste IPFS PATH into config
 9) Run MODE 3 - IPFS PATH replace
-10) Upload JSON to IPFS
-11) Get Smart Contract ERC721 or ERC1155
+10) Upload JSON to IPFS (pinata)
+11) Get Smart Contract: ERC721 or ERC1155
 12) Update IPFS PATH as contract URI.
 13) Execute on TESTNET (Rinkeby, Mumbai)
-14) VIEW test NFTs on Opensea.testnet
-15) Execute on MAINNET (ETH or MATIC)
-16) EDIT public COLLECTION on OpenSea
-17) Set Items for Sale.
-18) Celebrate! 
+14) Unit Test Contract (Hardhat, Truffle)
+15) VIEW test NFTs on Opensea.testnet
+16) Save in /Contractz/721_set1 for records
+17) Execute on MAINNET (ETH or MATIC) with REMIX
+18) EDIT public COLLECTION on OpenSea
+19) Set Items for Sale.
+20) Celebrate! 
 
-- NOTE: *METANETs can exist at ./ , to avoid duplicates, or not, optional.
+- NOTE: *METANETs can exist at ./ , to avoid duplicates, or not (optional).
 
 ## EXAMPLE of LAYERZ technology
     //load all the images - at INIT
