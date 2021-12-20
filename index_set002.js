@@ -4,12 +4,13 @@ const rootPATH = __dirname; //C:\PROJECTS\\KRYPTOBITZ //todo maybe remove
 let DSTAMP= new Date().toISOString().split("T")[0]; //simple date, use FULL ISO as ISO-STAMP in other places. //todo maybe remove
 let DATE_STAMP_TAG = `${new Date().toISOString().split("T")[0]}`; //STRING TAG for nice DATE STAMP-.
 DATE_STAMP_TAG += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`;   
-let {BITZSET, TOTAL_CARDZ, METANET, RARITYNET, IDENTITYNET, OS_META_MODEL, width, height} = require('./config1.js')
+//HINT: change new set number on config file-.
+let {BITZSET, TOTAL_CARDZ, SET_TXT, BUILD_LIB, METANET, RARITYNET, IDENTITYNET, OS_META_MODEL, width, height} = require('./config_set002.js')
 
 const COMMANDZ = process.argv.slice(2); //CMD LINE args. -> node index 2
 /****************************************************\
  * IPFS update uri - MODE-. 
- * RUN:  node index 2     
+ * RUN:  node index 2  //look for _setNUM   
  * RESULT: to replace the IFPS PATH from CONFIG.
 \****************************************************/
 if(COMMANDZ[0]==='2'){ //IPFS MODE-.
@@ -19,7 +20,7 @@ if(COMMANDZ[0]==='2'){ //IPFS MODE-.
     console.log('Updating Metadata files with IPFS base URI')
     console.log('NOTE: do not run twice. It may duplicate signature attribute.')
     //FILE READ: IPFS REPLACE, from METADATAMAIN.
-    let rawdata = fs.readFileSync(`${rootPATH}/output1/json/_metadataMAIN.json`);
+    let rawdata = fs.readFileSync(`${rootPATH}/${BUILD_LIB}/json/_metadataMAIN.json`);
     let data = JSON.parse(rawdata);
     data.forEach((item) => {  //Update metadata to OpenSea data structure
         console.log("UPDATE IPFS",item.name)
@@ -35,38 +36,38 @@ if(COMMANDZ[0]==='2'){ //IPFS MODE-.
             //todo move this to config, and maybe prior loop?
 
         //FILE: WRITE - out IPFS JSON, to each NUMBERED FILE. No Need to Back. Can generate from Main-.
-        if(!fs.existsSync(`./output1/json/${publishDateStr}`)){ fs.mkdirSync(`./output1/json/${publishDateStr}`); }
-        fs.writeFileSync(`${rootPATH}/output1/json/${publishDateStr}/${item.cardNum}.json`,
+        if(!fs.existsSync(`./${BUILD_LIB}/json/${publishDateStr}`)){ fs.mkdirSync(`./${BUILD_LIB}/json/${publishDateStr}`); }
+        fs.writeFileSync(`${rootPATH}/${BUILD_LIB}/json/${publishDateStr}/${item.cardNum}.json`,
             JSON.stringify(item, null, 2)
         );
     });
     //FILE: WRITE - OUT IPFS REPLACEMENT in METADATA MAIN.
-    if(!fs.existsSync(`./output1/json`)){ fs.mkdirSync(`./output1/json`); }
+    if(!fs.existsSync(`./${BUILD_LIB}/json`)){ fs.mkdirSync(`./${BUILD_LIB}/json`); }
     fs.writeFileSync(  
-      `${rootPATH}/output1/json/_metadataMAIN.json`, JSON.stringify(data, null, 2)
+      `${rootPATH}/${BUILD_LIB}/json/_metadataMAIN.json`, JSON.stringify(data, null, 2)
     ); //todo remove rootpath, to ./
 
     //BAK - METADATA MAIN. dated on folder. Possible to hydrate prior runs, different run codes, new sets.
     // let DATE_STAMP_TAG = `${new Date().toISOString().split("T")[0]}`
     // DATE_STAMP_TAG += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
-    if(!fs.existsSync(`./output1/json/bak/${DATE_STAMP_TAG}`)){ fs.mkdirSync(`./output1/json/bak/${DATE_STAMP_TAG}`); }
+    if(!fs.existsSync(`./${BUILD_LIB}/json/bak/${DATE_STAMP_TAG}`)){ fs.mkdirSync(`./${BUILD_LIB}/json/bak/${DATE_STAMP_TAG}`); }
     fs.writeFileSync(
-        `./output1/json/bak/${DATE_STAMP_TAG}/_metadataMAIN.json`, JSON.stringify(data, null, 2)
+        `./${BUILD_LIB}/json/bak/${DATE_STAMP_TAG}/_metadataMAIN.json`, JSON.stringify(data, null, 2)
     );
     return; //END SCRIPT-.
-}//END IPFS MODE-.
+}//END IPFS MODE--------------------------------.
 
 /****************************************************\
- * BUILD-IMG - MODE ->  KRYPTO-FACTORY!
+ * BUILD-IMG - MODE ->  KRYPTO-FACTORY! //TODO rename proj-.
 \****************************************************/
 const { createCanvas, loadImage} = require("canvas");
 const canvas = createCanvas(width,height)
 const ctx = canvas.getContext("2d")
 
-let METABITZOS = [] //OpenSea Metdata BITZ-.console.log("Running IMG mode, creation date:",DSTAMP);
+let METABITZ_OS = [] //OpenSea Metdata BITZ-.console.log("Running IMG mode, creation date:",DSTAMP);
 let dupe = null
 
-function main_NIFTYFACTORY(){
+function main_NIFTYFACTORY(){ //todo KryptoFactory
     var CANVAS_LAYERZ = ctx; //document.getElementById("myCanvas").getContext("2d");
     var layerz = [];  //allows for ctx to write multiple times with clearRect abstracted out.
     function addLAYERZ(layerz) { 
@@ -248,6 +249,7 @@ function drawBITZ(_currentCardNum, _BITZSET){
             layerCTX.shadowBlur=4;
             layerCTX.fillStyle="steelblue";
             layerCTX.fillText("2 0 2 1",136,968);
+            //TODO dynamic year
         
             newLayerZ = addLAYERZ(layerz);
             layerCTX = newLayerZ.getContext("2d");
@@ -292,7 +294,7 @@ function drawBITZ(_currentCardNum, _BITZSET){
             layerCTX.fillStyle="white";
             layerCTX.fillText(itemNUM,92,70);
 
-            //NAME LBL -  let nameLBL = "OrbyOrbot";
+            //HINT: NAME LBL -  let nameLBL = "OrbyOrbot";
             newLayerZ = addLAYERZ(layerz);
             layerCTX = newLayerZ.getContext("2d");
             layerCTX.font="32pt Verdana";
@@ -307,7 +309,7 @@ function drawBITZ(_currentCardNum, _BITZSET){
             layerCTX.fillStyle="steelblue";
             layerCTX.fillText(`${nameLBL}`,499,887);
 
-            //SUB LBL1 -  let subLBL1 = "GODRAYS"; //COSMOBLAST //BLASTABLACKHOLE
+            //HINT: SUB LBL1 -  let subLBL1 = "GODRAYS"; //COSMOBLAST //BLASTABLACKHOLE
             newLayerZ = addLAYERZ(layerz);
             layerCTX = newLayerZ.getContext("2d");
             layerCTX.font="italic 22pt Verdana";
@@ -336,7 +338,7 @@ function drawBITZ(_currentCardNum, _BITZSET){
             layerCTX.fillStyle="steelblue";
             layerCTX.fillText(`${subLBL2}`,629,938); 
 
-            //DYNAMIC SET #DATESTAMP  _NUMBER RAN.
+            //HINT: DYNAMIC SET #DATESTAMP  _NUMBER RAN.
             var newLayerZ = addLAYERZ(layerz);
             layerCTX = newLayerZ.getContext("2d");
             layerCTX.fillStyle = "#333333";
@@ -351,7 +353,15 @@ function drawBITZ(_currentCardNum, _BITZSET){
             layerCTX.font = "10pt calibri";
             layerCTX.textBaseline = "top";
             layerCTX.textAlign = "right";
-            layerCTX.fillText(`cardz ${TOTAL_CARDZ}`, 940, 60);
+            layerCTX.fillText(`cardz ${TOTAL_CARDZ}`, 944, 60);
+
+            var newLayerZ = addLAYERZ(layerz);
+            layerCTX = newLayerZ.getContext("2d");
+            layerCTX.fillStyle = "#333333";
+            layerCTX.font = "10pt calibri";
+            layerCTX.textBaseline = "top";
+            layerCTX.textAlign = "right";
+            layerCTX.fillText(`cardz ${SET_TXT}`, 964, 80);
 
             var newLayerZ = addLAYERZ(layerz);
             layerCTX = newLayerZ.getContext("2d");
@@ -359,7 +369,7 @@ function drawBITZ(_currentCardNum, _BITZSET){
             layerCTX.font = "12pt calibri";
             layerCTX.textBaseline = "bottom";
             layerCTX.textAlign = "left";
-            layerCTX.fillText(`kbz ${IDENTITY_BIT}`,33,940);
+            layerCTX.fillText(`kbz:${IDENTITY_BIT}`,33,940);
 
             //slvr n gld
             if(useOnce){
@@ -388,13 +398,14 @@ function drawBITZ(_currentCardNum, _BITZSET){
         console.log("Writing IMAGE and METABITZ...",_currentCardNum)
 
         //FILE WRITE: NUMBERED IMAGES (png)
-        if(!fs.existsSync(`./output1/images/IMGZ`)){ fs.mkdirSync(`./output1/images/IMGZ`); }
-        fs.writeFileSync(`./output1/images/IMGZ/${_currentCardNum}.png`,canvas.toBuffer("image/png"))
+        if(!fs.existsSync(`./${BUILD_LIB}/IMGZ`)){ fs.mkdirSync(`./${BUILD_LIB}/IMGZ`); }
+        fs.writeFileSync(`./${BUILD_LIB}/IMGZ/${_currentCardNum}.png`,canvas.toBuffer("image/png"))
         //BAK IMGZ, to ignored bak folder. dated on folder. Has the stamp on the card.
         // let DATE_STAMP_TAG = `${new Date().toISOString().split("T")[0]}`
         // DATE_STAMP_TAG += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
-        if(!fs.existsSync(`./output1/images/bak/${DATE_STAMP_TAG}`)){ fs.mkdirSync(`./output1/images/bak/${DATE_STAMP_TAG}`); }
-        fs.writeFileSync(`./output1/images/bak/${DATE_STAMP_TAG}/${_currentCardNum}.png`,canvas.toBuffer("image/png"))
+        if(!fs.existsSync(`./${BUILD_LIB}/bak`)){ fs.mkdirSync(`./${BUILD_LIB}/bak`); } //TODO this above KBZ_MetaNET?
+        if(!fs.existsSync(`./${BUILD_LIB}/bak/${DATE_STAMP_TAG}`)){ fs.mkdirSync(`./${BUILD_LIB}/bak/${DATE_STAMP_TAG}`); }
+        fs.writeFileSync(`./${BUILD_LIB}/bak/${DATE_STAMP_TAG}/${_currentCardNum}.png`,canvas.toBuffer("image/png"))
         
         function setMETABITZ(){//COMPILE OPENSEA STYLE METADATA-. For Upload to IPFS through pinata-.
             let metaBIT = {}, idb=[], idbName ='';
@@ -442,15 +453,16 @@ function drawBITZ(_currentCardNum, _BITZSET){
                     {"trait_type":"SLVR","value":"SILVER-CARD","display_type": "boost_percentage"}, 
                 );
             }
-            METABITZOS.push(metaBIT)
+            METABITZ_OS.push(metaBIT)
         } setMETABITZ();
         function finishMETABITZ(){ //OPTIMIZATION: SAVE ONLY ONCE- at the end-.
             if(_currentCardNum===TOTAL_CARDZ){ //FINAL-CARD-. Finish METABITZ-.
-                console.log("WRITE METABITZ:",METABITZOS.length,"of",TOTAL_CARDZ)
+                console.log("WRITE METABITZ:",METABITZ_OS.length,"of",TOTAL_CARDZ)
                 calculateRARITY();
                 //FILE WRITE: METADATA MAIN - original run. No need to BAK. Still needs IPFS-.
-                 fs.writeFileSync(`./output1/json/_metadataMAIN.json`, JSON.stringify(METABITZOS));
-                writeMETANETtoFILE();
+                if(!fs.existsSync(`./${BUILD_LIB}/json`)){ fs.mkdirSync(`./${BUILD_LIB}/json`); }
+                 fs.writeFileSync(`./${BUILD_LIB}/json/_metadataMAIN.json`, JSON.stringify(METABITZ_OS));
+                writeMETANETtoFILE(); 
             } //else{ console.log("not end",_currentCardNum) }
         } finishMETABITZ();
     });
@@ -460,7 +472,8 @@ function drawBITZ(_currentCardNum, _BITZSET){
 function startMETABITZ(){ 
     try {
         //FILE READ IN METANET from file, replicate STATE-.
-        let rawdata = fs.readFileSync(`${rootPATH}/output1/json/KBZ_METANET.json`)
+        // let rawdata = fs.readFileSync(`${rootPATH}/${BUILD_LIB}/json/KBZ_METANET.json`)
+        let rawdata = fs.readFileSync(`${rootPATH}/KBZ_METANET_${SET_TXT}.json`)
         let data = JSON.parse(rawdata);
         RARITYNET = data.RARITYNET;
         IDENTITYNET = data.IDENTITYNET;
@@ -522,8 +535,8 @@ function calculateRARITY(){
 
         //UPDATE RARITY SCORES in ATTRIBUTES - before writing to METAMAIN
         let bitItem = null;
-        for(var k = 0; k<METABITZOS.length; k++){
-            bitItem = METABITZOS[k];
+        for(var k = 0; k<METABITZ_OS.length; k++){
+            bitItem = METABITZ_OS[k];
             if(bitItem.identity===bitKEY){
                 bitItem.attributes.push(
                     {"display_type": "boost_number","trait_type":"RARE-GRADE","value": aNIFTY.rarity.NFTRARITYGRADE}, 
@@ -541,17 +554,18 @@ function writeMETANETtoFILE(){ //write to master-meta-net-.
 
     //FILE WRITE: METABITZ - the entire run state into FILE-. For reloading not BAK.
     console.log("WRITE-METABITZ",new Date().toISOString());
-    var stream = fs.createWriteStream(`./output1/json/KBZ_METANET.json`, {flags:'w'}); //a append, w write-.
-    // var stream = fs.createWriteStream(`./output1/KBZ_METANET_${new Date().toISOString().split(":")[0]}.json`, {flags:'a'});
+    var stream = fs.createWriteStream(`./KBZ_METANET_${SET_TXT}.json`, {flags:'w'}); //a append, w write-.
+    // var stream = fs.createWriteStream(`./${BUILD_LIB}/json/KBZ_METANET.json`, {flags:'w'}); //a append, w write-.
+    // var stream = fs.createWriteStream(`./${BUILD_LIB}/KBZ_METANET_${new Date().toISOString().split(":")[0]}.json`, {flags:'a'});
     stream.write(`${JSON.stringify(METABITZ)}`);
     stream.end();
 
     //FILE WRITE: BAK METANET - the entire run state into FILE-.
     // let DATE_STAMP_TAG = `${new Date().toISOString().split("T")[0]}`
     // DATE_STAMP_TAG += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}`        
-    // if(!fs.existsSync(`./output1/bak`)){ fs.mkdirSync(`./output1/bak/${DATE_STAMP_TAG}`); }
+    // if(!fs.existsSync(`./${BUILD_LIB}/bak`)){ fs.mkdirSync(`./${BUILD_LIB}/bak/${DATE_STAMP_TAG}`); }
     // fs.writeFileSync(
-    //     `./output1/bak/${DATE_STAMP_TAG}/KBZ_METANET.json`, JSON.stringify(METABITZ)
+    //     `./${BUILD_LIB}/bak/${DATE_STAMP_TAG}/KBZ_METANET.json`, JSON.stringify(METABITZ)
     // );
 
 

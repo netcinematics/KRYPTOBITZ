@@ -2,7 +2,10 @@ const fs = require("fs");
 const DIR = __dirname; //C:\PROJECTS\KRYPTOBITZ
 const width = 1000;
 const height = 1000;
-const TOTAL_CARDZ = 44;
+const TOTAL_CARDZ = 22;  //how many cards will be generated.
+const SET_TXT = "set002" //used for path output name convention-.
+const ASSET_LIB = `assets_${SET_TXT}`;
+const BUILD_LIB = `build_${SET_TXT}`;
 
 let OS_META_MODEL = { //OpenSea metadata 
     namePrefix : "KRYPTOBITZ",
@@ -47,32 +50,32 @@ const BITZSET = [  //LAYERZ of BITZ, in BITZSETS, chosen at random for view. Mak
     {
         id:1,
         name:"starz",
-        PATH: `${DIR}/assets_set1/starz/`,
-        BITZ: getBITZ(`${DIR}/assets_set1/starz/`),
+        PATH: `${DIR}/copyrightNetCinematics/${ASSET_LIB}/starz/`,
+        BITZ: getBITZ(`${DIR}/copyrightNetCinematics/${ASSET_LIB}/starz/`),
         size: {width:width,height:height},
         position: {x:0,y:0},
     },
     {
         id:2,
         name:"backgroundz",
-        PATH: `${DIR}/assets_set1/bgz/`,
-        BITZ: getBITZ(`${DIR}/assets_set1/bgz/`),
+        PATH: `${DIR}/copyrightNetCinematics/${ASSET_LIB}/bgz/`,
+        BITZ: getBITZ(`${DIR}/copyrightNetCinematics/${ASSET_LIB}/bgz/`),
         size: {width:width,height:height},
         position: {x:0,y:0},
     },
     {
         id:3,
         name:"heroz",
-        PATH: `${DIR}/assets_set1/heroz/`,
-        BITZ: getBITZ(`${DIR}/assets_set1/heroz/`),
+        PATH: `${DIR}/copyrightNetCinematics/${ASSET_LIB}/heroz/`,
+        BITZ: getBITZ(`${DIR}/copyrightNetCinematics/${ASSET_LIB}/heroz/`),
         size: {width:width,height:height},
         position: {x:0,y:0},
     },
     {
         id:4,
         name:"framez",
-        PATH: `${DIR}/assets_set1/framez/`,
-        BITZ: getBITZ(`${DIR}/assets_set1/framez/`),
+        PATH: `${DIR}/copyrightNetCinematics/${ASSET_LIB}/framez/`,
+        BITZ: getBITZ(`${DIR}/copyrightNetCinematics/${ASSET_LIB}/framez/`),
         size: {width:width,height:height},
         position: {x:0,y:0},
     },
@@ -264,4 +267,4 @@ initIDENTITYNET();
 //18000 KRYPTOBITZ set 3  KBZv3
 
 
-module.exports = {BITZSET, TOTAL_CARDZ, METANET, RARITYNET, IDENTITYNET, OS_META_MODEL, width, height}
+module.exports = {BITZSET, TOTAL_CARDZ, SET_TXT, BUILD_LIB, METANET, RARITYNET, IDENTITYNET, OS_META_MODEL, width, height}

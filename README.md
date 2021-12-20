@@ -1,12 +1,29 @@
 # KRYPTOBITZ
 Awesome little KRYPTOBITZ of generative art, node server. NFT minter.
 
+## Made with HTML5 Canvas
 
 npm init //get package.json
 
- npm install canvas --save
+npm install canvas --save
 
- npm audit fix (!)(?)
+## How to Build
+
+npm install
+
+cd into engine_
+
+node index   //to build
+
+OR 
+
+node index 2 //to set IPFS
+
+## Getting Started
+
+- go to engine_ /config.js
+- set all the variables.
+- A METANET can exist ./ or not, to avoid duplicates.
 
 EXAMPLE
     //load all the images - at INIT
