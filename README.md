@@ -3,7 +3,9 @@ Generative art, node server, token factory, NFT minter.
 
 ## Made with HTML5 Canvas
 
-> $ npm init //get package.json
+> $ npm init 
+
+- get package.json
 
 > $ npm install canvas --save
 
@@ -13,7 +15,7 @@ Generative art, node server, token factory, NFT minter.
 
 > $ node index_set001   
 
-//to build _set001
+- that will build _set001
 
 OR * optional parameter MODES 2 or 3
 
@@ -46,11 +48,13 @@ OR * optional parameter MODES 2 or 3
 - RANDOMLY MIX
 - CONFIRM UNIQUE
 - reloop if not unique
-- CALCULATE IDENTITY and RARITY
-- BUILD METADATA WITH STAMPS and IPFS resources
-- METANET with IDENTITYNET creates BITZSETS, of KRYPTOBITZ-!
-- Update IPFS resources - using command line "2" param
-- MINT to OPEN SEA with attributes
+- CALCULATE IDENTITY
+- CALCULATE RARITY
+- TIMESTAMP and SIGN each CARD
+- BUILD METADATA ATTRIBUTES for OpenSea
+- UPDATE IPFS resources in metadata
+- WRITES METANET of IDENTITYNET with BITZSETS, of KRYPTOBITZ-!
+
 
 ----
 > This code is MIT, open-source.
