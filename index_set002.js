@@ -56,6 +56,41 @@ if(COMMANDZ[0]==='2'){ //IPFS MODE-.
     );
     return; //END SCRIPT-.
 }//END IPFS MODE--------------------------------.
+if(COMMANDZ[0]==='3'){ //VALIDATE IDENTITY MODE-.
+    //HINT: this command will open up two JSON object files,
+    // read all IDENTITYNET arrays, 
+    // and loop KBZ:IDENTITY_TAGZ
+    /*EXAMPLE: 
+    $ node index_set002 3
+    */
+    console.log("MODE 3: validating unique identity.")
+    try {
+        //FILE READ IN METANET from file, replicate STATE-.
+        //HINT: change the file below to compare different sets.
+        let prevRaw = fs.readFileSync(`${rootPATH}/KBZ_METANET_${"set001"}.json`)
+        let currRaw = fs.readFileSync(`${rootPATH}/KBZ_METANET_${SET_TXT}.json`)
+        let prevData = JSON.parse(prevRaw);
+        let currData = JSON.parse(currRaw);
+        let IDENTITYNETa = prevData.IDENTITYNET;
+        let IDENTITYNETb = currData.IDENTITYNET;
+        let idItemA = null, idItemB = null;
+        let validity = true;
+        for(let i=0; i < IDENTITYNETa.length; i++){
+            idItemA = IDENTITYNETa[i];
+            for(let j=0; j < IDENTITYNETb.length; j++){
+                idItemB = IDENTITYNETb[j];
+                console.log('COMPARING: ',idItemA,idItemB);
+                if(idItemA === idItemB){
+                    console.log("INVALID: DUPE DETECTED!", idItemA)
+                    validity = false;
+                }
+            }
+        }
+        if(validity){ console.log("VALID: UNIQUE SET CONFIRMED!") }
+        else { console.log("ERROR: DUPLICATE DETECTED.") }        
+    } catch( e ) { return; }
+    return; //END SCRIPT-.
+}//END VALIDATE MODE--------------------------------.
 
 /****************************************************\
  * BUILD-IMG - MODE ->  KRYPTO-FACTORY! //TODO rename proj-.
