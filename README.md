@@ -25,23 +25,26 @@ node index 2 //to set IPFS
 - set all the variables.
 - A METANET can exist ./ or not, to avoid duplicates.
 
-EXAMPLE
+## EXAMPLE of LAYERZ technology
     //load all the images - at INIT
     // const frm1 = loadImage(`${rootPATH}\\assets_set1\\framez\\frame1a.png`)
     // const bg1 = loadImage(`${rootPATH}\\assets_set1\\bgz\\bg1a.png`)
     // const hero1 = loadImage(`${rootPATH}\\assets_set1\\heroz\\char1a.png`)
     // const sky1 = loadImage(`${rootPATH}\\assets_set1\\starz\\sky1a.png`)
 
-RANDOMLY MIX
+## What it does...
 
-CONFIRM UNIQUE
+- RANDOMLY MIX
+- CONFIRM UNIQUE
+- reloop if not unique
+- CALCULATE IDENTITY and RARITY
+- BUILD METADATA WITH STAMPS and IPFS resources
+- METANET with IDENTITYNET creates BITZSETS, of KRYPTOBITZ-!
+- Update IPFS resources - using command line "2" param
+- MINT to OPEN SEA with attributes
 
-CALCULATE IDENTITY and RARITY
-
-WRITE METADATA WITH STAMPS and IPFS resources
-
-Uses a METANET with an IDENTITYNET to create BITZSETS, of KRYPTOBITZ-.
-
-Update the IPFS resources,
-
-and MINT to OPEN SEA with attributes
+----
+> This code is MIT, open-source.
+> email netcinematics(at)protonmail(dot)com.
+> copyright for images and art (c) 2021 NetCinematics
+----
