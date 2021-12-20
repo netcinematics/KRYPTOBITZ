@@ -1,5 +1,5 @@
 # KRYPTOBITZ
-Awesome little KRYPTOBITZ of generative art, node server. NFT minter.
+Generative art, node server, token factory, NFT minter.
 
 ## Made with HTML5 Canvas
 
