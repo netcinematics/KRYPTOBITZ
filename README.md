@@ -46,5 +46,5 @@ OR
 ----
 > This code is MIT, open-source.
 > email netcinematics(at)protonmail(dot)com.
-> copyright for images and art (c) 2021 NetCinematics
+> copyright for images and art (c) 2021 NetCinematics.
 ----
