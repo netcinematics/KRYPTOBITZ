@@ -7,17 +7,26 @@ Generative art, node server, token factory, NFT minter.
 
 > $ npm install canvas --save
 
-## How to Build
+## How to Build (example _set001)
 
 > $ npm install
 
-cd into engine_
+> $ node index_set001   
 
-> $ node index   //to build
+//to build _set001
 
-OR 
+OR * optional parameter MODES 2 or 3
 
-> $ node index 2 //to set IPFS
+> $ node index 2 
+
+- VERIFY SET UNIQUENESS
+- Configure comparison in code.
+
+> $ node index 3
+
+- POPULATE IPFS PATH
+
+----
 
 ## Getting Started
 

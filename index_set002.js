@@ -8,12 +8,48 @@ DATE_STAMP_TAG += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTi
 let {BITZSET, TOTAL_CARDZ, SET_TXT, BUILD_LIB, METANET, RARITYNET, IDENTITYNET, OS_META_MODEL, width, height} = require('./config_set002.js')
 
 const COMMANDZ = process.argv.slice(2); //CMD LINE args. -> node index 2
+if(COMMANDZ[0]==='1'){} //default: KRYPTOFACTORY (below) -.
+if(COMMANDZ[0]==='2'){ //VALIDATE IDENTITY MODE-.
+    //HINT: this command will open up two JSON object files,
+    // read all IDENTITYNET arrays, 
+    // and loop KBZ:IDENTITY_TAGZ
+    /*EXAMPLE param: 
+    $ node index_set002 2
+    */
+    console.log("MODE 2: validating unique identity.")
+    try {
+        //FILE READ IN METANET from file, replicate STATE-.
+        //HINT: change the file below to compare different sets.
+        let prevRaw = fs.readFileSync(`${rootPATH}/KBZ_METANET_${"set001"}.json`)
+        let currRaw = fs.readFileSync(`${rootPATH}/KBZ_METANET_${SET_TXT}.json`)
+        let prevData = JSON.parse(prevRaw);
+        let currData = JSON.parse(currRaw);
+        let IDENTITYNETa = prevData.IDENTITYNET;
+        let IDENTITYNETb = currData.IDENTITYNET;
+        let idItemA = null, idItemB = null;
+        let validity = true;
+        for(let i=0; i < IDENTITYNETa.length; i++){
+            idItemA = IDENTITYNETa[i];
+            for(let j=0; j < IDENTITYNETb.length; j++){
+                idItemB = IDENTITYNETb[j];
+                console.log('COMPARING: ',idItemA,idItemB);
+                if(idItemA === idItemB){
+                    console.log("INVALID: DUPE DETECTED!", idItemA)
+                    validity = false;
+                }
+            }
+        }
+        if(validity){ console.log("VALID: UNIQUE SET CONFIRMED!") }
+        else { console.log("ERROR: DUPLICATE DETECTED.") }        
+    } catch( e ) { return; }
+    return; //END SCRIPT-.
+}//END VALIDATE MODE--------------------------------.
 /****************************************************\
- * IPFS update uri - MODE-. 
- * RUN:  node index 2  //look for _setNUM   
+ * IPFS update uri - MODE 3. 
+ * RUN:  node index 3  //look for _setNUM   
  * RESULT: to replace the IFPS PATH from CONFIG.
 \****************************************************/
-if(COMMANDZ[0]==='2'){ //IPFS MODE-.
+if(COMMANDZ[0]==='3'){ //IPFS MODE-.
     let publishDateStr = `${new Date().toISOString().split("T")[0]}`
     publishDateStr += `_${new Date().toTimeString().split(':')[0]}_${new Date().toTimeString().split(':')[1]}` 
     console.log('RUNNING IN IPFS IMAGE UPDATE MODE',publishDateStr);
@@ -56,41 +92,6 @@ if(COMMANDZ[0]==='2'){ //IPFS MODE-.
     );
     return; //END SCRIPT-.
 }//END IPFS MODE--------------------------------.
-if(COMMANDZ[0]==='3'){ //VALIDATE IDENTITY MODE-.
-    //HINT: this command will open up two JSON object files,
-    // read all IDENTITYNET arrays, 
-    // and loop KBZ:IDENTITY_TAGZ
-    /*EXAMPLE: 
-    $ node index_set002 3
-    */
-    console.log("MODE 3: validating unique identity.")
-    try {
-        //FILE READ IN METANET from file, replicate STATE-.
-        //HINT: change the file below to compare different sets.
-        let prevRaw = fs.readFileSync(`${rootPATH}/KBZ_METANET_${"set001"}.json`)
-        let currRaw = fs.readFileSync(`${rootPATH}/KBZ_METANET_${SET_TXT}.json`)
-        let prevData = JSON.parse(prevRaw);
-        let currData = JSON.parse(currRaw);
-        let IDENTITYNETa = prevData.IDENTITYNET;
-        let IDENTITYNETb = currData.IDENTITYNET;
-        let idItemA = null, idItemB = null;
-        let validity = true;
-        for(let i=0; i < IDENTITYNETa.length; i++){
-            idItemA = IDENTITYNETa[i];
-            for(let j=0; j < IDENTITYNETb.length; j++){
-                idItemB = IDENTITYNETb[j];
-                console.log('COMPARING: ',idItemA,idItemB);
-                if(idItemA === idItemB){
-                    console.log("INVALID: DUPE DETECTED!", idItemA)
-                    validity = false;
-                }
-            }
-        }
-        if(validity){ console.log("VALID: UNIQUE SET CONFIRMED!") }
-        else { console.log("ERROR: DUPLICATE DETECTED.") }        
-    } catch( e ) { return; }
-    return; //END SCRIPT-.
-}//END VALIDATE MODE--------------------------------.
 
 /****************************************************\
  * BUILD-IMG - MODE ->  KRYPTO-FACTORY! //TODO rename proj-.
